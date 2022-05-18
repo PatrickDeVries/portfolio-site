@@ -1,6 +1,7 @@
 {
   "name": "personal-site",
   "version": "0.1.0",
+  "homepage": "https://patrickdevries.github.io/cra-personal-site",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
@@ -18,6 +19,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
