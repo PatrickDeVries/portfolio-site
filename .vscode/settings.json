@@ -1,0 +1,18 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "prettier.enable": true,
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "eslint.nodePath": ".yarn/sdks",
+  "prettier.prettierPath": ".yarn/sdks/prettier/index.js"
+}

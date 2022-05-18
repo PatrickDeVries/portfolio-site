@@ -46,5 +46,11 @@
   },
   "installConfig": {
     "pnp": true
+  },
+  "packageManager": "yarn@3.2.1",
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-react-app": "^7.0.1",
+    "prettier": "^2.6.2"
   }
 }
