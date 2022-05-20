@@ -1,5 +1,7 @@
 import { Theme } from './styled'
 
+export type ThemeName = 'dark' | 'light'
+
 export const dark: Theme = {
   name: 'dark',
   text: '#FFFFFF',

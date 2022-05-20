@@ -3,7 +3,7 @@ import { Variant } from '../../types/inputs'
 import { StyledButton } from './style'
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant: Variant
+  variant?: Variant
 }
 
 const Button: React.FC<Props> = ({ variant = 'fill', type = 'button', ...props }) => {

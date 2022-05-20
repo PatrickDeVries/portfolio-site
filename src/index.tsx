@@ -1,30 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components/macro'
+import { useProxy } from 'valtio/macro'
+import store from './common/components/particleControlCard/store'
 import Home from './home'
 import './index.css'
+import Particles from './particles'
 import reportWebVitals from './reportWebVitals'
 import { Global } from './theme/global'
 import { dark, light } from './theme/themes'
 
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
-
-  useEffect(() => {
-    const storedtheme = localStorage.getItem('theme')
-    setTheme(storedtheme === 'dark' || storedtheme === 'light' ? storedtheme : 'dark')
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(theme))
-  }, [theme])
+  useProxy(store)
 
   return (
-    <ThemeProvider theme={theme === 'light' ? light : dark}>
+    <ThemeProvider theme={store.theme === 'light' ? light : dark}>
       <Global />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/particles" element={<Particles />} />
       </Routes>
     </ThemeProvider>
   )

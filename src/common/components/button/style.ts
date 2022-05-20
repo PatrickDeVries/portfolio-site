@@ -38,7 +38,7 @@ export const StyledButton = styled.button<{ variant: Variant }>`
 
   cursor: pointer;
   border-radius: 0.6em;
-  padding: 0.5em 0.25em;
+  padding: 0.5em 0.75em;
 
   user-select: none;
 
