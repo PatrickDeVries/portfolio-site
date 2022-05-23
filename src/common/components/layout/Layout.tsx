@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { matchPath, matchRoutes, RouteObject, useLocation } from 'react-router-dom'
+import BackgroundParticles from './backgroundParticles'
 // import BackgroundParticles from '../backgroundParticles'
 import Header from './header'
 import { Body, Main } from './style'
@@ -24,12 +25,8 @@ const Layout: React.FC<Props> = ({ children }) => {
 
   return (
     <>
-      <head>
-        <title>Patrick DeVries</title>
-      </head>
       {matchRoutes(PARTICLE_WHITELIST, location.pathname) && (
-        <span>bg shown</span>
-        // <BackgroundParticles top={bodyRef.current?.offsetTop ?? 0} />
+        <BackgroundParticles top={bodyRef.current?.offsetTop ?? 0} />
       )}
       <Main>
         <Header />

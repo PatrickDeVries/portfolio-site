@@ -4,6 +4,7 @@ export const Global = createGlobalStyle`
   html {
     height: 100vh;
     width: 100vw;
+    overflow: hidden;
 
     color: ${({ theme }) => theme.text};
     background-image: ${({ theme }) =>
