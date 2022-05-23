@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/cra-personal-site/static/css/main.073c9b0a.css",
-    "main.js": "/cra-personal-site/static/js/main.3c17be7d.js",
-    "static/js/787.3ba5e41c.chunk.js": "/cra-personal-site/static/js/787.3ba5e41c.chunk.js",
-    "static/media/logo.svg": "/cra-personal-site/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "main.css": "/cra-personal-site/static/css/main.48273abc.css",
+    "main.js": "/cra-personal-site/static/js/main.f393549b.js",
+    "static/js/633.1bc91048.chunk.js": "/cra-personal-site/static/js/633.1bc91048.chunk.js",
     "index.html": "/cra-personal-site/index.html",
-    "main.073c9b0a.css.map": "/cra-personal-site/static/css/main.073c9b0a.css.map",
-    "main.3c17be7d.js.map": "/cra-personal-site/static/js/main.3c17be7d.js.map",
-    "787.3ba5e41c.chunk.js.map": "/cra-personal-site/static/js/787.3ba5e41c.chunk.js.map"
+    "main.48273abc.css.map": "/cra-personal-site/static/css/main.48273abc.css.map",
+    "main.f393549b.js.map": "/cra-personal-site/static/js/main.f393549b.js.map",
+    "633.1bc91048.chunk.js.map": "/cra-personal-site/static/js/633.1bc91048.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.3c17be7d.js"
+    "static/css/main.48273abc.css",
+    "static/js/main.f393549b.js"
   ]
 }
