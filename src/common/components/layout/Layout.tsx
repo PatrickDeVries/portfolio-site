@@ -30,7 +30,7 @@ const Layout: React.FC<Props> = ({ children }) => {
       )}
       <Main>
         <Header />
-        <Body tint={!!matchPath(location.pathname, '/particles')} ref={bodyRef}>
+        <Body tint={!matchPath(location.pathname, '/particles')} ref={bodyRef}>
           {children}
         </Body>
       </Main>

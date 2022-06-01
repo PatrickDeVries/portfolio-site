@@ -1,10 +1,10 @@
 import { mdiCogOutline, mdiThemeLightDark } from '@mdi/js'
 import Icon from '@mdi/react'
-import React, { useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useProxy } from 'valtio/macro'
+import { useSnapshot } from 'valtio'
 import { dark, light } from '../../../../theme/themes'
-import store from '../../particleControlCard/store'
+import particleSettings from '../../particleControlCard/store'
 import {
   BarWrapper,
   DropDown,
@@ -37,7 +37,7 @@ const Header: React.FC = () => {
   )
   const gearRef = useRef<HTMLDivElement>(null)
 
-  useProxy(store)
+  const settingsSnap = useSnapshot(particleSettings)
 
   const navItems: { route: string; label: string; onClick: () => void }[] = [
     {
@@ -78,21 +78,19 @@ const Header: React.FC = () => {
     },
   ]
 
-  useEffect(() => {
-    if (document) {
-      document.onkeyup = event => {
-        if (event.key === 'Escape') {
-          if (gearRef.current) {
-            gearRef.current.click()
-          }
-        } else if (event.key === '=') {
-          store.mouseSize = store.mouseSize + 0.5 < 5 ? store.mouseSize + 0.5 : 5
-        } else if (event.key === '-') {
-          store.mouseSize = store.mouseSize - 0.5 > 0 ? store.mouseSize - 0.5 : 0
-        }
+  document.onkeyup = event => {
+    if (event.key === 'Escape') {
+      if (gearRef.current) {
+        gearRef.current.click()
       }
+    } else if (event.key === '=') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize + 0.5 < 5 ? particleSettings.mouseSize + 0.5 : 5
+    } else if (event.key === '-') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize - 0.5 > 0 ? particleSettings.mouseSize - 0.5 : 0
     }
-  }, [store.mouseSize])
+  }
 
   return (
     <>
@@ -114,8 +112,8 @@ const Header: React.FC = () => {
             <NavIcon
               title="Edit background settings"
               onClick={() => {
-                store.controlsOpen = !store.controlsOpen
-                store.firstHit = false
+                particleSettings.controlsOpen = !particleSettings.controlsOpen
+                particleSettings.firstHit = false
                 setExpanded(false)
               }}
               ref={gearRef}
@@ -124,19 +122,25 @@ const Header: React.FC = () => {
             </NavIcon>
           )}
           <NavIcon
-            title={`Change to ${store.theme === 'light' ? 'dark' : 'light'} mode`}
+            title={`Change to ${settingsSnap.theme === 'light' ? 'dark' : 'light'} mode`}
             onClick={() => {
-              if (store.theme === 'light') {
-                store.theme = 'dark'
-                if (store.colorA === light.primary && store.colorB === light.secondary) {
-                  store.colorA = dark.primary
-                  store.colorB = dark.secondary
+              if (settingsSnap.theme === 'light') {
+                particleSettings.theme = 'dark'
+                if (
+                  settingsSnap.colorA === light.primary &&
+                  settingsSnap.colorB === light.secondary
+                ) {
+                  particleSettings.colorA = dark.primary
+                  particleSettings.colorB = dark.secondary
                 }
               } else {
-                store.theme = 'light'
-                if (store.colorA === dark.primary && store.colorB === dark.secondary) {
-                  store.colorA = light.primary
-                  store.colorB = light.secondary
+                particleSettings.theme = 'light'
+                if (
+                  settingsSnap.colorA === dark.primary &&
+                  settingsSnap.colorB === dark.secondary
+                ) {
+                  particleSettings.colorA = light.primary
+                  particleSettings.colorB = light.secondary
                 }
               }
             }}

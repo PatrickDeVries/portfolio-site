@@ -1,84 +1,88 @@
 import React from 'react'
 import { useProxy } from 'valtio/macro'
 import Button from '../button'
+import { MAX_PARTICLES } from '../layout/backgroundParticles/consts'
+import { randomizeLocations } from '../layout/backgroundParticles/store'
 import RangeSlider from '../rangeSlider'
-import store, { MouseShape } from './store'
+import particleSettings, { MouseShape, resetSettings } from './store'
 import { ColorInput, ControlCard, ControlRows, Footer, Label } from './style'
 
 const ParticleControlCard: React.FC = () => {
-  useProxy(store)
+  useProxy(particleSettings)
 
   return (
     <>
-      <ControlCard controlsOpen={store.controlsOpen}>
+      <ControlCard controlsOpen={particleSettings.controlsOpen}>
         <span>Controls</span>
         <ControlRows>
           <RangeSlider
-            value={store.particleCount}
+            value={particleSettings.particleCount}
             min={1}
-            max={99999}
+            max={MAX_PARTICLES}
             onChange={newVal => {
-              store.particleCount = newVal
-              if (store.freeThinkers > newVal) store.freeThinkers = newVal
+              particleSettings.particleCount = newVal
+              if (particleSettings.freeThinkers > newVal) particleSettings.freeThinkers = newVal
             }}
             label="Particle count"
           />
           <RangeSlider
-            value={parseFloat(store.baseV.toFixed(4))}
+            value={parseFloat(particleSettings.baseV.toFixed(4))}
             min={0}
             max={1}
             step={0.0001}
-            onChange={newVal => (store.baseV = newVal)}
+            onChange={newVal => {
+              particleSettings.baseV = newVal
+            }}
             label="Base velocity"
           />
           <RangeSlider
-            value={parseFloat(store.vVar.toFixed(4))}
+            value={parseFloat(particleSettings.vVar.toFixed(4))}
             min={0}
             max={1}
             step={0.0001}
-            onChange={newVal => (store.vVar = newVal)}
+            onChange={newVal => (particleSettings.vVar = newVal)}
             label="Velocity variance"
           />
           <RangeSlider
-            value={parseFloat(store.baseTurnV.toFixed(5))}
+            value={parseFloat(particleSettings.baseTurnV.toFixed(5))}
             min={0}
             max={parseFloat((Math.PI / 4).toFixed(5))}
             step={0.00001}
-            onChange={newVal => (store.baseTurnV = newVal)}
+            onChange={newVal => (particleSettings.baseTurnV = newVal)}
             label="Base turn speed"
             labels={{ max: 'π/4' }}
           />
           <RangeSlider
-            value={parseFloat(store.turnVar.toFixed(5))}
+            value={parseFloat(particleSettings.turnVar.toFixed(5))}
             min={0}
             max={parseFloat((Math.PI / 4).toFixed(5))}
             step={0.00001}
-            onChange={newVal => (store.turnVar = newVal)}
+            onChange={newVal => (particleSettings.turnVar = newVal)}
             label="Turn speed variance"
             labels={{ max: 'π/4' }}
           />
           <RangeSlider
-            value={store.freeThinkers}
+            value={particleSettings.freeThinkers}
             min={0}
-            max={store.particleCount}
+            max={particleSettings.particleCount}
             step={1}
-            onChange={newVal => (store.freeThinkers = newVal)}
+            onChange={newVal => (particleSettings.freeThinkers = newVal)}
             label="Free thinkers"
           />
           <Label>
             Left color
             <ColorInput
               type="color"
-              value={store.colorA}
-              onChange={event => (store.colorA = event.target.value)}
+              value={particleSettings.colorA}
+              onChange={event => (particleSettings.colorA = event.target.value)}
             />
           </Label>
           <RangeSlider
-            value={store.mouseSize}
+            value={particleSettings.mouseSize}
             min={0}
             max={5}
             step={0.01}
-            onChange={newVal => (store.mouseSize = newVal)}
+            onChange={newVal => (particleSettings.mouseSize = newVal)}
             label="Mouse social distancing"
             title="Press '-' to shrink, '=' to grow"
           />
@@ -86,15 +90,17 @@ const ParticleControlCard: React.FC = () => {
             Right color
             <ColorInput
               type="color"
-              value={store.colorB}
-              onChange={event => (store.colorB = event.target.value)}
+              value={particleSettings.colorB}
+              onChange={event => (particleSettings.colorB = event.target.value)}
             />
           </Label>
           <Label>
             Mouse shape
             <select
-              value={store.mouseShape}
-              onChange={e => (store.mouseShape = MouseShape[e.target.value as MouseShape])}
+              value={particleSettings.mouseShape}
+              onChange={e =>
+                (particleSettings.mouseShape = MouseShape[e.target.value as MouseShape])
+              }
             >
               {Object.keys(MouseShape).map(shape => (
                 <option key={shape} value={shape}>
@@ -105,19 +111,14 @@ const ParticleControlCard: React.FC = () => {
           </Label>
         </ControlRows>
         <Footer>
-          <Button
-            onClick={() => {
-              // TODO reset settings
-              // resetSettings()
-            }}
-          >
-            Restore settings to Default
-          </Button>
+          <Button onClick={resetSettings}>Restore settings to Default</Button>
           <Label>
             Mouse shape
             <select
-              value={store.mouseShape}
-              onChange={e => (store.mouseShape = MouseShape[e.target.value as MouseShape])}
+              value={particleSettings.mouseShape}
+              onChange={e =>
+                (particleSettings.mouseShape = MouseShape[e.target.value as MouseShape])
+              }
             >
               {Object.keys(MouseShape).map(shape => (
                 <option key={shape} value={shape}>
@@ -127,11 +128,7 @@ const ParticleControlCard: React.FC = () => {
             </select>
           </Label>
           <Button
-            onClick={() => {
-              store.positions = []
-              store.velocities = []
-              store.angles = []
-            }}
+            onClick={randomizeLocations}
             title="This will randomise the positions of all particles"
           >
             Reset Particle Locations

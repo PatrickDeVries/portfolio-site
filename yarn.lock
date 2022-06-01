@@ -5592,6 +5592,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-valtio@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "eslint-plugin-valtio@npm:0.4.4"
+  checksum: 2df3e01cf5a362f947a5e50641c3082062c1fd1afc73ece4f57d2a317e411993c95cbab2764ae9bb9743518caafd97b42886590c306d5f19d1d7b86851f48585
+  languageName: node
+  linkType: hard
+
 "eslint-scope@npm:5.1.1, eslint-scope@npm:^5.1.1":
   version: 5.1.1
   resolution: "eslint-scope@npm:5.1.1"
@@ -9122,6 +9129,7 @@ __metadata:
     babel-plugin-macros: ^3.1.0
     eslint: ^8.15.0
     eslint-config-react-app: ^7.0.1
+    eslint-plugin-valtio: ^0.4.4
     gh-pages: ^4.0.0
     lodash: ^4.17.21
     polished: ^4.2.2

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components/macro'
 import { useProxy } from 'valtio/macro'
-import store from './common/components/particleControlCard/store'
+import particleSettings from './common/components/particleControlCard/store'
 import Home from './home'
 import './index.css'
 import Particles from './particles'
@@ -12,10 +12,10 @@ import { Global } from './theme/global'
 import { dark, light } from './theme/themes'
 
 const App: React.FC = () => {
-  useProxy(store)
+  useProxy(particleSettings)
 
   return (
-    <ThemeProvider theme={store.theme === 'light' ? light : dark}>
+    <ThemeProvider theme={particleSettings.theme === 'light' ? light : dark}>
       <Global />
       <Routes>
         <Route path="/" element={<Home />} />

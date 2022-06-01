@@ -2,14 +2,13 @@ export const vertex = `
   varying vec3 vUv;
   uniform float bboxMin;
   uniform float bboxMax;
-  attribute float size;
 
   void main() {
     vUv.x = (position.x - bboxMin) / (bboxMax - bboxMin);
       vUv = position;
       vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
       gl_Position = projectionMatrix * modelViewPosition;    
-      gl_PointSize = size;  
+      gl_PointSize = 10.0;  
   }
   `
 

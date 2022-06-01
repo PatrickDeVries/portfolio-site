@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['react-app'],
+  extends: ['react-app', 'plugin:valtio/recommended'],
   rules: {
     'react/jsx-key': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',

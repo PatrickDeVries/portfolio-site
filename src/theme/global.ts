@@ -11,7 +11,7 @@ export const Global = createGlobalStyle`
       `linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight})`};
   }
 
-  input {
+  input{
     font-size: inherit;
     color: inherit;
   }

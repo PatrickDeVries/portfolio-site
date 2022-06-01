@@ -1,11 +1,12 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import { BufferAttribute, BufferGeometry, Points, ShaderMaterial } from 'three'
-import { useSnapshot } from 'valtio'
-import store, { MouseShape } from '../../particleControlCard/store'
+import { Points, ShaderMaterial } from 'three'
+import particleSettings, { MouseShape } from '../../particleControlCard/store'
+import { MAX_PARTICLES } from './consts'
 import './particlematerial'
 import { fragment, vertex } from './particlematerial'
+import particlePositions, { randomizeLocations } from './store'
 import {
   Circle,
   escapeRadius,
@@ -37,11 +38,11 @@ const GetShaderMaterial: React.FC<{
           bboxMax: { value: props.bboxMax },
         },
       ]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
 
-  // this works, but is not dependent on props
-  useFrame(state => {
+  useFrame(() => {
     if (ref.current) {
       ref.current.uniforms.colorA.value = new THREE.Color(props.colorA)
       ref.current.uniforms.colorB.value = new THREE.Color(props.colorB)
@@ -67,18 +68,11 @@ type Props = {
 }
 
 const Particles: React.FC<Props> = ({ top, pathname }) => {
-  const viewport = useThree(state => state.viewport)
+  const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
+  particlePositions.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
 
   const pointRef = useRef<Points | null>(null)
-  const particles = useRef<BufferGeometry | null>(null)
-
-  const sizes = []
-  const state = useSnapshot(store)
-
-  const [positions, setPositions] = useState<number[]>([...(state.positions ?? [])])
-  const [velocities, setVelocities] = useState<number[]>([...(state.velocities ?? [])])
-  const [angles, setAngles] = useState<number[]>([...(state.angles ?? [])])
 
   const avoid = useMemo(
     () =>
@@ -131,55 +125,6 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
   )
 
   const mouse = useRef<Point2d>({ x: 0, y: 0 })
-  let mouseBounds: Circle | Polygon = useMemo(
-    () =>
-      state.mouseShape === MouseShape.Circle
-        ? ({ ...mouse.current, radius: state.mouseSize } as Circle)
-        : state.mouseShape === MouseShape.Star
-        ? ({ vertices: generateStar(state.mouseSize, mouse.current) } as Polygon)
-        : ({
-            vertices: generateRectangleFromCenter(
-              mouse.current,
-              state.mouseSize * 2,
-              state.mouseSize * 2,
-            ),
-          } as Polygon),
-    [state.mouseShape, state.mouseSize],
-  )
-
-  let mouseMax: Point2d = useMemo(
-    () =>
-      !isCircle(mouseBounds)
-        ? {
-            x: Math.max.apply(
-              Math,
-              mouseBounds.vertices.map(v => v.x),
-            ),
-            y: Math.max.apply(
-              Math,
-              mouseBounds.vertices.map(v => v.y),
-            ),
-          }
-        : { x: 0, y: 0 },
-    [mouseBounds],
-  )
-
-  let mouseMin: Point2d = useMemo(
-    () =>
-      !isCircle(mouseBounds)
-        ? {
-            x: Math.min.apply(
-              Math,
-              mouseBounds.vertices.map(v => v.x),
-            ),
-            y: Math.min.apply(
-              Math,
-              mouseBounds.vertices.map(v => v.y),
-            ),
-          }
-        : { x: 0, y: 0 },
-    [mouseBounds],
-  )
 
   document.onmousemove = event => {
     mouse.current = {
@@ -237,49 +182,59 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
     [avoid],
   )
 
-  for (let i = 0; i < 999999; i++) {
-    sizes.push(10)
-  }
-
-  if (positions.length < state.particleCount) {
-    const newPositions = []
-    const newVelocities = []
-    const newAngles = []
-    for (let i = 0; i < 999999; i++) {
-      newPositions.push(
-        Math.random() * viewport.width - viewport.width / 2,
-        Math.random() * viewport.height - viewport.height / 2 - viewportTop,
-        0,
-      )
-      newVelocities.push(Math.random(), Math.random(), 0)
-      let newA = Math.random() * 2 * Math.PI
-      if (
-        newA < 0.01 ||
-        newA > Math.PI - 0.01 ||
-        (newA < Math.PI / 2 + 0.01 && newA > Math.PI / 2 - 0.01) ||
-        (newA < Math.PI / 4 + 0.01 && newA > Math.PI / 4 - 0.01) ||
-        (newA < (Math.PI * 3) / 4 + 0.01 && newA > (Math.PI * 3) / 4 - 0.01)
-      ) {
-        newA += 0.03
-      }
-      newAngles.push(newA)
-    }
-
-    setPositions(newPositions)
-    setVelocities(newVelocities)
-    setAngles(newAngles)
+  if (particlePositions.positions.length < MAX_PARTICLES * 3) {
+    randomizeLocations()
   }
 
   const updatePositions = () => {
-    if (particles.current) {
-      const pps: BufferAttribute = particles.current['attributes']['position'] as BufferAttribute
-      const pvs: BufferAttribute = particles.current['attributes']['velocity'] as BufferAttribute
-      const pas: BufferAttribute = particles.current['attributes']['angle'] as BufferAttribute
+    let mouseBounds: Circle | Polygon =
+      particleSettings.mouseShape === MouseShape.Circle
+        ? ({ ...mouse.current, radius: particleSettings.mouseSize } as Circle)
+        : particleSettings.mouseShape === MouseShape.Star
+        ? ({ vertices: generateStar(particleSettings.mouseSize, mouse.current) } as Polygon)
+        : ({
+            vertices: generateRectangleFromCenter(
+              mouse.current,
+              particleSettings.mouseSize * 2,
+              particleSettings.mouseSize * 2,
+            ),
+          } as Polygon)
 
-      for (let i = 0, l = state.particleCount; i < l; i++) {
+    let mouseMax: Point2d = !isCircle(mouseBounds)
+      ? {
+          x: Math.max.apply(
+            Math,
+            mouseBounds.vertices.map(v => v.x),
+          ),
+          y: Math.max.apply(
+            Math,
+            mouseBounds.vertices.map(v => v.y),
+          ),
+        }
+      : { x: 0, y: 0 }
+
+    let mouseMin: Point2d = !isCircle(mouseBounds)
+      ? {
+          x: Math.min.apply(
+            Math,
+            mouseBounds.vertices.map(v => v.x),
+          ),
+          y: Math.min.apply(
+            Math,
+            mouseBounds.vertices.map(v => v.y),
+          ),
+        }
+      : { x: 0, y: 0 }
+
+    if (pointRef.current) {
+      const pps = pointRef.current.geometry.getAttribute('position')
+      const pvs = pointRef.current.geometry.getAttribute('velocity')
+      const pas = pointRef.current.geometry.getAttribute('angle')
+
+      for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
         const angle = pas.getX(i)
-        const v = pvs.getX(i) * state.vVar + state.baseV
-        const turnV = pvs.getY(i) * state.turnVar + state.baseTurnV
+        const v = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
+        const turnV = pvs.getY(i) * particleSettings.turnVar + particleSettings.baseTurnV
 
         pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
 
@@ -376,6 +331,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
                   return true
                 }
               }
+              return false
             })
             .some(val => val) ||
           mouseMoved
@@ -396,12 +352,12 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           ) {
             pps.setXY(i, 0, 0)
           }
-        } else if (state.freeThinkers === 0) {
+        } else if (particleSettings.freeThinkers === 0) {
           let goalAngle = 0
           if (i === 0) {
             goalAngle = Math.atan2(
-              pps.getY(state.particleCount - 1) - pps.getY(i),
-              pps.getX(state.particleCount - 1) - pps.getX(i),
+              pps.getY(particleSettings.particleCount - 1) - pps.getY(i),
+              pps.getX(particleSettings.particleCount - 1) - pps.getX(i),
             )
           } else {
             goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
@@ -409,7 +365,10 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           const newAngle = getNewAngle(angle, goalAngle, turnV)
 
           pas.setX(i, newAngle)
-        } else if (i % Math.ceil(state.particleCount / state.freeThinkers) !== 0 && i > 0) {
+        } else if (
+          i % Math.ceil(particleSettings.particleCount / particleSettings.freeThinkers) !== 0 &&
+          i > 0
+        ) {
           // non-free particles
           const goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
           const newAngle = getNewAngle(angle, goalAngle, turnV)
@@ -417,45 +376,56 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           pas.setX(i, newAngle)
         }
       }
+      pointRef.current.geometry.setAttribute('position', pps)
+      pointRef.current.geometry.setAttribute('velocity', pvs)
+      pointRef.current.geometry.setAttribute('angle', pas)
+      pointRef.current.geometry.attributes.position.needsUpdate = true
+      pointRef.current.geometry.attributes.velocity.needsUpdate = true
+      pointRef.current.geometry.attributes.angle.needsUpdate = true
     }
   }
 
   useFrame(() => {
     updatePositions()
-    if (particles.current) particles.current['attributes']['position'].needsUpdate = true
+
+    if (pointRef.current) {
+      particlePositions.pointsRef = pointRef
+      pointRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
+    }
   })
 
-  console.log(particles.current)
+  if (particlePositions.positions.length < MAX_PARTICLES * 3) {
+    return null
+  }
 
   return (
     <points ref={pointRef}>
-      <bufferGeometry ref={particles} attach="geometry">
+      <bufferGeometry attach="geometry">
         <bufferAttribute
           attach="attributes-position"
-          count={state.particleCount}
-          array={new Float32Array(positions)}
+          count={MAX_PARTICLES}
+          array={new Float32Array(particlePositions.positions)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-velocity"
-          count={state.particleCount}
-          array={new Float32Array(velocities)}
+          count={MAX_PARTICLES}
+          array={new Float32Array(particlePositions.velocities)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-angle"
-          count={state.particleCount}
-          array={new Float32Array(angles)}
-          itemSize={1}
-        />
-        <bufferAttribute
-          attach="attributes-size"
-          count={state.particleCount}
-          array={new Float32Array(sizes)}
+          count={MAX_PARTICLES}
+          array={new Float32Array(particlePositions.angles)}
           itemSize={1}
         />
       </bufferGeometry>
-      <GetShaderMaterial colorA={state.colorA} colorB={state.colorB} bboxMin={-1} bboxMax={1} />
+      <GetShaderMaterial
+        colorA={particleSettings.colorA}
+        colorB={particleSettings.colorB}
+        bboxMin={-1}
+        bboxMax={1}
+      />
     </points>
   )
 }
