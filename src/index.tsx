@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components/macro'
 import { useProxy } from 'valtio/macro'
 import particleSettings from './common/components/particleControlCard/store'
+import Contact from './contact'
 import Home from './home'
 import Particles from './particles'
 import Portfolio from './portfolio'
@@ -22,7 +23,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/particles" element={<Particles />} />
         <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/static/lasers/index.html" />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
     </ThemeProvider>
   )
