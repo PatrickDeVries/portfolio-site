@@ -17,7 +17,7 @@ import {
   isInCircle,
   isInPolygon,
   Point2d,
-  Polygon,
+  Polygon
 } from './utils'
 
 const GetShaderMaterial: React.FC<{
@@ -72,7 +72,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
   const viewportTop = top * (viewport.height / window.innerHeight)
   particlePositions.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
 
-  const pointRef = useRef<Points | null>(null)
+  const pointsRef = useRef<Points | null>(null)
 
   const avoid = useMemo(
     () =>
@@ -182,8 +182,14 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
     [avoid],
   )
 
-  if (particlePositions.positions.length < MAX_PARTICLES * 3) {
-    randomizeLocations()
+  let ps: number[] = []
+  let vs: number[] = []
+  let as: number[] = []
+  if (ps.length < MAX_PARTICLES * 3) {
+    const { positions, velocities, angles } = randomizeLocations()
+    ps = positions
+    vs = velocities
+    as = angles
   }
 
   const updatePositions = () => {
@@ -226,10 +232,10 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
         }
       : { x: 0, y: 0 }
 
-    if (pointRef.current) {
-      const pps = pointRef.current.geometry.getAttribute('position')
-      const pvs = pointRef.current.geometry.getAttribute('velocity')
-      const pas = pointRef.current.geometry.getAttribute('angle')
+    if (pointsRef.current) {
+      const pps = pointsRef.current.geometry.getAttribute('position')
+      const pvs = pointsRef.current.geometry.getAttribute('velocity')
+      const pas = pointsRef.current.geometry.getAttribute('angle')
 
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
         const angle = pas.getX(i)
@@ -376,47 +382,47 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           pas.setX(i, newAngle)
         }
       }
-      pointRef.current.geometry.setAttribute('position', pps)
-      pointRef.current.geometry.setAttribute('velocity', pvs)
-      pointRef.current.geometry.setAttribute('angle', pas)
-      pointRef.current.geometry.attributes.position.needsUpdate = true
-      pointRef.current.geometry.attributes.velocity.needsUpdate = true
-      pointRef.current.geometry.attributes.angle.needsUpdate = true
+      pointsRef.current.geometry.setAttribute('position', pps)
+      pointsRef.current.geometry.setAttribute('velocity', pvs)
+      pointsRef.current.geometry.setAttribute('angle', pas)
+      pointsRef.current.geometry.attributes.position.needsUpdate = true
+      pointsRef.current.geometry.attributes.velocity.needsUpdate = true
+      pointsRef.current.geometry.attributes.angle.needsUpdate = true
     }
   }
 
   useFrame(() => {
     updatePositions()
 
-    if (pointRef.current) {
-      particlePositions.pointsRef = pointRef
-      pointRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
+    if (pointsRef.current) {
+      particlePositions.pointsRef = pointsRef
+      pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
     }
   })
 
-  if (particlePositions.positions.length < MAX_PARTICLES * 3) {
+  if (ps.length < MAX_PARTICLES * 3) {
     return null
   }
 
   return (
-    <points ref={pointRef}>
+    <points ref={pointsRef}>
       <bufferGeometry attach="geometry">
         <bufferAttribute
           attach="attributes-position"
           count={MAX_PARTICLES}
-          array={new Float32Array(particlePositions.positions)}
+          array={new Float32Array(ps)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-velocity"
           count={MAX_PARTICLES}
-          array={new Float32Array(particlePositions.velocities)}
+          array={new Float32Array(vs)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-angle"
           count={MAX_PARTICLES}
-          array={new Float32Array(particlePositions.angles)}
+          array={new Float32Array(as)}
           itemSize={1}
         />
       </bufferGeometry>

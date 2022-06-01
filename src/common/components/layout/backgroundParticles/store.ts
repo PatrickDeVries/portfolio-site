@@ -3,40 +3,22 @@ import { proxy } from 'valtio'
 import { MAX_PARTICLES } from './consts'
 
 export type Positions = {
-  positions: number[]
-  velocities: number[]
-  angles: number[]
   viewport: { width: number; height: number; top: number }
-
   pointsRef: React.MutableRefObject<THREE.Points | null>
 }
 
 const DEFAULT_POSITIONS: Positions = {
-  positions: [],
-  velocities: [],
-  angles: [],
   viewport: { width: 0, height: 0, top: 0 },
-
   pointsRef: React.createRef(),
 }
 
 const particlePositions = proxy(DEFAULT_POSITIONS)
 
-export const updateState = () => {
-  if (particlePositions.pointsRef.current) {
-    particlePositions.positions = Array.from(
-      particlePositions.pointsRef.current.geometry.attributes.position.array,
-    )
-    particlePositions.velocities = Array.from(
-      particlePositions.pointsRef.current.geometry.attributes.velocity.array,
-    )
-    particlePositions.angles = Array.from(
-      particlePositions.pointsRef.current.geometry.attributes.angle.array,
-    )
-  }
-}
-
-export const randomizeLocations = () => {
+export const randomizeLocations = (): {
+  positions: number[]
+  velocities: number[]
+  angles: number[]
+} => {
   const newPositions = []
   const newVelocities = []
   const newAngles = []
@@ -79,11 +61,9 @@ export const randomizeLocations = () => {
     particlePositions.pointsRef.current.geometry.attributes.position.needsUpdate = true
     particlePositions.pointsRef.current.geometry.attributes.velocity.needsUpdate = true
     particlePositions.pointsRef.current.geometry.attributes.angle.needsUpdate = true
-  } else {
-    particlePositions.positions = newPositions
-    particlePositions.velocities = newVelocities
-    particlePositions.angles = newAngles
   }
+
+  return { positions: newPositions, velocities: newVelocities, angles: newAngles }
 }
 
 export default particlePositions
