@@ -5,21 +5,24 @@ import { ThemeProvider } from 'styled-components/macro'
 import { useProxy } from 'valtio/macro'
 import particleSettings from './common/components/particleControlCard/store'
 import Home from './home'
-import './index.css'
 import Particles from './particles'
+import Portfolio from './portfolio'
 import reportWebVitals from './reportWebVitals'
 import { Global } from './theme/global'
+import './theme/global.css'
 import { dark, light } from './theme/themes'
 
 const App: React.FC = () => {
   useProxy(particleSettings)
-
+  const reload = () => window.location.reload()
   return (
     <ThemeProvider theme={particleSettings.theme === 'light' ? light : dark}>
       <Global />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/particles" element={<Particles />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/static/lasers/index.html" />
       </Routes>
     </ThemeProvider>
   )
