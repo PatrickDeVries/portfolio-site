@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro'
-import { MOBILE } from '../theme/mediaQueries'
+import { MOBILE } from '../../theme/mediaQueries'
 
 export const Wrapper = styled.div`
   padding: 2rem;

@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro'
-import { DESKTOP, SMALL_MOBILE } from '../../theme/mediaQueries'
+import { DESKTOP, SMALL_MOBILE } from '../../../theme/mediaQueries'
 
 export const StyledCard = styled.div`
   align-self: stretch;

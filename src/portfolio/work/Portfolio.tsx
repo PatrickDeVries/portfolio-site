@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTheme } from 'styled-components/macro'
-import Layout from '../common/components/layout'
+import Layout from '../../common/components/layout'
 import { myWork } from './constants'
 import { ReadmeStats, SectionHeader, WorkItems, Wrapper } from './style'
 import WorkCard from './workCard'

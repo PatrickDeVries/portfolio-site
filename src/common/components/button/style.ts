@@ -10,7 +10,7 @@ const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultThem
   text: css`
     background-color: transparent;
     color: ${({ theme }) => theme.focus};
-    border: none;
+    border-color: ${({ theme }) => theme.focus};
     &:hover {
       text-decoration: underline;
     }
@@ -18,12 +18,12 @@ const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultThem
   outline: css`
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.focus};
-    border: 1px solid ${({ theme }) => theme.focus};
+    border-color: ${({ theme }) => theme.focus};
   `,
   fill: css`
     background-color: ${({ theme }) => theme.focus};
     color: ${({ theme }) => theme.background};
-    border: 1px solid ${({ theme }) => theme.backgroundHighlight};
+    border-color: ${({ theme }) => theme.backgroundHighlight};
   `,
 }
 
@@ -34,13 +34,16 @@ export const StyledButton = styled.button<{ variant: Variant }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+
+  text-align: center;
 
   cursor: pointer;
-  border-radius: 0.6em;
+  border-radius: 0.25em;
   padding: 0.5em 0.75em;
 
   user-select: none;
+
+  border: 1px solid;
 
   :disabled {
     pointer-events: none;
