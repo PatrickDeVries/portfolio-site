@@ -1,11 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { useTheme } from 'styled-components/macro'
+import { useSnapshot } from 'valtio'
 import Button from '../../../../common/components/button'
 import Input from '../../../../common/components/input'
+import Layout from '../../../../common/components/layout'
 import { formatBallType } from '../formatters'
 import SseoGraph from '../sseoGraph'
-import { Ball, BallType, GameState, Player, Roles } from '../types'
-import { ballsSunkToRole, cascadeRoles, getDecided, getWinners, wouldWin } from '../utils'
+import sseo, { derived, INITIAL_STATE } from '../store'
+import { Player } from '../types'
+import { ballsSunkToRole, cascadeRoles, wouldWin } from '../utils'
 import {
   BallsWrapper,
   ConfirmQueue,
@@ -17,245 +20,234 @@ import {
   Wrapper,
 } from './style'
 
-const INITIAL_STATE: GameState = {
-  names: {
-    [Player.One]: '',
-    [Player.Two]: '',
-    [Player.Three]: '',
-    [Player.Four]: '',
-  },
-  balls: new Array(15).fill({ sunkBy: null, queued: false }),
-  roles: {
-    [Player.One]: Object.values(BallType),
-    [Player.Two]: Object.values(BallType),
-    [Player.Three]: Object.values(BallType),
-    [Player.Four]: Object.values(BallType),
-  },
-  winners: [],
-  losers: [],
-}
-
 const SseoContainer: React.FC = () => {
   const theme = useTheme()
-  const [game, setGame] = useState<GameState>(INITIAL_STATE)
   const [selectedPlayer, setSelectedPlayer] = useState<Player>(Player.One)
   const [lost, setLost] = useState<boolean>(false)
-  const decided: Record<BallType, Player | undefined> = useMemo(
-    () => getDecided(game.roles),
-    [game.roles],
-  )
-  const winningShot = useMemo(
-    () => wouldWin(selectedPlayer, game.balls, decided),
-    [game.balls, decided, selectedPlayer],
-  )
-  // TODO: diffs instead of full state
-  const [history, setHistory] = useState<
-    { balls: Ball[]; roles?: Roles; winners?: Player[]; losers?: Player[] }[]
-  >([])
 
-  useEffect(() => {
-    if (!winningShot) setLost(false)
-  }, [winningShot])
-  useEffect(
-    () =>
-      setGame(curr => ({
-        ...curr,
-        winners: [
-          ...curr.winners,
-          ...getWinners(game.balls, decided).filter(
-            winner => !curr.winners.includes(winner) && !curr.losers.includes(winner),
-          ),
-        ],
-      })),
-    [decided, game.balls],
-  )
+  const stateSnap = useSnapshot(sseo)
+  const { decided } = useSnapshot(derived)
 
   return (
-    <Wrapper>
-      <LeftSection>
-        <Header>
-          <h1>Solids vs Stripes vs Evens vs Odds </h1>
-          <Button
-            onClick={() => {
-              setGame(curr => ({ ...INITIAL_STATE, names: curr.names }))
-              setSelectedPlayer(Player.One)
-              setLost(false)
-            }}
-            color={theme.focus}
-          >
-            New game
-          </Button>
-        </Header>
-        {Object.values(Player).map((playerKey, i) => (
-          <PlayerWrapper key={playerKey}>
-            <div>
-              {`Player ${playerKey.toLowerCase()} - ${game.roles[playerKey]
-                .map(ballType => formatBallType(ballType))
-                .join(' | ')}`}
+    <Layout>
+      <Wrapper>
+        <LeftSection>
+          <Header>
+            <h1>Solids vs Stripes vs Evens vs Odds </h1>
+            <Button
+              onClick={() => {
+                Object.assign(sseo.balls, INITIAL_STATE.balls)
+                Object.assign(sseo.roles, INITIAL_STATE.roles)
+                sseo.shots = []
+                sseo.rankings = {}
+                setSelectedPlayer(Player.One)
+              }}
+              color={theme.focus}
+            >
+              New game
+            </Button>
+          </Header>
+          {Object.values(Player).map((playerKey, i) => (
+            <PlayerWrapper key={playerKey}>
               <div>
-                <Input
-                  placeholder={`Player name`}
-                  type="text"
-                  value={game.names[playerKey]}
-                  onChange={e =>
-                    setGame(curr => ({
-                      ...curr,
-                      names: { ...curr.names, [playerKey]: e.target.value },
-                    }))
-                  }
-                />
-                <Button
-                  color={theme.primary}
-                  variant="outline"
-                  onClick={() => setSelectedPlayer(playerKey)}
-                  disabled={game.winners.includes(playerKey) || game.losers.includes(playerKey)}
-                >
-                  Select
-                </Button>
+                {`Player ${playerKey.toLowerCase()} - ${stateSnap.roles[playerKey]
+                  .map(ballType => formatBallType(ballType))
+                  .join(' | ')}`}
+                <div>
+                  <Input
+                    placeholder={`Player name`}
+                    type="text"
+                    value={stateSnap.names[playerKey]}
+                    onChange={e => {
+                      sseo.names[playerKey] = e.target.value
+                    }}
+                  />
+                  <Button
+                    color={theme.primary}
+                    variant="outline"
+                    onClick={() => setSelectedPlayer(playerKey)}
+                    disabled={stateSnap.rankings[playerKey] !== undefined}
+                  >
+                    Select
+                  </Button>
+                </div>
               </div>
-            </div>
-            {game.balls.map(
-              ({ sunkBy, queued }, index) =>
-                sunkBy === playerKey &&
-                !queued && (
-                  <PoolBall key={`ball-${index + 1}`} num={index + 1} sunk>
-                    <div>{index + 1}</div>
+              {stateSnap.shots
+                .filter(({ player }) => player === playerKey)
+                .map(({ balls }) =>
+                  balls.map(ball => (
+                    <PoolBall key={`ball-${ball}`} num={ball} sunk>
+                      <div>{ball}</div>
+                    </PoolBall>
+                  )),
+                )}
+            </PlayerWrapper>
+          ))}
+
+          <div>Remaining - click a ball to queue</div>
+          <BallsWrapper>
+            {Object.entries(stateSnap.balls)
+              .filter(([, status]) => status === 'table')
+              .map(([ball]) => {
+                const ballNum = +ball
+                return (
+                  <PoolBall
+                    title="Click to add to queue"
+                    key={`ball-${ball}`}
+                    num={ballNum}
+                    onClick={() => {
+                      sseo.balls[ballNum] = 'queued'
+                    }}
+                  >
+                    <div>{ball}</div>
                   </PoolBall>
-                ),
-            )}
-          </PlayerWrapper>
-        ))}
-
-        <div>Remaining - click a ball to queue</div>
-        <BallsWrapper>
-          {game.balls.map(
-            ({ sunkBy, queued }, index) =>
-              !sunkBy &&
-              !queued && (
-                <PoolBall
-                  title="Click to add to queue"
-                  key={`ball-${index + 1}`}
-                  num={index + 1}
-                  onClick={() => {
-                    const currCopy = [...game.balls]
-                    currCopy[index] = { sunkBy: null, queued: true }
-                    setGame(curr => ({ ...curr, balls: currCopy }))
-                  }}
-                >
-                  <div>{index + 1}</div>
-                </PoolBall>
-              ),
-          )}
-        </BallsWrapper>
-        <ConfirmQueue>
-          <div>Queue</div>
-          <select
-            title="Select Player"
-            value={selectedPlayer}
-            onChange={e => setSelectedPlayer(e.target.value as Player)}
-          >
-            {Object.values(Player).map((player, i) => (
-              <option
-                key={player}
-                label={game.names[player] || `Player ${i + 1}`}
-                value={player}
-                disabled={game.winners.includes(player) || game.losers.includes(player)}
-              />
-            ))}
-          </select>
-          <Button
-            variant="outline"
-            color={theme.focus}
-            disabled={!game.balls.filter(({ queued }) => queued).length}
-            onClick={() => {
-              setHistory([...history, game])
-
-              const newBalls = game.balls.map(({ sunkBy, queued }) => ({
-                sunkBy: queued ? selectedPlayer : sunkBy,
-                queued: false,
-              }))
-              const newRoles = cascadeRoles({
-                ...game.roles,
-                [selectedPlayer]: ballsSunkToRole(
-                  game.balls
-                    .map(({ queued }, i) => ({ queued: queued, val: i + 1 }))
-                    .filter(({ queued }) => queued)
-                    .map(({ val }) => val),
-                  game.roles[selectedPlayer],
-                ),
-              })
-              const newLosers = winningShot && lost ? [...game.losers, selectedPlayer] : game.losers
-              const newWinners =
-                winningShot && !lost ? [...game.winners, selectedPlayer] : game.winners
-
-              setGame(curr => ({
-                ...curr,
-                roles: newRoles,
-                balls: newBalls,
-                winners: newWinners,
-                losers: newLosers,
-              }))
-
-              if (winningShot) {
-                setSelectedPlayer(
-                  curr =>
-                    Object.values(Player).find(
-                      player =>
-                        !newWinners.includes(player) &&
-                        !newLosers.includes(player) &&
-                        player !== curr,
-                    ) ?? curr,
                 )
-              }
-            }}
-          >
-            Confirm
-          </Button>
-        </ConfirmQueue>
-        <BallsWrapper>
-          {game.balls.map(
-            ({ queued }, index) =>
-              queued && (
-                <PoolBall
-                  title="Click to remove from queue"
-                  key={`ball-${index + 1}`}
-                  num={index + 1}
-                  onClick={() => {
-                    const currCopy = [...game.balls]
-                    currCopy[index] = { sunkBy: null, queued: false }
-                    setGame(curr => ({ ...curr, balls: currCopy }))
-                  }}
-                >
-                  <div>{index + 1}</div>
-                </PoolBall>
-              ),
+              })}
+          </BallsWrapper>
+          <ConfirmQueue>
+            <div>Queue</div>
+            <select
+              title="Select Player"
+              value={selectedPlayer}
+              onChange={e => setSelectedPlayer(e.target.value as Player)}
+            >
+              {Object.values(Player).map((playerKey, i) => (
+                <option
+                  key={playerKey}
+                  label={stateSnap.names[playerKey] || `Player ${i + 1}`}
+                  value={playerKey}
+                  disabled={stateSnap.rankings[playerKey] !== undefined}
+                />
+              ))}
+            </select>
+            <Button
+              variant="outline"
+              color={theme.focus}
+              disabled={!Object.values(stateSnap.balls).some(status => status === 'queued')}
+              onClick={() => {
+                const sunkBalls = Object.entries(stateSnap.balls)
+                  .filter(([, status]) => status === 'queued')
+                  .map(([key]) => Number(key))
+                sseo.shots.push({
+                  player: selectedPlayer,
+                  balls: sunkBalls,
+                  roles: stateSnap.roles,
+                  rankings: stateSnap.rankings,
+                  lost,
+                })
+
+                sunkBalls.forEach(ball => {
+                  sseo.balls[ball] = 'sunk'
+                })
+
+                sseo.roles = cascadeRoles({
+                  ...stateSnap.roles,
+                  [selectedPlayer]: ballsSunkToRole(sunkBalls, stateSnap.roles[selectedPlayer]),
+                })
+
+                let selectedWon = false
+                if (wouldWin(selectedPlayer, sseo.balls, decided)) {
+                  selectedWon = true
+                  let ranks = [1, 2, 3, 4]
+                  Object.values(sseo.rankings).forEach(
+                    rank => (ranks = ranks.filter(r => r !== rank)),
+                  )
+                  if (lost) {
+                    sseo.rankings[selectedPlayer] = ranks.at(-1)
+                  } else {
+                    sseo.rankings[selectedPlayer] = ranks.at(0)
+                  }
+                  setSelectedPlayer(
+                    curr =>
+                      Object.values(Player).find(
+                        player =>
+                          typeof sseo.rankings[player] === 'undefined' && player !== selectedPlayer,
+                      ) ?? curr,
+                  )
+                }
+
+                Object.values(Player).forEach(player => {
+                  if (
+                    typeof sseo.rankings[player] === 'undefined' &&
+                    (!selectedWon || player !== selectedPlayer) &&
+                    wouldWin(player, sseo.balls, decided)
+                  ) {
+                    let ranks = [1, 2, 3, 4]
+                    Object.values(sseo.rankings).forEach(
+                      rank => (ranks = ranks.filter(r => r !== rank)),
+                    )
+                    sseo.rankings[player] = ranks.at(0)
+                  }
+                })
+                setLost(false)
+              }}
+            >
+              Confirm
+            </Button>
+          </ConfirmQueue>
+          {Object.entries(stateSnap.balls).filter(([, status]) => status === 'queued').length >
+            0 && (
+            <BallsWrapper>
+              {Object.entries(stateSnap.balls)
+                .filter(([, status]) => status === 'queued')
+                .map(([ball]) => {
+                  const ballNum = Number(ball)
+                  return (
+                    <PoolBall
+                      title="Click to remove from queue"
+                      key={`ball-${ball}`}
+                      num={ballNum}
+                      onClick={() => {
+                        sseo.balls[ballNum] = 'table'
+                      }}
+                    >
+                      <div>{ball}</div>
+                    </PoolBall>
+                  )
+                })}
+              {wouldWin(selectedPlayer, stateSnap.balls, decided) && (
+                <Input
+                  type="checkbox"
+                  label="called wrong pocket / scratched"
+                  checked={lost}
+                  onChange={e => setLost(e.target.checked)}
+                />
+              )}
+            </BallsWrapper>
           )}
-          {winningShot && game.balls.some(ball => ball.queued) && (
-            <Input
-              type="checkbox"
-              label="called wrong pocket / scratched"
-              checked={lost}
-              onChange={e => setLost(e.target.checked)}
-            />
+          {stateSnap.shots.length > 0 && (
+            <Button
+              variant="outline"
+              color={theme.danger}
+              onClick={() => {
+                const lastShot = stateSnap.shots.at(-1)
+                if (!lastShot) return
+
+                Object.entries(sseo.balls).forEach(([ball, status]) => {
+                  if (status === 'queued') sseo.balls[Number(ball)] = 'table'
+                })
+                lastShot.balls.forEach(ball => (sseo.balls[ball] = 'queued'))
+
+                Object.assign(sseo.roles, lastShot.roles)
+
+                sseo.rankings = {}
+                Object.assign(sseo.rankings, lastShot.rankings)
+
+                setLost(lastShot.lost)
+                setSelectedPlayer(lastShot.player)
+
+                sseo.shots.pop()
+              }}
+            >
+              Undo Last Shot
+            </Button>
           )}
-        </BallsWrapper>
-        {history.length > 0 && (
-          <Button
-            variant="outline"
-            color={theme.danger}
-            onClick={() => {
-              setGame(curr => ({ ...curr, ...history.at(-1) }))
-              setHistory(history.slice(0, -1))
-            }}
-          >
-            Undo Last Shot
-          </Button>
-        )}
-      </LeftSection>
-      <RightSection>
-        <SseoGraph game={game} decided={decided} />
-      </RightSection>
-    </Wrapper>
+        </LeftSection>
+        <RightSection>
+          <SseoGraph game={stateSnap} decided={decided} />
+        </RightSection>
+      </Wrapper>
+    </Layout>
   )
 }
 

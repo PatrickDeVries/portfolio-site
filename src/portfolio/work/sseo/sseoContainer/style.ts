@@ -5,6 +5,7 @@ export const Wrapper = styled.div`
   width: 100%;
 
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   ${MOBILE} {
     flex-direction: column;
@@ -20,19 +21,20 @@ export const Wrapper = styled.div`
 `
 
 export const LeftSection = styled.div`
+  flex: 1;
+
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  align-items: flex-start;
+
+  > button {
+    align-self: flex-start;
+  }
 `
 
 export const RightSection = styled.div`
-  width: max-content;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  * {
-  }
+  flex: 1;
+  width: 100%;
 `
 
 const BALL_COLORS = [
@@ -51,7 +53,7 @@ export const Header = styled.header`
   gap: 1rem;
   align-items: center;
 
-  font-size: 1rem;
+  font-size: 1.2rem;
 `
 
 export const PlayerWrapper = styled.div`
@@ -163,15 +165,15 @@ export const ConfirmQueue = styled.div`
   > select {
     padding: 0.75rem 0.5rem;
 
-    border: 1px solid ${({ theme }) => theme.secondary};
+    border: 1px solid ${({ theme }) => theme.focus};
     border-radius: 0.25rem;
     outline: none;
 
     color: ${({ theme }) => theme.text};
-    background-color: ${({ theme }) => theme.backgroundHighlight};
+    background-color: ${({ theme }) => theme.background};
 
     &:focus {
-      border-color: ${({ theme }) => theme.focus};
+      border-color: ${({ theme }) => theme.secondary};
     }
   }
 `

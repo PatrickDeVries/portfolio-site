@@ -12,17 +12,31 @@ const WorkCard = ({ item }: WorkCardProps) => {
     <StyledCard>
       <div>
         {route ? (
-          <>
-            <Link to={route}>
-              <HeaderText>{item.header}</HeaderText>
-            </Link>
-            <Link to={route}>
-              <BodySection>
-                <ScalingImg src={process.env.PUBLIC_URL + item.image} />
-                <BodyText>{item.description}</BodyText>
-              </BodySection>
-            </Link>
-          </>
+          item?.href ? (
+            <>
+              <a href={item.href}>
+                <HeaderText>{item.header}</HeaderText>
+              </a>
+              <a href={item.href}>
+                <BodySection>
+                  <ScalingImg src={process.env.PUBLIC_URL + item.image} />
+                  <BodyText>{item.description}</BodyText>
+                </BodySection>
+              </a>
+            </>
+          ) : (
+            <>
+              <Link to={route}>
+                <HeaderText>{item.header}</HeaderText>
+              </Link>
+              <Link to={route}>
+                <BodySection>
+                  <ScalingImg src={process.env.PUBLIC_URL + item.image} />
+                  <BodyText>{item.description}</BodyText>
+                </BodySection>
+              </Link>
+            </>
+          )
         ) : (
           <>
             <HeaderText>{item.header}</HeaderText>

@@ -4,10 +4,8 @@ import { MOBILE } from '../../../../theme/mediaQueries'
 import { BallType, BallTypeCombo } from '../types'
 
 export const Wrapper = styled.div`
-  width: 100%;
   position: relative;
-  width: min(75vh, 90vw);
-  aspect-ratio: 1;
+  flex: 1;
 `
 
 export const GraphLabels = styled.div`
@@ -80,7 +78,7 @@ export const Label = styled.div<{
   height: 50%;
 
   top: ${({ location, index }) =>
-    location === BallType.Solid || location === BallType.Stripe
+    location === BallType.Solid || location === BallType.Stripe || location === 'hidden'
       ? '25%'
       : location === BallType.Odd
       ? '50%'
@@ -99,7 +97,7 @@ export const Label = styled.div<{
       : '50%'};
 
   left: ${({ location }) =>
-    location === BallType.Even || location === BallType.Odd
+    location === BallType.Even || location === BallType.Odd || location === 'hidden'
       ? '25%'
       : location === BallTypeCombo.StripeEven ||
         location === BallTypeCombo.StripeOdd ||
@@ -110,7 +108,9 @@ export const Label = styled.div<{
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 1s ease-in-out;
+  transition-property: top, left;
+  transition-duration: 1s;
+  transition-timing-function: ease-in-out;
 
   > span {
     padding: 1rem;

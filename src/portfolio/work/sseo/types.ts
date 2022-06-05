@@ -12,10 +12,9 @@ export enum BallType {
   Odd = 'ODD',
 }
 
-export interface Ball {
-  sunkBy: Player | null
-  queued: boolean
-}
+export type BallStatus = 'table' | 'queued' | 'sunk'
+
+export type Balls = Record<number, BallStatus>
 
 export type Roles = {
   [key in Player]: BallType[]
@@ -28,10 +27,18 @@ export enum BallTypeCombo {
   StripeOdd = 'STRIPE_ODD',
 }
 
-export interface GameState {
-  names: Record<Player, string>
-  balls: Ball[]
+export interface Shot {
+  player: Player
+  balls: number[]
   roles: Roles
-  winners: Player[]
-  losers: Player[]
+  rankings: { [key in Player]?: number }
+  lost: boolean
+}
+
+export interface GameState {
+  names: { [key in Player]: string }
+  balls: Balls
+  shots: Shot[]
+  roles: Roles
+  rankings: { [key in Player]?: number }
 }

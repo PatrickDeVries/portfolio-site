@@ -10,8 +10,6 @@ const storage: ProxyPersistStorageEngine = {
 
 export const persistence = {
   persistStrategies: PersistStrategy.SingleFile,
-  version: 0,
-  migrations: {},
   getStorage: () => storage,
   onBeforeBulkWrite: throttle(bulkWrite => bulkWrite(), 1000),
 }

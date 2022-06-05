@@ -35,22 +35,6 @@ const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1
 
 const SseoGraph: React.FC<Props> = ({ game, decided }) => {
   const quarters = useMemo(() => getQuarters(game.roles), [game.roles])
-  const rankings = useMemo<{
-    [Player.One]?: number
-    [Player.Two]?: number
-    [Player.Three]?: number
-    [Player.Four]?: number
-  }>(
-    () =>
-      Object.values(Player).reduce((obj, player) => {
-        const winRank = game.winners.findIndex(winner => winner === player)
-        if (winRank !== -1) return { ...obj, [player]: winRank + 1 }
-        const loseRank = game.losers.findIndex(loser => loser === player)
-        if (loseRank !== -1) return { ...obj, [player]: 4 - loseRank }
-        return { ...obj }
-      }, {}),
-    [game.losers, game.winners],
-  )
 
   return (
     <Wrapper>
@@ -67,14 +51,14 @@ const SseoGraph: React.FC<Props> = ({ game, decided }) => {
                 key={`${BallTypeCombo.SolidEven}-${player}`}
                 location={getLocation(player, decided, quarters)}
                 index={getIndex(player, quarters)}
-                rank={rankings[player]}
+                rank={game.rankings[player]}
               >
                 <span>
                   {formatPlayerName(player, game.names)}
-                  {rankings[player] && (
+                  {game.rankings[player] && (
                     <span>
                       {' - '}
-                      {formatOrdinal(rankings[player])}
+                      {formatOrdinal(game.rankings[player])}
                     </span>
                   )}
                 </span>

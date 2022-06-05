@@ -1,4 +1,4 @@
-import { Ball, BallType, BallTypeCombo, Player, Roles } from './types'
+import { Balls, BallType, BallTypeCombo, Player, Roles } from './types'
 
 export const ballsSunkToRole = (balls: number[], role: BallType[]): BallType[] => {
   const sunkTypes = {
@@ -119,67 +119,39 @@ export const getDecided = (roles: Roles) => {
 
 export const wouldWin = (
   player: Player,
-  balls: Ball[],
+  balls: Balls,
   decided: Record<BallType, Player | undefined>,
 ): boolean => {
   let won = false
   Object.values(BallType).forEach(ballType => {
     if (decided[ballType] === player) {
-      if (
-        ballType === BallType.Solid &&
-        balls.every(({ sunkBy, queued }, index) => index + 1 > 8 || sunkBy || queued)
-      )
-        won = true
-      else if (
-        ballType === BallType.Stripe &&
-        balls.every(({ sunkBy, queued }, index) => index + 1 <= 8 || sunkBy || queued)
-      )
-        won = true
-      else if (
-        ballType === BallType.Even &&
-        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 !== 0 || sunkBy || queued)
-      )
-        won = true
-      else if (
-        ballType === BallType.Odd &&
-        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 === 0 || sunkBy || queued)
-      )
-        won = true
+      switch (ballType) {
+        case BallType.Solid:
+          won = Object.entries(balls)
+            .filter(([key]) => Number(key) < 9)
+            .every(([, status]) => status === 'sunk' || status === 'queued')
+          break
+
+        case BallType.Stripe:
+          won = Object.entries(balls)
+            .filter(([key]) => Number(key) > 8)
+            .every(([, status]) => status === 'sunk' || status === 'queued')
+          break
+
+        case BallType.Even:
+          won = Object.entries(balls)
+            .filter(([key]) => Number(key) % 2 === 0)
+            .every(([, status]) => status === 'sunk' || status === 'queued')
+          break
+
+        case BallType.Odd:
+          won = Object.entries(balls)
+            .filter(([key]) => Number(key) % 2 !== 0)
+            .every(([, status]) => status === 'sunk' || status === 'queued')
+          break
+      }
     }
   })
 
   return won
-}
-
-export const getWinners = (
-  balls: Ball[],
-  decided: Record<BallType, Player | undefined>,
-): Player[] => {
-  let winners: Player[] = []
-  Object.values(BallType).forEach(ballType => {
-    const decidedPlayer = decided[ballType]
-    if (typeof decidedPlayer !== 'undefined') {
-      if (
-        ballType === BallType.Solid &&
-        balls.every(({ sunkBy, queued }, index) => index + 1 > 8 || (sunkBy && !queued))
-      )
-        winners.push(decidedPlayer)
-      else if (
-        ballType === BallType.Stripe &&
-        balls.every(({ sunkBy, queued }, index) => index + 1 <= 8 || (sunkBy && !queued))
-      )
-        winners.push(decidedPlayer)
-      else if (
-        ballType === BallType.Even &&
-        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 !== 0 || (sunkBy && !queued))
-      )
-        winners.push(decidedPlayer)
-      else if (
-        ballType === BallType.Odd &&
-        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 === 0 || (sunkBy && !queued))
-      )
-        winners.push(decidedPlayer)
-    }
-  })
-  return winners
 }

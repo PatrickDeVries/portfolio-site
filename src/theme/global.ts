@@ -20,6 +20,5 @@ export const Global = createGlobalStyle`
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  transition: background-color 100ms ease-out, color 100ms ease;
 }
 `

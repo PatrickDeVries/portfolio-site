@@ -1,6 +1,6 @@
 import proxyWithPersist from 'valtio-persist'
 import { dark, ThemeName } from '../../../theme/themes'
-import { persistence } from '../../store'
+import { persistence } from '../../store/persistence'
 
 export type Mouse = {
   x: number
@@ -13,7 +13,6 @@ export enum MouseShape {
   Star = 'Star',
 }
 
-//TODO: split up theme pieces and relocate, do not persist particle info
 export type BackgroundControl = {
   theme: ThemeName
 
@@ -69,6 +68,8 @@ const DEFAULT_SETTINGS: Partial<BackgroundControl> = {
 const particleSettings = proxyWithPersist({
   name: 'particleSettings',
   initialState: INITIAL_SETTINGS,
+  version: 0,
+  migrations: {},
   ...persistence,
 })
 

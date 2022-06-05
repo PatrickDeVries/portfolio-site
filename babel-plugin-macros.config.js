@@ -3,4 +3,5 @@ module.exports = {
     fileName: false,
     displayName: true,
   },
+  valtio: { pure: true },
 }
