@@ -1,7 +1,7 @@
 {
   "name": "personal-site",
   "version": "0.1.0",
-  "homepage": "https://patrickdevries.github.io/cra-personal-site",
+  "homepage": "http://patrickdevries.com/",
   "private": true,
   "scripts": {
     "predeploy": "yarn build",
