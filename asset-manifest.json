@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/cra-personal-site/static/css/main.e59465f1.css",
-    "main.js": "/cra-personal-site/static/js/main.88e46b4f.js",
-    "static/js/633.1bc91048.chunk.js": "/cra-personal-site/static/js/633.1bc91048.chunk.js",
-    "index.html": "/cra-personal-site/index.html",
-    "main.e59465f1.css.map": "/cra-personal-site/static/css/main.e59465f1.css.map",
-    "main.88e46b4f.js.map": "/cra-personal-site/static/js/main.88e46b4f.js.map",
-    "633.1bc91048.chunk.js.map": "/cra-personal-site/static/js/633.1bc91048.chunk.js.map"
+    "main.css": "/static/css/main.e59465f1.css",
+    "main.js": "/static/js/main.7528e51a.js",
+    "static/js/633.1bc91048.chunk.js": "/static/js/633.1bc91048.chunk.js",
+    "index.html": "/index.html",
+    "main.e59465f1.css.map": "/static/css/main.e59465f1.css.map",
+    "main.7528e51a.js.map": "/static/js/main.7528e51a.js.map",
+    "633.1bc91048.chunk.js.map": "/static/js/633.1bc91048.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e59465f1.css",
-    "static/js/main.88e46b4f.js"
+    "static/js/main.7528e51a.js"
   ]
 }
