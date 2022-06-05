@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components/macro'
 import { useProxy } from 'valtio/macro'
+import Layout from './common/components/layout'
 import particleSettings from './common/components/particleControlCard/store'
 import Contact from './contact'
 import Home from './home'
@@ -23,6 +24,14 @@ const App: React.FC = () => {
         <Route path="/particles" element={<Particles />} />
         <Route path="/portfolio/*" element={<PortfolioRoutes />} />
         <Route path="/contact" element={<Contact />} />
+        <Route
+          path="/*"
+          element={
+            <Layout>
+              <p>404 | Page not found</p>
+            </Layout>
+          }
+        />
       </Routes>
     </ThemeProvider>
   )
@@ -32,7 +41,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/cra-personal-site">
       <App />
     </BrowserRouter>
   </React.StrictMode>,
