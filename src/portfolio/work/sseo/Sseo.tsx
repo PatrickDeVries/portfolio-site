@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components/macro'
 import { useSnapshot } from 'valtio'
-import Button from '../../../../common/components/button'
-import Input from '../../../../common/components/input'
-import Layout from '../../../../common/components/layout'
-import { formatBallType } from '../formatters'
-import SseoGraph from '../sseoGraph'
-import sseo, { derived, INITIAL_STATE } from '../store'
-import { Player } from '../types'
-import { ballsSunkToRole, cascadeRoles, wouldWin } from '../utils'
+import Button from '../../../common/components/button'
+import Input from '../../../common/components/input'
+import Layout from '../../../common/components/layout'
+import { formatBallType } from './formatters'
+import Graph from './graph'
+import sseo, { derived, INITIAL_STATE } from './store'
 import {
   BallsWrapper,
   ConfirmQueue,
@@ -19,8 +17,10 @@ import {
   RightSection,
   Wrapper,
 } from './style'
+import { Player } from './types'
+import { ballsSunkToRole, cascadeRoles, wouldWin } from './utils'
 
-const SseoContainer: React.FC = () => {
+const Sseo: React.FC = () => {
   const theme = useTheme()
   const [selectedPlayer, setSelectedPlayer] = useState<Player>(Player.One)
   const [lost, setLost] = useState<boolean>(false)
@@ -244,11 +244,11 @@ const SseoContainer: React.FC = () => {
           )}
         </LeftSection>
         <RightSection>
-          <SseoGraph game={stateSnap} decided={decided} />
+          <Graph />
         </RightSection>
       </Wrapper>
     </Layout>
   )
 }
 
-export default SseoContainer
+export default Sseo

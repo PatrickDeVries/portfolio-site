@@ -1,4 +1,3 @@
-import SseoContainer from './sseoContainer'
-import SseoGraph from './sseoGraph'
+import Sseo from './Sseo'
 
-export { SseoContainer, SseoGraph }
+export default Sseo

@@ -1,13 +1,9 @@
-import React, { useMemo } from 'react'
+import React from 'react'
+import { useSnapshot } from 'valtio'
 import { formatBallType, formatOrdinal, formatPlayerName } from '../formatters'
-import { BallType, BallTypeCombo, GameState, Player } from '../types'
-import { getQuarters } from '../utils'
+import sseo, { derived } from '../store'
+import { BallType, BallTypeCombo, Player } from '../types'
 import { GraphBody, GraphLabels, GridCell, GridHeader, Label, Wrapper } from './style'
-
-interface Props {
-  game: GameState
-  decided: Record<BallType, Player | undefined>
-}
 
 const getLocation = (
   player: Player,
@@ -33,8 +29,9 @@ const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1
   return quarters[quarter as BallTypeCombo][0] === player ? 0 : 1
 }
 
-const SseoGraph: React.FC<Props> = ({ game, decided }) => {
-  const quarters = useMemo(() => getQuarters(game.roles), [game.roles])
+const Graph: React.FC = () => {
+  const stateSnap = useSnapshot(sseo)
+  const { decided, quarters } = useSnapshot(derived)
 
   return (
     <Wrapper>
@@ -51,14 +48,14 @@ const SseoGraph: React.FC<Props> = ({ game, decided }) => {
                 key={`${BallTypeCombo.SolidEven}-${player}`}
                 location={getLocation(player, decided, quarters)}
                 index={getIndex(player, quarters)}
-                rank={game.rankings[player]}
+                rank={stateSnap.rankings[player]}
               >
                 <span>
-                  {formatPlayerName(player, game.names)}
-                  {game.rankings[player] && (
+                  {formatPlayerName(player, stateSnap.names)}
+                  {stateSnap.rankings[player] && (
                     <span>
                       {' - '}
-                      {formatOrdinal(game.rankings[player])}
+                      {formatOrdinal(stateSnap.rankings[player])}
                     </span>
                   )}
                 </span>
@@ -74,4 +71,4 @@ const SseoGraph: React.FC<Props> = ({ game, decided }) => {
   )
 }
 
-export default SseoGraph
+export default Graph
