@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components/macro'
 import { useSnapshot } from 'valtio'
-import Button from '../../../common/components/button'
-import Input from '../../../common/components/input'
-import Layout from '../../../common/components/layout'
+import Button from '../../../../common/components/button'
+import Input from '../../../../common/components/input'
+import Layout from '../../../../common/components/layout'
 import { formatBallType } from './formatters'
 import Graph from './graph'
 import sseo, { derived, INITIAL_STATE } from './store'
@@ -17,12 +17,11 @@ import {
   RightSection,
   Wrapper,
 } from './style'
-import { Player } from './types'
 import { ballsSunkToRole, cascadeRoles, wouldWin } from './utils'
 
 const Sseo: React.FC = () => {
   const theme = useTheme()
-  const [selectedPlayer, setSelectedPlayer] = useState<Player>(Player.One)
+  const [selectedPlayer, setSelectedPlayer] = useState<number>(1)
   const [lost, setLost] = useState<boolean>(false)
 
   const stateSnap = useSnapshot(sseo)
@@ -40,49 +39,51 @@ const Sseo: React.FC = () => {
                 Object.assign(sseo.roles, INITIAL_STATE.roles)
                 sseo.shots = []
                 sseo.rankings = {}
-                setSelectedPlayer(Player.One)
+                setSelectedPlayer(1)
               }}
               color={theme.focus}
             >
               New game
             </Button>
           </Header>
-          {Object.values(Player).map((playerKey, i) => (
-            <PlayerWrapper key={playerKey}>
-              <div>
-                {`Player ${playerKey.toLowerCase()} - ${stateSnap.roles[playerKey]
-                  .map(ballType => formatBallType(ballType))
-                  .join(' | ')}`}
+          {Object.keys(stateSnap.roles)
+            .map(Number)
+            .map(playerKey => (
+              <PlayerWrapper key={`player-${playerKey}`}>
                 <div>
-                  <Input
-                    placeholder={`Player name`}
-                    type="text"
-                    value={stateSnap.names[playerKey]}
-                    onChange={e => {
-                      sseo.names[playerKey] = e.target.value
-                    }}
-                  />
-                  <Button
-                    color={theme.primary}
-                    variant="outline"
-                    onClick={() => setSelectedPlayer(playerKey)}
-                    disabled={stateSnap.rankings[playerKey] !== undefined}
-                  >
-                    Select
-                  </Button>
+                  {`Player ${playerKey} - ${stateSnap.roles[playerKey]
+                    .map(ballType => formatBallType(ballType))
+                    .join(' | ')}`}
+                  <div>
+                    <Input
+                      placeholder={`Player name`}
+                      type="text"
+                      value={stateSnap.names[playerKey]}
+                      onChange={e => {
+                        sseo.names[playerKey] = e.target.value
+                      }}
+                    />
+                    <Button
+                      color={theme.primary}
+                      variant="outline"
+                      onClick={() => setSelectedPlayer(playerKey)}
+                      disabled={stateSnap.rankings[playerKey] !== undefined}
+                    >
+                      Select
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              {stateSnap.shots
-                .filter(({ player }) => player === playerKey)
-                .map(({ balls }) =>
-                  balls.map(ball => (
-                    <PoolBall key={`ball-${ball}`} num={ball} sunk>
-                      <div>{ball}</div>
-                    </PoolBall>
-                  )),
-                )}
-            </PlayerWrapper>
-          ))}
+                {stateSnap.shots
+                  .filter(({ player }) => player === playerKey)
+                  .map(({ balls }) =>
+                    balls.map(ball => (
+                      <PoolBall key={`ball-${ball}`} num={ball} sunk>
+                        <div>{ball}</div>
+                      </PoolBall>
+                    )),
+                  )}
+              </PlayerWrapper>
+            ))}
 
           <div>Remaining - click a ball to queue</div>
           <BallsWrapper>
@@ -109,14 +110,14 @@ const Sseo: React.FC = () => {
             <select
               title="Select Player"
               value={selectedPlayer}
-              onChange={e => setSelectedPlayer(e.target.value as Player)}
+              onChange={e => setSelectedPlayer(Number(e.target.value))}
             >
-              {Object.values(Player).map((playerKey, i) => (
+              {Object.keys(stateSnap.roles).map((playerKey, i) => (
                 <option
                   key={playerKey}
-                  label={stateSnap.names[playerKey] || `Player ${i + 1}`}
-                  value={playerKey}
-                  disabled={stateSnap.rankings[playerKey] !== undefined}
+                  label={stateSnap.names[Number(playerKey)] || `Player ${i + 1}`}
+                  value={Number(playerKey)}
+                  disabled={stateSnap.rankings[Number(playerKey)] !== undefined}
                 />
               ))}
             </select>
@@ -159,26 +160,31 @@ const Sseo: React.FC = () => {
                   }
                   setSelectedPlayer(
                     curr =>
-                      Object.values(Player).find(
-                        player =>
-                          typeof sseo.rankings[player] === 'undefined' && player !== selectedPlayer,
-                      ) ?? curr,
+                      Object.keys(sseo.rankings)
+                        .map(Number)
+                        .find(
+                          player =>
+                            typeof sseo.rankings[player] === 'undefined' &&
+                            player !== selectedPlayer,
+                        ) ?? curr,
                   )
                 }
 
-                Object.values(Player).forEach(player => {
-                  if (
-                    typeof sseo.rankings[player] === 'undefined' &&
-                    (!selectedWon || player !== selectedPlayer) &&
-                    wouldWin(player, sseo.balls, decided)
-                  ) {
-                    let ranks = [1, 2, 3, 4]
-                    Object.values(sseo.rankings).forEach(
-                      rank => (ranks = ranks.filter(r => r !== rank)),
-                    )
-                    sseo.rankings[player] = ranks.at(0)
-                  }
-                })
+                Object.values(sseo.rankings)
+                  .map(Number)
+                  .forEach(player => {
+                    if (
+                      typeof sseo.rankings[player] === 'undefined' &&
+                      (!selectedWon || player !== selectedPlayer) &&
+                      wouldWin(player, sseo.balls, decided)
+                    ) {
+                      let ranks = [1, 2, 3, 4]
+                      Object.values(sseo.rankings).forEach(
+                        rank => (ranks = ranks.filter(r => r !== rank)),
+                      )
+                      sseo.rankings[player] = ranks.at(0)
+                    }
+                  })
                 setLost(false)
               }}
             >

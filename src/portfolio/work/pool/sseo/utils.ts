@@ -1,4 +1,5 @@
-import { Balls, BallType, BallTypeCombo, Player, Roles } from './types'
+import { Balls, BallType } from '../types'
+import { BallTypeCombo, Roles } from './types'
 
 export const ballsSunkToRole = (balls: number[], role: BallType[]): BallType[] => {
   const sunkTypes = {
@@ -22,15 +23,17 @@ export const removeDecided = (roles: Roles): Roles => {
     0,
   )
   if (decidedCount < 4) {
-    Object.values(Player).forEach(decidedPlayer => {
+    for (let decidedPlayer = 1; decidedPlayer < 5; decidedPlayer++) {
       if (roles[decidedPlayer].length === 1) {
-        Object.values(Player)
-          .filter(p => p !== decidedPlayer)
-          .forEach(p => {
-            roles[p] = roles[p].filter(ballType => ballType !== roles[decidedPlayer][0])
-          })
+        for (let otherPlayer = 1; otherPlayer < 5; otherPlayer++) {
+          if (otherPlayer !== decidedPlayer) {
+            roles[otherPlayer] = roles[otherPlayer].filter(
+              ballType => ballType !== roles[decidedPlayer][0],
+            )
+          }
+        }
       }
-    })
+    }
 
     const newDecided = Object.values(roles).reduce(
       (curr, ballTypes) => curr + +(ballTypes.length === 1),
@@ -42,10 +45,10 @@ export const removeDecided = (roles: Roles): Roles => {
   return roles
 }
 
-export const getQuarters = (roles: Roles): Record<BallTypeCombo, Player[]> => {
-  const playersInQuarters = Object.keys(roles).filter(
-    player => roles[player as keyof Roles].length === 2,
-  ) as Player[]
+export const getQuarters = (roles: Roles): Record<BallTypeCombo, number[]> => {
+  const playersInQuarters = Object.keys(roles)
+    .filter(player => roles[Number(player)].length === 2)
+    .map(Number)
 
   return {
     [BallTypeCombo.SolidEven]: playersInQuarters.filter(player =>
@@ -64,9 +67,10 @@ export const getQuarters = (roles: Roles): Record<BallTypeCombo, Player[]> => {
 }
 
 export const pushByQuarter = (roles: Roles): Roles => {
-  const playersInQuarters = Object.keys(roles).filter(
-    player => roles[player as keyof Roles].length === 2,
-  )
+  const playersInQuarters = Object.keys(roles)
+    .filter(player => roles[Number(player)].length === 2)
+    .map(Number)
+
   if (playersInQuarters.length <= 1) return roles
 
   const quarters = getQuarters(roles)
@@ -75,9 +79,9 @@ export const pushByQuarter = (roles: Roles): Roles => {
   if (!fullCorner) return roles
 
   Object.keys(roles)
-    .filter(player => !quarters[fullCorner as BallTypeCombo].includes(player as keyof Roles))
+    .filter(player => !quarters[fullCorner as BallTypeCombo].includes(Number(player)))
     .forEach(player => {
-      roles[player as keyof Roles] = roles[player as keyof Roles].filter(
+      roles[Number(player)] = roles[Number(player)].filter(
         ballType => !roles[quarters[fullCorner as BallTypeCombo][0]].includes(ballType),
       )
     })
@@ -96,18 +100,18 @@ export const cascadeRoles = (roles: Roles): Roles => {
 }
 
 export const getDecided = (roles: Roles) => {
-  const solidPlayer = Object.values(Player).find(
-    player => roles[player].length === 1 && roles[player].includes(BallType.Solid),
-  )
-  const stripePlayer = Object.values(Player).find(
-    player => roles[player].length === 1 && roles[player].includes(BallType.Stripe),
-  )
-  const evenPlayer = Object.values(Player).find(
-    player => roles[player].length === 1 && roles[player].includes(BallType.Even),
-  )
-  const oddPlayer = Object.values(Player).find(
-    player => roles[player].length === 1 && roles[player].includes(BallType.Odd),
-  )
+  const solidPlayer = Object.keys(roles)
+    .map(Number)
+    .find(player => roles[player].length === 1 && roles[player].includes(BallType.Solid))
+  const stripePlayer = Object.keys(roles)
+    .map(Number)
+    .find(player => roles[player].length === 1 && roles[player].includes(BallType.Stripe))
+  const evenPlayer = Object.keys(roles)
+    .map(Number)
+    .find(player => roles[player].length === 1 && roles[player].includes(BallType.Even))
+  const oddPlayer = Object.keys(roles)
+    .map(Number)
+    .find(player => roles[player].length === 1 && roles[player].includes(BallType.Odd))
 
   return {
     [BallType.Solid]: solidPlayer,
@@ -118,9 +122,9 @@ export const getDecided = (roles: Roles) => {
 }
 
 export const wouldWin = (
-  player: Player,
+  player: number,
   balls: Balls,
-  decided: Record<BallType, Player | undefined>,
+  decided: Record<BallType, number | undefined>,
 ): boolean => {
   let won = false
   Object.values(BallType).forEach(ballType => {

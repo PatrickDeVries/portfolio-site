@@ -1,13 +1,14 @@
 import proxyWithPersist from 'valtio-persist'
-import { persistence } from '../../../../common/store/persistence'
-import { BallType, GameState, Player } from '../types'
+import { persistence } from '../../../../../common/store/persistence'
+import { BallType } from '../../types'
+import { GameState } from '../types'
 
 export const INITIAL_STATE: GameState = {
   names: {
-    [Player.One]: '',
-    [Player.Two]: '',
-    [Player.Three]: '',
-    [Player.Four]: '',
+    1: '',
+    2: '',
+    3: '',
+    4: '',
   },
   balls: {
     1: 'table',
@@ -27,10 +28,10 @@ export const INITIAL_STATE: GameState = {
     15: 'table',
   },
   roles: {
-    [Player.One]: Object.values(BallType),
-    [Player.Two]: Object.values(BallType),
-    [Player.Three]: Object.values(BallType),
-    [Player.Four]: Object.values(BallType),
+    1: Object.values(BallType),
+    2: Object.values(BallType),
+    3: Object.values(BallType),
+    4: Object.values(BallType),
   },
   shots: [],
   rankings: {},

@@ -77,7 +77,7 @@ export const myWork: Record<string, WorkItem[]> = {
       description:
         'A tool for tracking the rules and game state of the 4-player pool game, solids vs stripes vs evens vs odds. Players enter nicknames, then as they sink balls they input them. The resulting role assignments are visualized in the graph.',
       tags: ['TypeScript', 'CSS', 'Pool', 'Game'],
-      page: '/portfolio/sseo',
+      page: '/portfolio/pool/sseo',
     },
   ],
 }

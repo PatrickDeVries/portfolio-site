@@ -1,4 +1,4 @@
-import { BallType, Player } from './types'
+import { BallType } from '../types'
 
 export const formatBallType = (ballType: BallType): string => {
   if (ballType === BallType.Odd) return 'Odds'
@@ -7,8 +7,8 @@ export const formatBallType = (ballType: BallType): string => {
   return 'Stripes'
 }
 
-export const formatPlayerName = (player: Player, playerNames: Record<Player, string>): string =>
-  playerNames[player] ? playerNames[player] : `Player ${player.toLowerCase()}`
+export const formatPlayerName = (player: number, playerNames: Record<number, string>): string =>
+  playerNames[player] ? playerNames[player] : `Player ${player}`
 
 export const formatOrdinal = (i?: number): string => {
   if (!i) return ''

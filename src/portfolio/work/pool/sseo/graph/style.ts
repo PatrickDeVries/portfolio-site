@@ -1,7 +1,8 @@
 import { mix } from 'polished'
 import styled, { css } from 'styled-components/macro'
-import { MOBILE } from '../../../../theme/mediaQueries'
-import { BallType, BallTypeCombo } from '../types'
+import { MOBILE } from '../../../../../theme/mediaQueries'
+import { BallType } from '../../types'
+import { BallTypeCombo } from '../types'
 
 export const Wrapper = styled.div`
   position: relative;

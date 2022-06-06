@@ -1,14 +1,15 @@
 import React from 'react'
 import { useSnapshot } from 'valtio'
+import { BallType } from '../../types'
 import { formatBallType, formatOrdinal, formatPlayerName } from '../formatters'
 import sseo, { derived } from '../store'
-import { BallType, BallTypeCombo, Player } from '../types'
+import { BallTypeCombo } from '../types'
 import { GraphBody, GraphLabels, GridCell, GridHeader, Label, Wrapper } from './style'
 
 const getLocation = (
-  player: Player,
-  decided: Record<BallType, Player | undefined>,
-  quarters: Record<BallTypeCombo, Player[]>,
+  player: number,
+  decided: Record<BallType, number | undefined>,
+  quarters: Record<BallTypeCombo, number[]>,
 ): BallType | BallTypeCombo | 'hidden' => {
   const single = Object.values(BallType).find(ballType => decided[ballType] === player)
   if (single) return single
@@ -21,7 +22,7 @@ const getLocation = (
   return 'hidden'
 }
 
-const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1 | 0 | 1 => {
+const getIndex = (player: number, quarters: Record<BallTypeCombo, number[]>): -1 | 0 | 1 => {
   const quarter = Object.keys(quarters).find(quarter =>
     quarters[quarter as BallTypeCombo].includes(player),
   )
@@ -43,24 +44,26 @@ const Graph: React.FC = () => {
         <GridHeader ballType={BallType.Odd}>{formatBallType(BallType.Odd)}</GridHeader>
         <GraphBody>
           <GridCell>
-            {Object.values(Player).map(player => (
-              <Label
-                key={`${BallTypeCombo.SolidEven}-${player}`}
-                location={getLocation(player, decided, quarters)}
-                index={getIndex(player, quarters)}
-                rank={stateSnap.rankings[player]}
-              >
-                <span>
-                  {formatPlayerName(player, stateSnap.names)}
-                  {stateSnap.rankings[player] && (
-                    <span>
-                      {' - '}
-                      {formatOrdinal(stateSnap.rankings[player])}
-                    </span>
-                  )}
-                </span>
-              </Label>
-            ))}
+            {Object.keys(stateSnap.roles)
+              .map(Number)
+              .map(player => (
+                <Label
+                  key={`${BallTypeCombo.SolidEven}-${player}`}
+                  location={getLocation(player, decided, quarters)}
+                  index={getIndex(player, quarters)}
+                  rank={stateSnap.rankings[player]}
+                >
+                  <span>
+                    {formatPlayerName(player, stateSnap.names)}
+                    {stateSnap.rankings[player] && (
+                      <span>
+                        {' - '}
+                        {formatOrdinal(stateSnap.rankings[player])}
+                      </span>
+                    )}
+                  </span>
+                </Label>
+              ))}
           </GridCell>
           <GridCell></GridCell>
           <GridCell></GridCell>
