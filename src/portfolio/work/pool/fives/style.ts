@@ -56,6 +56,19 @@ export const Header = styled.header`
   font-size: 1.2rem;
 `
 
+export const PlayerCountSelection = styled.div`
+  width: fit-content;
+
+  display: flex;
+  flex-direction: column;
+  font-size: 1.2rem;
+  gap: 0.5rem;
+
+  em {
+    color: ${({ theme }) => theme.danger};
+  }
+`
+
 export const PlayerWrapper = styled.div`
   display: flex;
   gap: 1rem;

@@ -5,14 +5,14 @@ import Button from '../../../../common/components/button'
 import Input from '../../../../common/components/input'
 import Layout from '../../../../common/components/layout'
 import Select from '../../../../common/components/select'
-import { formatBallType } from './formatters'
-import Graph from './graph'
-import sseo, { derived, INITIAL_STATE } from './store'
+import { formatRole } from './formatters'
+import fives, { reset, resetWithNewCount } from './store'
 import {
   BallsWrapper,
   ConfirmQueue,
   Header,
   LeftSection,
+  PlayerCountSelection,
   PlayerWrapper,
   PoolBall,
   RightSection,
@@ -20,26 +20,24 @@ import {
 } from './style'
 import { ballsSunkToRole, cascadeRoles, wouldWin } from './utils'
 
-const Sseo: React.FC = () => {
+const Fives: React.FC = () => {
   const theme = useTheme()
   const [selectedPlayer, setSelectedPlayer] = useState<number>(1)
   const [lost, setLost] = useState<boolean>(false)
 
-  const stateSnap = useSnapshot(sseo)
-  const { decided } = useSnapshot(derived)
+  const stateSnap = useSnapshot(fives)
+  // const { decided } = useSnapshot(derived)
 
   return (
     <Layout>
       <Wrapper>
         <LeftSection>
           <Header>
-            <h1>Solids vs Stripes vs Evens vs Odds </h1>
+            <h1>Fives</h1>
+
             <Button
               onClick={() => {
-                Object.assign(sseo.balls, INITIAL_STATE.balls)
-                Object.assign(sseo.roles, INITIAL_STATE.roles)
-                sseo.shots = []
-                sseo.rankings = {}
+                reset()
                 setSelectedPlayer(1)
               }}
               color={theme.focus}
@@ -47,13 +45,40 @@ const Sseo: React.FC = () => {
               New game
             </Button>
           </Header>
+          <PlayerCountSelection>
+            <div>
+              Number of players - <em>changing will reset the game</em>
+            </div>
+            <Select
+              title="Players"
+              value={fives.playerCount}
+              onChange={e => {
+                resetWithNewCount(Number(e.target.value))
+                setSelectedPlayer(1)
+              }}
+            >
+              {[3, 4, 5, 6, 7].map(val => (
+                <option
+                  key={val}
+                  value={val}
+                  label={
+                    15 % val === 0
+                      ? val.toString()
+                      : val === 4 || val === 6
+                      ? `${val} - 13-15 considered "free" balls`
+                      : `${val} - 15 considered a "free" ball`
+                  }
+                />
+              ))}
+            </Select>
+          </PlayerCountSelection>
           {Object.keys(stateSnap.roles)
             .map(Number)
             .map(playerKey => (
               <PlayerWrapper key={`player-${playerKey}`}>
                 <div>
                   {`Player ${playerKey} - ${stateSnap.roles[playerKey]
-                    .map(ballType => formatBallType(ballType))
+                    .map(role => formatRole(role))
                     .join(' | ')}`}
                   <div>
                     <Input
@@ -61,7 +86,7 @@ const Sseo: React.FC = () => {
                       type="text"
                       value={stateSnap.names[playerKey]}
                       onChange={e => {
-                        sseo.names[playerKey] = e.target.value
+                        fives.names[playerKey] = e.target.value
                       }}
                     />
                     <Button
@@ -98,7 +123,7 @@ const Sseo: React.FC = () => {
                     key={`ball-${ball}`}
                     num={ballNum}
                     onClick={() => {
-                      sseo.balls[ballNum] = 'queued'
+                      fives.balls[ballNum] = 'queued'
                     }}
                   >
                     <div>{ball}</div>
@@ -122,7 +147,6 @@ const Sseo: React.FC = () => {
                 />
               ))}
             </Select>
-
             <Button
               variant="outline"
               color={theme.focus}
@@ -131,7 +155,7 @@ const Sseo: React.FC = () => {
                 const sunkBalls = Object.entries(stateSnap.balls)
                   .filter(([, status]) => status === 'queued')
                   .map(([key]) => Number(key))
-                sseo.shots.push({
+                fives.shots.push({
                   player: selectedPlayer,
                   balls: sunkBalls,
                   roles: stateSnap.roles,
@@ -140,51 +164,51 @@ const Sseo: React.FC = () => {
                 })
 
                 sunkBalls.forEach(ball => {
-                  sseo.balls[ball] = 'sunk'
+                  fives.balls[ball] = 'sunk'
                 })
 
-                sseo.roles = cascadeRoles({
+                fives.roles = cascadeRoles({
                   ...stateSnap.roles,
                   [selectedPlayer]: ballsSunkToRole(sunkBalls, stateSnap.roles[selectedPlayer]),
                 })
 
                 let selectedWon = false
-                if (wouldWin(selectedPlayer, sseo.balls, decided)) {
+                if (wouldWin(selectedPlayer, fives.balls, fives.roles)) {
                   selectedWon = true
-                  let ranks = [1, 2, 3, 4]
-                  Object.values(sseo.rankings).forEach(
+                  let ranks = Object.keys(fives.roles).map(Number)
+                  Object.values(fives.rankings).forEach(
                     rank => (ranks = ranks.filter(r => r !== rank)),
                   )
                   if (lost) {
-                    sseo.rankings[selectedPlayer] = ranks.at(-1)
+                    fives.rankings[selectedPlayer] = ranks.at(-1)
                   } else {
-                    sseo.rankings[selectedPlayer] = ranks.at(0)
+                    fives.rankings[selectedPlayer] = ranks.at(0)
                   }
                   setSelectedPlayer(
                     curr =>
-                      Object.keys(sseo.rankings)
+                      Object.keys(fives.rankings)
                         .map(Number)
                         .find(
                           player =>
-                            typeof sseo.rankings[player] === 'undefined' &&
+                            typeof fives.rankings[player] === 'undefined' &&
                             player !== selectedPlayer,
                         ) ?? curr,
                   )
                 }
 
-                Object.values(sseo.rankings)
+                Object.values(fives.rankings)
                   .map(Number)
                   .forEach(player => {
                     if (
-                      typeof sseo.rankings[player] === 'undefined' &&
+                      typeof fives.rankings[player] === 'undefined' &&
                       (!selectedWon || player !== selectedPlayer) &&
-                      wouldWin(player, sseo.balls, decided)
+                      wouldWin(player, fives.balls, fives.roles)
                     ) {
-                      let ranks = [1, 2, 3, 4]
-                      Object.values(sseo.rankings).forEach(
+                      let ranks = Object.keys(fives.roles).map(Number)
+                      Object.values(fives.rankings).forEach(
                         rank => (ranks = ranks.filter(r => r !== rank)),
                       )
-                      sseo.rankings[player] = ranks.at(0)
+                      fives.rankings[player] = ranks.at(0)
                     }
                   })
                 setLost(false)
@@ -206,14 +230,14 @@ const Sseo: React.FC = () => {
                       key={`ball-${ball}`}
                       num={ballNum}
                       onClick={() => {
-                        sseo.balls[ballNum] = 'table'
+                        fives.balls[ballNum] = 'table'
                       }}
                     >
                       <div>{ball}</div>
                     </PoolBall>
                   )
                 })}
-              {wouldWin(selectedPlayer, stateSnap.balls, decided) && (
+              {wouldWin(selectedPlayer, stateSnap.balls, stateSnap.roles) && (
                 <Input
                   type="checkbox"
                   label="called wrong pocket / scratched"
@@ -231,32 +255,30 @@ const Sseo: React.FC = () => {
                 const lastShot = stateSnap.shots.at(-1)
                 if (!lastShot) return
 
-                Object.entries(sseo.balls).forEach(([ball, status]) => {
-                  if (status === 'queued') sseo.balls[Number(ball)] = 'table'
+                Object.entries(fives.balls).forEach(([ball, status]) => {
+                  if (status === 'queued') fives.balls[Number(ball)] = 'table'
                 })
-                lastShot.balls.forEach(ball => (sseo.balls[ball] = 'queued'))
+                lastShot.balls.forEach(ball => (fives.balls[ball] = 'queued'))
 
-                Object.assign(sseo.roles, lastShot.roles)
+                Object.assign(fives.roles, lastShot.roles)
 
-                sseo.rankings = {}
-                Object.assign(sseo.rankings, lastShot.rankings)
+                fives.rankings = {}
+                Object.assign(fives.rankings, lastShot.rankings)
 
                 setLost(lastShot.lost)
                 setSelectedPlayer(lastShot.player)
 
-                sseo.shots.pop()
+                fives.shots.pop()
               }}
             >
               Undo Last Shot
             </Button>
           )}
         </LeftSection>
-        <RightSection>
-          <Graph />
-        </RightSection>
+        <RightSection>{/* <Graph /> */}</RightSection>
       </Wrapper>
     </Layout>
   )
 }
 
-export default Sseo
+export default Fives

@@ -86,18 +86,10 @@ export const pushByQuarter = (roles: Roles): Roles => {
       )
     })
 
-  roles = removeDecided(roles)
-
-  return roles
+  return removeDecided(roles)
 }
 
-export const cascadeRoles = (roles: Roles): Roles => {
-  let rolesCopy = { ...roles }
-  rolesCopy = removeDecided(rolesCopy)
-  rolesCopy = pushByQuarter(rolesCopy)
-
-  return rolesCopy
-}
+export const cascadeRoles = (roles: Roles): Roles => pushByQuarter(removeDecided({ ...roles }))
 
 export const getDecided = (roles: Roles) => {
   const solidPlayer = Object.keys(roles)
