@@ -1,24 +1,54 @@
 import proxyWithPersist from 'valtio-persist'
 import { persistence } from '../../../../../common/store/persistence'
-import { GameState, Role, Roles } from '../types'
+import { Color, GameState, Range_, Roles } from '../types'
 
-const generateRoles = (playerCount: number): Roles => {
-  const roleOptions: Role[] = []
-  const ballsPerGroup = Math.floor(15 / playerCount)
-  const groupCount = Math.floor(15 / ballsPerGroup)
-  for (let i = 0; i < groupCount; i++) {
-    roleOptions.push({ min: i * ballsPerGroup + 1, max: (i + 1) * ballsPerGroup })
-  }
-
-  const lastGroup = roleOptions.at(-1)
-  if (lastGroup && lastGroup.max < 15) roleOptions.push({ min: lastGroup.max + 1, max: 15 })
-
+const generateRoles = (playerCount: number): { roles: Roles; free: number[] } => {
   const roles: Roles = {}
-  for (let i = 1; i <= playerCount; i++) {
-    roles[i] = roleOptions
+  const free: number[] = []
+
+  if (playerCount < 6) {
+    const ballsPerGroup = Math.floor(15 / playerCount)
+    const groupCount = Math.floor(15 / ballsPerGroup)
+    const roleOptions: Range_[] = []
+
+    for (let i = 0; i < groupCount; i++) {
+      if (i < playerCount) {
+        roleOptions.push({
+          min: i * ballsPerGroup + 1,
+          max: (i + 1) * ballsPerGroup,
+        })
+      } else {
+        free.push(i * ballsPerGroup + 1, i * ballsPerGroup + 2, i * ballsPerGroup + 3)
+      }
+    }
+
+    for (let i = 1; i <= playerCount; i++) {
+      roles[i] = roleOptions
+    }
+  } else {
+    const roleOptions: Color[] = []
+
+    for (let i = 1; i <= Math.min(playerCount, 7); i++) {
+      roleOptions.push({ solid: i, stripe: i + 8 })
+    }
+
+    if (playerCount === 6) {
+      free.push(7, 15)
+    }
+    if (playerCount > 7) {
+      for (let i = 0; i < playerCount - 7; i++) {
+        roleOptions.push({ solid: -1, stripe: -1 })
+      }
+    }
+
+    free.push(8)
+
+    for (let i = 1; i <= playerCount; i++) {
+      roles[i] = roleOptions
+    }
   }
 
-  return roles
+  return { roles, free: free.sort((a, b) => a - b) }
 }
 
 export const INITIAL_STATE: GameState = {
@@ -45,7 +75,8 @@ export const INITIAL_STATE: GameState = {
     14: 'table',
     15: 'table',
   },
-  roles: generateRoles(3),
+  roles: generateRoles(3).roles,
+  freeBalls: [],
   shots: [],
   rankings: {},
   playerCount: 3,
@@ -63,16 +94,26 @@ export default fives
 
 export const reset = () => {
   Object.assign(fives.balls, INITIAL_STATE.balls)
+
+  fives.freeBalls = []
   fives.roles = {}
-  Object.assign(fives.roles, generateRoles(fives.playerCount))
+  const newRoles = generateRoles(fives.playerCount)
+  fives.freeBalls = newRoles.free
+  Object.assign(fives.roles, newRoles.roles)
+
   fives.shots = []
   fives.rankings = {}
 }
 
 export const resetWithNewCount = (count: number) => {
   fives.playerCount = count
+
+  fives.freeBalls = []
   fives.roles = {}
-  Object.assign(fives.roles, generateRoles(count))
+  const newRoles = generateRoles(count)
+  fives.freeBalls = newRoles.free
+  Object.assign(fives.roles, newRoles.roles)
+
   Object.assign(fives.balls, INITIAL_STATE.balls)
   fives.shots = []
   fives.rankings = {}

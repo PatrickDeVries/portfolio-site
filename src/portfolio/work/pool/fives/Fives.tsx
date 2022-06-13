@@ -5,19 +5,11 @@ import Button from '../../../../common/components/button'
 import Input from '../../../../common/components/input'
 import Layout from '../../../../common/components/layout'
 import Select from '../../../../common/components/select'
+import { BallsWrapper, ConfirmQueue, PlayerCountSelection, PlayerWrapper, PoolBall } from '../style'
 import { formatRole } from './formatters'
 import fives, { reset, resetWithNewCount } from './store'
-import {
-  BallsWrapper,
-  ConfirmQueue,
-  Header,
-  LeftSection,
-  PlayerCountSelection,
-  PlayerWrapper,
-  PoolBall,
-  RightSection,
-  Wrapper,
-} from './style'
+import { Header, LeftSection, RightSection, Wrapper } from './style'
+import { isColor } from './types'
 import { ballsSunkToRole, cascadeRoles, wouldWin } from './utils'
 
 const Fives: React.FC = () => {
@@ -33,7 +25,13 @@ const Fives: React.FC = () => {
       <Wrapper>
         <LeftSection>
           <Header>
-            <h1>Fives</h1>
+            <h1>
+              {stateSnap.playerCount === 3
+                ? 'Fives'
+                : stateSnap.playerCount <= 5
+                ? 'Threes'
+                : 'Colors'}
+            </h1>
 
             <Button
               onClick={() => {
@@ -57,21 +55,21 @@ const Fives: React.FC = () => {
                 setSelectedPlayer(1)
               }}
             >
-              {[3, 4, 5, 6, 7].map(val => (
-                <option
-                  key={val}
-                  value={val}
-                  label={
-                    15 % val === 0
-                      ? val.toString()
-                      : val === 4 || val === 6
-                      ? `${val} - 13-15 considered "free" balls`
-                      : `${val} - 15 considered a "free" ball`
-                  }
-                />
+              {[3, 4, 5, 6, 7, 8, 9].map(val => (
+                <option key={val} value={val} label={val.toString()} />
               ))}
             </Select>
           </PlayerCountSelection>
+          {15 % fives.playerCount !== 0 && (
+            <BallsWrapper>
+              {fives.freeBalls.map(num => (
+                <PoolBall num={num} key={`free-${num}`} sunk>
+                  <div>{num}</div>
+                </PoolBall>
+              ))}
+              considered "free"
+            </BallsWrapper>
+          )}
           {Object.keys(stateSnap.roles)
             .map(Number)
             .map(playerKey => (
@@ -108,6 +106,9 @@ const Fives: React.FC = () => {
                       </PoolBall>
                     )),
                   )}
+                {fives.rankings[playerKey] && `Placed ${fives.rankings[playerKey]}!`}
+                {formatRole(fives.roles[playerKey][0]) === 'none' &&
+                  ' - Lost by failing to get a role'}
               </PlayerWrapper>
             ))}
 
@@ -209,6 +210,20 @@ const Fives: React.FC = () => {
                         rank => (ranks = ranks.filter(r => r !== rank)),
                       )
                       fives.rankings[player] = ranks.at(0)
+                    }
+                  })
+
+                Object.keys(fives.roles)
+                  .map(Number)
+                  .forEach(player => {
+                    const newRole = fives.roles[player][0]
+                    // loss by failing to secure a role
+                    if (isColor(newRole) && newRole.solid === -1) {
+                      let ranks = Object.keys(fives.roles).map(Number)
+                      Object.values(fives.rankings).forEach(
+                        rank => (ranks = ranks.filter(r => r !== rank)),
+                      )
+                      fives.rankings[player] = ranks.at(-1)
                     }
                   })
                 setLost(false)

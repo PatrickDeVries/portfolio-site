@@ -1,8 +1,32 @@
 import { BallType } from '../types'
-import { Role } from './types'
+import { isRange, Role } from './types'
 
 export const formatRole = (role: Role): string => {
-  return role.min === role.max ? role.min.toString() : `${role.min}-${role.max}`
+  if (isRange(role)) return role.min === role.max ? role.min.toString() : `${role.min}-${role.max}`
+  else {
+    switch (role.solid) {
+      case -1:
+        return 'none'
+      case 1:
+        return 'yellows'
+      case 2:
+        return 'blues'
+      case 3:
+        return 'reds'
+      case 4:
+        return 'purples'
+      case 5:
+        return 'oranges'
+      case 6:
+        return 'greens'
+      case 7:
+        return 'maroons'
+      case 8:
+        return 'black'
+      default:
+        return 'unknown'
+    }
+  }
 }
 
 export const formatBallType = (ballType: BallType): string => {

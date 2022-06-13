@@ -5,19 +5,11 @@ import Button from '../../../../common/components/button'
 import Input from '../../../../common/components/input'
 import Layout from '../../../../common/components/layout'
 import Select from '../../../../common/components/select'
+import { BallsWrapper, ConfirmQueue, PlayerWrapper, PoolBall } from '../style'
 import { formatBallType } from './formatters'
 import Graph from './graph'
 import sseo, { derived, INITIAL_STATE } from './store'
-import {
-  BallsWrapper,
-  ConfirmQueue,
-  Header,
-  LeftSection,
-  PlayerWrapper,
-  PoolBall,
-  RightSection,
-  Wrapper,
-} from './style'
+import { Header, LeftSection, RightSection, Wrapper } from './style'
 import { ballsSunkToRole, cascadeRoles, wouldWin } from './utils'
 
 const Sseo: React.FC = () => {

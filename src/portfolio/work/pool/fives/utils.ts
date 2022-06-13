@@ -1,10 +1,24 @@
 import { Balls } from '../types'
 import fives from './store'
-import { Role, Roles } from './types'
+import { isColor, isRange, Role, Roles } from './types'
+
+const isBallInRole = (role: Role, ball: number): boolean => {
+  if (isRange(role)) {
+    return ball >= role.min && ball <= role.max
+  } else {
+    return ball === role.solid || ball === role.stripe
+  }
+}
 
 export const ballsSunkToRole = (balls: number[], roles: Role[]): Role[] => {
-  const newRoles = roles.filter(({ min, max }) => balls.find(ball => ball >= min && ball <= max))
+  const newRoles = roles.filter(role => balls.find(ball => isBallInRole(role, ball)))
   return newRoles.length > 0 ? newRoles : roles
+}
+
+const isSameRole = (a: Role, b: Role) => {
+  if (isRange(a) && isRange(b) && a.min === b.min) return true
+  if (isColor(a) && isColor(b) && a.solid === b.solid) return true
+  return false
 }
 
 export const removeDecided = (roles: Roles): Roles => {
@@ -16,7 +30,7 @@ export const removeDecided = (roles: Roles): Roles => {
         for (let otherPlayer = 1; otherPlayer < fives.playerCount; otherPlayer++) {
           if (otherPlayer !== decidedPlayer) {
             roles[otherPlayer] = roles[otherPlayer].filter(
-              role => role.min !== roles[decidedPlayer][0].min,
+              role => !isSameRole(role, roles[decidedPlayer][0]),
             )
           }
         }
@@ -36,30 +50,36 @@ export const pushOutOfMatching = (roles: Roles): Roles => {
   ]
 
   for (let player = 2; player <= fives.playerCount; player++) {
-    const matchingGroupIndex = matchingGroups.findIndex(
-      ({ matchingRoles }) =>
+    const matchingGroupIndex = matchingGroups.findIndex(({ matchingRoles }) => {
+      const currPlayerRoles = roles[player]
+
+      return (
         matchingRoles.every(
           matchRole =>
-            roles[player].find(playerRole => playerRole.min === matchRole.min) !== undefined,
+            currPlayerRoles.find(playerRole => isSameRole(playerRole, matchRole)) !== undefined,
         ) &&
-        roles[player].every(
+        currPlayerRoles.every(
           playerRole =>
-            matchingRoles.find(matchRole => matchRole.min === playerRole.min) !== undefined,
-        ),
-    )
+            matchingRoles.find(matchRole => isSameRole(matchRole, playerRole)) !== undefined,
+        )
+      )
+    })
+
     if (matchingGroupIndex === -1)
       matchingGroups.push({ matchingRoles: roles[player], players: [player] })
     else matchingGroups[matchingGroupIndex].players.push(player)
   }
 
   matchingGroups.forEach(group => {
-    if (group.matchingRoles.length === group.players.length) {
+    if (group.matchingRoles.length === group.players.length && group.matchingRoles.length <= 3) {
       for (let player = 1; player <= fives.playerCount; player++) {
         if (!group.players.includes(player)) {
-          roles[player] = roles[player].filter(
+          const newRoles = roles[player].filter(
             playerRole =>
-              group.matchingRoles.find(matchRole => matchRole.min === playerRole.min) === undefined,
+              group.matchingRoles.find(matchRole => isSameRole(matchRole, playerRole)) ===
+              undefined,
           )
+          if (newRoles.length > 0) roles[player] = newRoles
         }
       }
     }
@@ -75,9 +95,6 @@ export const wouldWin = (player: number, balls: Balls, roles: Roles): boolean =>
 
   return Object.entries(balls).every(
     ([ball, status]) =>
-      Number(ball) < roles[player][0].min ||
-      Number(ball) > roles[player][0].max ||
-      status === 'queued' ||
-      status === 'sunk',
+      !isBallInRole(roles[player][0], Number(ball)) || status === 'queued' || status === 'sunk',
   )
 }
