@@ -38,10 +38,8 @@ const Contact: React.FC = () => {
         <ContactText>Contact me:</ContactText>
         <SocialLinks>
           {socials.map(social => (
-            <SocialLink key={social.site}>
-              <a href={social.href}>
-                <Icon path={social.src} size="10rem" color={theme.secondary} />
-              </a>
+            <SocialLink key={social.site} as={'a'} href={social.href}>
+              <Icon path={social.src} size="10rem" color={theme.secondary} />
               <div>{social.text}</div>
             </SocialLink>
           ))}

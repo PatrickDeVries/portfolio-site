@@ -13,6 +13,7 @@ export const dark: Theme = {
   strongHighlight: '#113547',
   empty: '#FFFFFF',
   focus: '#00FF00',
+  disabled: '#777777',
 }
 
 export const light: Theme = {
@@ -26,4 +27,5 @@ export const light: Theme = {
   strongHighlight: '#DDDDDD',
   empty: '#EEEEEE',
   focus: '#2C00A3',
+  disabled: '#777777',
 }

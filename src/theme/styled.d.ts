@@ -11,6 +11,7 @@ export interface Theme {
   strongHighlight: string
   empty: string
   focus: string
+  disabled: string
 }
 
 declare module 'styled-components' {

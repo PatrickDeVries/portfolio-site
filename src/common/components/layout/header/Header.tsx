@@ -1,7 +1,7 @@
 import { mdiCogOutline, mdiThemeLightDark } from '@mdi/js'
 import Icon from '@mdi/react'
 import React, { useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, To, useLocation } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import { dark, light } from '../../../../theme/themes'
 import particleSettings from '../../particleControlCard/store'
@@ -22,57 +22,41 @@ import {
 
 const Header: React.FC = () => {
   const location = useLocation()
-  const navigate = useNavigate()
   const [expanded, setExpanded] = React.useState<boolean>(false)
-  const [selected, setSelected] = React.useState<number>(
-    location.pathname === '/'
-      ? 0
-      : location.pathname === '/portfolio'
-      ? 1
-      : location.pathname === '/contact'
-      ? 2
-      : location.pathname === '/particles'
-      ? 3
-      : 4,
-  )
   const gearRef = useRef<HTMLDivElement>(null)
 
   const settingsSnap = useSnapshot(particleSettings)
 
-  const navItems: { route: string; label: string; onClick: () => void }[] = [
+  const navItems: { route: string; label: string; onClick: () => void; to: To }[] = [
     {
       route: '/',
       label: 'Home',
+      to: '/',
       onClick: () => {
-        navigate('/')
-        setSelected(0)
         setExpanded(false)
       },
     },
     {
       route: '/portfolio',
       label: 'Portfolio',
+      to: '/portfolio',
       onClick: () => {
-        navigate('/portfolio')
-        setSelected(1)
         setExpanded(false)
       },
     },
     {
       route: '/contact',
       label: 'Contact',
+      to: '/contact',
       onClick: () => {
-        navigate('/contact')
-        setSelected(2)
         setExpanded(false)
       },
     },
     {
       route: '/particles',
       label: 'Particles',
+      to: 'particles',
       onClick: () => {
-        navigate('/particles')
-        setSelected(3)
         setExpanded(false)
       },
     },
@@ -99,6 +83,8 @@ const Header: React.FC = () => {
         <NavGroup>
           {navItems.map(item => (
             <NavItem
+              as={Link}
+              to={item.to}
               key={item.label}
               onClick={item.onClick}
               active={location.pathname === item.route}
@@ -171,8 +157,14 @@ const Header: React.FC = () => {
         </IconGroup>
       </Wrapper>
       <DropDown expanded={expanded}>
-        {navItems.map((item, index) => (
-          <DropDownItem key={item.label} onClick={item.onClick} active={selected === index}>
+        {navItems.map(item => (
+          <DropDownItem
+            key={item.label}
+            as={Link}
+            to={item.to}
+            onClick={item.onClick}
+            active={location.pathname === item.route}
+          >
             {item.label}
           </DropDownItem>
         ))}

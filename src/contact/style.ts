@@ -30,4 +30,12 @@ export const SocialLink = styled.div`
   align-items: center;
   margin-top: 1rem;
   margin-bottom: 1rem;
+
+  text-decoration: none;
+
+  color: ${({ theme }) => theme.text};
+
+  &:hover {
+    text-decoration: underline;
+  }
 `

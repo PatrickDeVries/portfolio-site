@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { matchPath, matchRoutes, RouteObject, useLocation } from 'react-router-dom'
 import BackgroundParticles from './backgroundParticles'
-// import BackgroundParticles from '../backgroundParticles'
 import Header from './header'
 import { Body, Main } from './style'
 

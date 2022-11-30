@@ -1,6 +1,11 @@
 import styled from 'styled-components/macro'
 import { DESKTOP, SMALL_MOBILE } from '../../../theme/mediaQueries'
 
+export const HeaderText = styled.span`
+  font-size: 1.4rem;
+  color: ${({ theme }) => theme.secondary};
+`
+
 export const StyledCard = styled.div`
   align-self: stretch;
 
@@ -24,14 +29,13 @@ export const StyledCard = styled.div`
     gap: 1rem;
   }
 
-  a {
-    text-decoration: none;
-  }
-`
+  text-decoration: none;
 
-export const HeaderText = styled.span`
-  font-size: 1.4rem;
-  color: ${({ theme }) => theme.secondary};
+  &:hover {
+    ${HeaderText} {
+      text-decoration: underline;
+    }
+  }
 `
 
 export const BodySection = styled.div`

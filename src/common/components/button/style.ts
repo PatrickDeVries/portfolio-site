@@ -11,23 +11,33 @@ const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultThem
     background-color: transparent;
     color: ${({ theme }) => theme.focus};
     border-color: ${({ theme }) => theme.focus};
-    &:hover {
-      text-decoration: underline;
+
+    &:disabled {
+      color: ${({ theme }) => theme.disabled};
+      border-color: ${({ theme }) => theme.disabled};
     }
   `,
   outline: css`
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.focus};
     border-color: ${({ theme }) => theme.focus};
+    &:disabled {
+      color: ${({ theme }) => theme.disabled};
+      border-color: ${({ theme }) => theme.disabled};
+    }
   `,
   fill: css`
     background-color: ${({ theme }) => theme.focus};
     color: ${({ theme }) => theme.background};
     border-color: ${({ theme }) => theme.backgroundHighlight};
+    &:disabled {
+      color: ${({ theme }) => theme.disabled};
+      border-color: ${({ theme }) => theme.disabled};
+    }
   `,
 }
 
-export const StyledButton = styled.button<{ variant: Variant }>`
+export const Button = styled.button<{ variant?: Variant }>`
   all: unset;
   box-sizing: border-box;
 
@@ -45,9 +55,14 @@ export const StyledButton = styled.button<{ variant: Variant }>`
 
   border: 1px solid;
 
-  :disabled {
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+
+  &:disabled {
     pointer-events: none;
   }
 
-  ${({ variant }) => VARIANT_STYLE[variant]}
+  ${({ variant = 'fill' }) => VARIANT_STYLE[variant]}
 `

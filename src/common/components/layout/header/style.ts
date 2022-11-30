@@ -37,26 +37,33 @@ export const NavGroup = styled.div`
   }
 `
 
-export const NavItem = styled.div<{ active?: boolean }>`
+export const NavItem = styled.button<{ active?: boolean }>`
+  height: 100%;
+
+  padding: 0 0.5rem;
+
   display: flex;
   align-items: center;
-
-  height: 100%;
-  padding: 0 0.5rem;
 
   white-space: nowrap;
   color: ${({ theme, active }) =>
     active ? mix(0.5, theme.backgroundHighlight, theme.text) : theme.text};
   background-color: ${({ theme }) => theme.backgroundHighlight};
 
-  &:hover {
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
     color: ${({ theme }) => mix(0.5, theme.backgroundHighlight, theme.text)};
+    text-decoration: underline;
   }
   user-select: none;
   cursor: pointer;
 `
 
 export const DropDown = styled.div<{ expanded?: boolean }>`
+  width: 100vw;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -67,7 +74,6 @@ export const DropDown = styled.div<{ expanded?: boolean }>`
   transform: translateX(${({ expanded }) => (expanded ? '-100vw' : '0')});
   transition: transform 0.15s ease;
 
-  width: 100vw;
   z-index: 3;
 
   background-color: ${({ theme }) => theme.backgroundHighlight};
@@ -79,22 +85,28 @@ export const DropDown = styled.div<{ expanded?: boolean }>`
   }
 `
 
-export const DropDownItem = styled.div<{ active?: boolean }>`
+export const DropDownItem = styled.button<{ active?: boolean }>`
+  width: 100%;
+  height: 3rem;
+
+  padding: 0 2rem;
+
   display: flex;
   justify-content: center;
   align-items: center;
 
-  width: 100%;
-  padding: 0 2rem;
-  height: 3rem;
   border-bottom: 1px ${({ theme }) => theme.secondary} solid;
 
   color: ${({ theme, active }) => (active ? darken(0.25)(theme.text) : theme.text)};
   text-align: center;
   font-size: 1.4rem;
 
-  &:hover {
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
     color: ${({ theme }) => darken(0.25)(theme.text)};
+    text-decoration: underline;
   }
   user-select: none;
   cursor: pointer;
