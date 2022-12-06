@@ -1,34 +1,43 @@
-import { darken, mix } from 'polished'
+import { mix } from 'polished'
 import styled, { css } from 'styled-components/macro'
 import { DESKTOP, MOBILE } from '../../../../theme/mediaQueries'
 
 export const Wrapper = styled.nav`
+  position: relative;
+
   display: flex;
   align-items: center;
-  gap: 3rem;
 
   font-size: 1.4rem;
 
-  height: 3rem;
   width: 100%;
   z-index: 2;
-  padding: 0 1rem;
 
   background-color: ${({ theme }) => theme.backgroundHighlight};
   border-bottom: 1px ${({ theme }) => theme.secondary} solid;
 `
 
 export const Logo = styled.div`
+  padding: 0.5rem 2rem;
+
+  outline: none;
+
   white-space: nowrap;
   color: ${({ theme }) => theme.secondary};
   font-weight: 600;
   user-select: none;
+
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
 `
 
 export const NavGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
 
   height: 100%;
 
@@ -38,38 +47,47 @@ export const NavGroup = styled.div`
 `
 
 export const NavItem = styled.button<{ active?: boolean }>`
+  outline: none;
+
   height: 100%;
 
-  padding: 0 0.5rem;
+  padding: 0.5rem 1.5rem;
 
   display: flex;
   align-items: center;
 
   white-space: nowrap;
-  color: ${({ theme, active }) =>
-    active ? mix(0.5, theme.backgroundHighlight, theme.text) : theme.text};
-  background-color: ${({ theme }) => theme.backgroundHighlight};
+  color: ${({ theme, active }) => (active ? theme.background : theme.text)};
+  background-color: ${({ theme, active }) =>
+    active ? theme.secondary : theme.backgroundHighlight};
 
   text-decoration: none;
 
   &:hover,
   &:focus {
-    color: ${({ theme }) => mix(0.5, theme.backgroundHighlight, theme.text)};
+    color: ${({ theme, active }) =>
+      active ? theme.background : mix(0.5, theme.secondary, theme.text)};
     text-decoration: underline;
   }
   user-select: none;
   cursor: pointer;
 `
 
-export const DropDown = styled.div<{ expanded?: boolean }>`
+export const PopupItem = styled(NavItem)`
+  width: 100%;
+
+  justify-content: center;
+`
+
+export const Popup = styled.div<{ expanded?: boolean }>`
   width: 100vw;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  position: fixed;
-  top: calc(3rem - 3px);
+  position: absolute;
+  top: 100%;
   right: -100vw;
   transform: translateX(${({ expanded }) => (expanded ? '-100vw' : '0')});
   transition: transform 0.15s ease;
@@ -78,38 +96,14 @@ export const DropDown = styled.div<{ expanded?: boolean }>`
 
   background-color: ${({ theme }) => theme.backgroundHighlight};
   border: 1px ${({ theme }) => theme.secondary} solid;
-  border-bottom: none;
+
+  ${PopupItem}:not(:last-child) {
+    border-bottom: 1px solid ${({ theme }) => theme.secondary};
+  }
 
   ${DESKTOP} {
     display: none;
   }
-`
-
-export const DropDownItem = styled.button<{ active?: boolean }>`
-  width: 100%;
-  height: 3rem;
-
-  padding: 0 2rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border-bottom: 1px ${({ theme }) => theme.secondary} solid;
-
-  color: ${({ theme, active }) => (active ? darken(0.25)(theme.text) : theme.text)};
-  text-align: center;
-  font-size: 1.4rem;
-
-  text-decoration: none;
-
-  &:hover,
-  &:focus {
-    color: ${({ theme }) => darken(0.25)(theme.text)};
-    text-decoration: underline;
-  }
-  user-select: none;
-  cursor: pointer;
 `
 
 export const IconGroup = styled.div`

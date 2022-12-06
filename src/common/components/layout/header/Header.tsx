@@ -6,8 +6,6 @@ import { useSnapshot } from 'valtio'
 import { dark, light } from '../../../../theme/themes'
 import particleSettings from '../../particleControlCard/store'
 import {
-  DropDown,
-  DropDownItem,
   Hamburger,
   HamburgerBar,
   IconGroup,
@@ -15,6 +13,8 @@ import {
   NavGroup,
   NavIcon,
   NavItem,
+  Popup,
+  PopupItem,
   Wrapper,
 } from './style'
 
@@ -77,7 +77,9 @@ const Header: React.FC = () => {
   return (
     <>
       <Wrapper>
-        <Logo>Patrick DeVries</Logo>
+        <Logo as={Link} to="/">
+          Patrick DeVries
+        </Logo>
         <NavGroup>
           {navItems.map(item => (
             <NavItem
@@ -145,20 +147,20 @@ const Header: React.FC = () => {
             </Hamburger>
           </NavIcon>
         </IconGroup>
+        <Popup expanded={expanded}>
+          {navItems.map(item => (
+            <PopupItem
+              key={item.label}
+              as={Link}
+              to={item.to}
+              onClick={item.onClick}
+              active={location.pathname === item.route}
+            >
+              {item.label}
+            </PopupItem>
+          ))}
+        </Popup>
       </Wrapper>
-      <DropDown expanded={expanded}>
-        {navItems.map(item => (
-          <DropDownItem
-            key={item.label}
-            as={Link}
-            to={item.to}
-            onClick={item.onClick}
-            active={location.pathname === item.route}
-          >
-            {item.label}
-          </DropDownItem>
-        ))}
-      </DropDown>
     </>
   )
 }
