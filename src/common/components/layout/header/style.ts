@@ -1,5 +1,5 @@
 import { darken, mix } from 'polished'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { DESKTOP, MOBILE } from '../../../../theme/mediaQueries'
 
 export const Wrapper = styled.nav`
@@ -141,65 +141,63 @@ export const NavIcon = styled.div<{ mobileOnly?: boolean }>`
   }
 `
 
-export const MenuWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+export const HamburgerBar = styled.div`
+  position: absolute;
+
+  width: 100%;
+  height: 3px;
+
+  border-radius: 2px;
+  background-color: ${({ theme }) => theme.secondary};
+
+  transition: all 0.15s ease 0.15s;
 `
 
-export const MenuIcon = styled.div<{ expanded?: boolean; size?: string }>`
+export const Hamburger = styled.div<{ expanded?: boolean; size?: string }>`
+  position: relative;
+
   height: ${({ size }) => size};
   width: ${({ size }) => size};
-  div:first-child {
-    top: 0;
-    transform-origin: top;
-    transform: translateY(${({ expanded }) => (expanded ? '0' : '-30%')});
-    div {
-      transform-origin: center;
 
-      transform: rotateZ(${({ expanded }) => (expanded ? '45deg' : '0deg')});
-    }
+  ${HamburgerBar}:nth-child(1) {
+    ${({ expanded }) =>
+      expanded
+        ? css`
+            top: 50%;
+            transform: translateY(-50%) rotateZ(45deg);
+          `
+        : css`
+            top: 10%;
+            transform: translateY(0) rotateZ(0deg);
+          `}
   }
-  div:nth-child(2) {
-    top: 0;
-    transform-origin: center;
-    transform: rotateZ(${({ expanded }) => (expanded ? '45deg' : '0deg')});
+  ${HamburgerBar}:nth-child(2) {
+    top: 50%;
+    ${({ expanded }) =>
+      expanded
+        ? css`
+            transform: translateY(-50%) rotateZ(135deg);
+          `
+        : css`
+            transform: translateY(-50%) rotateZ(0deg);
+          `}
   }
-  div:nth-child(3) {
-    top: 0;
-    transform-origin: top;
-
-    transform: translateY(${({ expanded }) => (expanded ? '0' : '25%')});
-    div {
-      transform-origin: center;
-      transform: rotateZ(${({ expanded }) => (expanded ? '-45deg' : '0deg')});
-    }
-  }
-  div > div {
-    background-color: ${({ theme }) => theme.secondary};
+  ${HamburgerBar}:nth-child(3) {
+    ${({ expanded }) =>
+      expanded
+        ? css`
+            bottom: 50%;
+            transform: translateY(50%) rotateZ(-45deg);
+          `
+        : css`
+            bottom: 10%;
+            transform: rotateZ(0deg) translateY(0);
+          `}
   }
 
   &:hover {
-    div > div {
+    ${HamburgerBar} {
       background-color: ${({ theme }) => mix(0.5, theme.backgroundHighlight, theme.secondary)};
     }
   }
-`
-
-export const BarWrapper = styled.div`
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  transition: all 0.15s ease;
-`
-
-export const MenuIconBar = styled.div`
-  position: relative;
-  width: 100%;
-  height: 3px;
-  border-radius: 2px;
-  transition: all 0.15s ease 0.15s;
 `

@@ -6,14 +6,12 @@ import { useSnapshot } from 'valtio'
 import { dark, light } from '../../../../theme/themes'
 import particleSettings from '../../particleControlCard/store'
 import {
-  BarWrapper,
   DropDown,
   DropDownItem,
+  Hamburger,
+  HamburgerBar,
   IconGroup,
   Logo,
-  MenuIcon,
-  MenuIconBar,
-  MenuWrapper,
   NavGroup,
   NavIcon,
   NavItem,
@@ -55,7 +53,7 @@ const Header: React.FC = () => {
     {
       route: '/particles',
       label: 'Particles',
-      to: 'particles',
+      to: '/particles',
       onClick: () => {
         setExpanded(false)
       },
@@ -140,19 +138,11 @@ const Header: React.FC = () => {
               setExpanded(!expanded)
             }}
           >
-            <MenuWrapper>
-              <MenuIcon expanded={expanded} size="1.5rem">
-                <BarWrapper>
-                  <MenuIconBar />
-                </BarWrapper>
-                <BarWrapper>
-                  <MenuIconBar />
-                </BarWrapper>
-                <BarWrapper>
-                  <MenuIconBar />
-                </BarWrapper>
-              </MenuIcon>
-            </MenuWrapper>
+            <Hamburger expanded={expanded} size="1.5rem">
+              <HamburgerBar />
+              <HamburgerBar />
+              <HamburgerBar />
+            </Hamburger>
           </NavIcon>
         </IconGroup>
       </Wrapper>
