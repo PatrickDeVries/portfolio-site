@@ -1,6 +1,6 @@
-import { mdiCogOutline, mdiThemeLightDark } from '@mdi/js'
-import Icon from '@mdi/react'
 import React, { useRef } from 'react'
+import { HiOutlineCog } from 'react-icons/hi'
+import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md'
 import { Link, To, useLocation } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import themeStore from '../../../../theme/store'
@@ -106,7 +106,7 @@ const Header: React.FC = () => {
               }}
               ref={gearRef}
             >
-              <Icon path={mdiCogOutline} size="1.5rem" />
+              <HiOutlineCog size="1.5rem" />
             </NavIcon>
           )}
           <NavIcon
@@ -133,7 +133,11 @@ const Header: React.FC = () => {
               }
             }}
           >
-            <Icon path={mdiThemeLightDark} size="1.5rem" />
+            {themeSnap.theme === 'light' ? (
+              <MdDarkMode size="1.5rem" />
+            ) : (
+              <MdOutlineDarkMode size="1.5rem" />
+            )}
           </NavIcon>
           <NavIcon
             title="Open navigation"

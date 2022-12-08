@@ -1807,22 +1807,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdi/js@npm:^6.9.96":
-  version: 6.9.96
-  resolution: "@mdi/js@npm:6.9.96"
-  checksum: 94c43271585981e7ebf8cc5e3ead11915eea1339b79e849b351fbaae58e9626aaca0a8b031f0e80754d880ea6b08fd715906588f3cf980603bb5f6871bff12cc
-  languageName: node
-  linkType: hard
-
-"@mdi/react@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "@mdi/react@npm:1.6.1"
-  dependencies:
-    prop-types: ^15.7.2
-  checksum: d0408c5fcc1cf6e4b1fc7be57a5516453b12c076dc682fe320c2fe7c19a333c265cd16dd2348d5587356f9f9a35cec46fb5f5f530d34c485d23975dcd240f834
-  languageName: node
-  linkType: hard
-
 "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1":
   version: 5.1.1-v1
   resolution: "@nicolo-ribaudo/eslint-scope-5-internals@npm:5.1.1-v1"
@@ -5471,8 +5455,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "personal-site@workspace:."
   dependencies:
-    "@mdi/js": ^6.9.96
-    "@mdi/react": ^1.6.1
     "@react-three/fiber": ^8.9.1
     "@stylelint/postcss-css-in-js": ^0.38.0
     "@types/lodash": ^4.14.191
@@ -5499,6 +5481,7 @@ __metadata:
     prettier-plugin-organize-imports: ^3.2.1
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-icons: ^4.7.1
     react-router-dom: ^6.4.5
     styled-components: ^5.3.6
     stylelint: ^14.16.0
@@ -5697,7 +5680,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -5745,6 +5728,15 @@ __metadata:
   peerDependencies:
     react: ^18.2.0
   checksum: 7d323310bea3a91be2965f9468d552f201b1c27891e45ddc2d6b8f717680c95a75ae0bc1e3f5cf41472446a2589a75aed4483aee8169287909fcd59ad149e8cc
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^4.7.1":
+  version: 4.7.1
+  resolution: "react-icons@npm:4.7.1"
+  peerDependencies:
+    react: "*"
+  checksum: ed3cbdc5fc0c4d7d2debf78fdc8c4c80aeacf85a506a9a3c11b1d5922de393ac0a6542012b7fb81761e9280c54d0f26827d50a92b54ec8f0c8e52364d89970b5
   languageName: node
   linkType: hard
 
