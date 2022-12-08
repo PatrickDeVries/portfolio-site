@@ -3,13 +3,13 @@ import Checkbox from './checkbox'
 import Text from './text'
 import { InputProps } from './types'
 
-const inputs = {
+const INPUTS = {
   checkbox: Checkbox,
   text: Text,
 }
 
 const Input: React.FC<InputProps> = ({ type, ...props }) =>
-  React.createElement(inputs[type ?? 'text'], {
+  React.createElement(INPUTS[type], {
     type: type,
     ...props,
   })

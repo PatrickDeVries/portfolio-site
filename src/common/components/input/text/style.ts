@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { TEXT_FIELD } from '../style'
 import { InputProps } from '../types'
 

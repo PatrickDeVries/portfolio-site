@@ -1,15 +1,15 @@
-
-
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { MOBILE } from '../theme/mediaQueries'
 
 export const Wrapper = styled.div<{ firstHit?: boolean }>`
   position: fixed;
   top: 2rem;
   right: 3.5rem;
+
   ${MOBILE} {
     right: 6rem;
   }
+
   ${({ firstHit }) => !firstHit && 'transform: translateY(-100vh);'}
 
   padding: 1rem;

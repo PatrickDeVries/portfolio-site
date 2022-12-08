@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { MOBILE } from '../../../theme/mediaQueries'
 
 export const Wrapper = styled.img`

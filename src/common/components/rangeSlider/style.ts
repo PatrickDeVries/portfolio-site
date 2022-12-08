@@ -1,4 +1,6 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
+
+/* stylelint-disable property-no-vendor-prefix */
 
 export const Wrapper = styled.div`
   display: flex;
@@ -21,11 +23,13 @@ export const Header = styled.div`
 
   input[type='number'] {
     all: unset;
+
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
+
     -moz-appearance: textfield;
     background-color: ${({ theme }) => theme.backgroundHighlight};
     color: ${({ theme }) => theme.text};
@@ -33,6 +37,7 @@ export const Header = styled.div`
     margin: 1px;
     border: 1px solid ${({ theme }) => theme.secondary};
     border-radius: 5px;
+
     &:focus {
       margin: 0;
       border: 2px solid ${({ theme }) => theme.primary};
@@ -49,7 +54,15 @@ export const SliderWrapper = styled.div`
   width: 100%;
 `
 
-export const RangeWrapper = styled.div<{ min: number; max: number; value: number }>`
+interface RangeWrapperProps {
+  percentFilled: number
+}
+
+export const RangeWrapper = styled.div.attrs<RangeWrapperProps>(({ percentFilled }) => ({
+  style: {
+    '--percent-filled': percentFilled,
+  },
+}))<RangeWrapperProps>`
   display: grid;
   grid-template: 1fr;
 
@@ -58,10 +71,11 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
     cursor: pointer;
 
     z-index: 2;
-    width: calc(100% * ${({ min, max, value }) => (value - min) / (max - min)});
+    width: calc(100% * var(--percent-filled));
     transition: width 100ms ease-in-out;
     pointer-events: none;
   }
+
   input[type='range'] {
     appearance: unset;
     background-color: ${({ theme }) => theme.empty};
@@ -69,6 +83,7 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
     width: 100%;
     cursor: pointer;
   }
+
   input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
     z-index: 3;
@@ -77,10 +92,12 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
     border-radius: 16px;
     background: ${({ theme }) => theme.primary};
     cursor: grab;
+
     &:active {
       cursor: grabbing;
     }
   }
+
   input[type='range']::-moz-range-thumb {
     z-index: 3;
     height: 16px;
@@ -88,6 +105,7 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
     border-radius: 16px;
     background: ${({ theme }) => theme.primary};
     cursor: grab;
+
     &:active {
       cursor: grabbing;
     }

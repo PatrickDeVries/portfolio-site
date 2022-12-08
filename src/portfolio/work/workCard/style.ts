@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { DESKTOP, SMALL_MOBILE } from '../../../theme/mediaQueries'
 
 export const HeaderText = styled.span`
@@ -6,7 +6,7 @@ export const HeaderText = styled.span`
   color: ${({ theme }) => theme.secondary};
 `
 
-export const StyledCard = styled.div`
+export const StyledCard = styled.div<{ $isLink: boolean }>`
   align-self: stretch;
 
   display: flex;
@@ -31,11 +31,15 @@ export const StyledCard = styled.div`
 
   text-decoration: none;
 
-  &:hover {
-    ${HeaderText} {
-      text-decoration: underline;
-    }
-  }
+  ${({ $isLink }) =>
+    $isLink &&
+    css`
+      &:hover {
+        ${HeaderText} {
+          text-decoration: underline;
+        }
+      }
+    `}
 `
 
 export const BodySection = styled.div`

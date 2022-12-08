@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { DESKTOP, MOBILE } from '../../../theme/mediaQueries'
 
 export const ControlCard = styled.div<{ controlsOpen?: boolean }>`
@@ -11,6 +11,7 @@ export const ControlCard = styled.div<{ controlsOpen?: boolean }>`
   flex: ${({ controlsOpen }) => (controlsOpen ? '1' : '0')};
   width: 100%;
   transition: all 0.25s ease;
+
   ${({ controlsOpen }) =>
     !controlsOpen &&
     `
@@ -20,21 +21,24 @@ export const ControlCard = styled.div<{ controlsOpen?: boolean }>`
 `
 
 export const ControlRows = styled.div`
+  padding: 1rem 0;
+
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
+
   > div {
     display: flex;
     justify-content: center;
     width: calc(33% - 0.5rem);
   }
-  padding: 1rem 0;
-  gap: 1rem;
 
   > div:nth-last-child(3),
   > div:last-child {
     padding: 0.5rem;
+
     * {
       font-size: 1rem;
     }
@@ -46,6 +50,7 @@ export const ControlRows = styled.div`
       width: calc(50% - 0.5rem);
     }
   }
+
   ${DESKTOP} {
     > label:last-child {
       display: none;
@@ -73,8 +78,10 @@ export const Footer = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   padding-top: 1rem;
+
   div {
     display: flex;
+
     * {
       font-size: 1rem;
     }
@@ -85,6 +92,7 @@ export const Footer = styled.div`
       width: 100%;
       justify-content: center;
     }
+
     > label {
       display: none;
     }

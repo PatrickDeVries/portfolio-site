@@ -1,7 +1,8 @@
 import { mix } from 'polished'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { MOBILE } from '../../../../theme/mediaQueries'
 import { BallType, BallTypeCombo } from '../types'
+/* stylelint-disable named-grid-areas-no-invalid */
 
 export const Wrapper = styled.div`
   position: relative;
@@ -36,6 +37,7 @@ export const GridHeader = styled.div<{ ballType: BallType }>`
 
   text-align: center;
   font-size: 1.4rem;
+
   ${MOBILE} {
     font-size: 1rem;
   }

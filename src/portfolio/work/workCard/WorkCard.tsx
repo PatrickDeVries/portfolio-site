@@ -8,10 +8,15 @@ interface Props {
 
 const WorkCard: React.FC<Props> = ({ item }) => {
   return (
-    <StyledCard as={item.to ? Link : item.href ? 'a' : undefined} href={item.href} to={item?.to}>
+    <StyledCard
+      as={item.to ? Link : item.href ? 'a' : undefined}
+      href={item.href}
+      to={item.to}
+      $isLink={!!item.href || !!item.to}
+    >
       <HeaderText>{item.header}</HeaderText>
       <BodySection>
-        <ScalingImg src={process.env.PUBLIC_URL + item.image} />
+        <ScalingImg src={item.image} />
         <BodyText>{item.description}</BodyText>
       </BodySection>
       <TagSection>

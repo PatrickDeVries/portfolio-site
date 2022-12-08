@@ -1,5 +1,5 @@
 import { mix } from 'polished'
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { DESKTOP, MOBILE } from '../../../../theme/mediaQueries'
 
 export const Wrapper = styled.nav`
@@ -46,7 +46,7 @@ export const NavGroup = styled.div`
   }
 `
 
-export const NavItem = styled.button<{ active?: boolean }>`
+export const NavItem = styled.button<{ $active?: boolean }>`
   outline: none;
 
   height: 100%;
@@ -57,16 +57,16 @@ export const NavItem = styled.button<{ active?: boolean }>`
   align-items: center;
 
   white-space: nowrap;
-  color: ${({ theme, active }) => (active ? theme.background : theme.text)};
-  background-color: ${({ theme, active }) =>
-    active ? theme.secondary : theme.backgroundHighlight};
+  color: ${({ theme, $active }) => ($active ? theme.background : theme.text)};
+  background-color: ${({ theme, $active }) =>
+    $active ? theme.secondary : theme.backgroundHighlight};
 
   text-decoration: none;
 
   &:hover,
   &:focus {
-    color: ${({ theme, active }) =>
-      active ? theme.background : mix(0.5, theme.secondary, theme.text)};
+    color: ${({ theme, $active }) =>
+      $active ? theme.background : mix(0.5, theme.secondary, theme.text)};
     text-decoration: underline;
   }
   user-select: none;
@@ -112,7 +112,12 @@ export const IconGroup = styled.div`
   align-items: center;
 `
 
-export const NavIcon = styled.div<{ mobileOnly?: boolean }>`
+export const NavIcon = styled.button<{ mobileOnly?: boolean }>`
+  appearance: none;
+  outline: none;
+  border: none;
+  background-color: transparent;
+
   display: flex;
   align-items: center;
 
@@ -120,6 +125,7 @@ export const NavIcon = styled.div<{ mobileOnly?: boolean }>`
   padding: 0 0.5rem;
 
   color: ${({ theme }) => theme.secondary};
+
   * {
     transition: color 0.05s ease;
   }
@@ -127,6 +133,7 @@ export const NavIcon = styled.div<{ mobileOnly?: boolean }>`
   &:hover {
     color: ${({ theme }) => mix(0.5, theme.backgroundHighlight, theme.secondary)};
   }
+
   user-select: none;
   cursor: pointer;
 
@@ -165,6 +172,7 @@ export const Hamburger = styled.div<{ expanded?: boolean; size?: string }>`
             transform: translateY(0) rotateZ(0deg);
           `}
   }
+
   ${HamburgerBar}:nth-child(2) {
     top: 50%;
     ${({ expanded }) =>
@@ -176,6 +184,7 @@ export const Hamburger = styled.div<{ expanded?: boolean; size?: string }>`
             transform: translateY(-50%) rotateZ(0deg);
           `}
   }
+
   ${HamburgerBar}:nth-child(3) {
     ${({ expanded }) =>
       expanded

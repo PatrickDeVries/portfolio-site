@@ -3,7 +3,7 @@ import React, { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Points, ShaderMaterial } from 'three'
 import particleSettings, { MouseShape } from '../../particleControlCard/store'
-import { MAX_PARTICLES } from './consts'
+import { MAX_PARTICLES } from './constants'
 import './particlematerial'
 import { fragment, vertex } from './particlematerial'
 import particlePositions, { randomizeLocations } from './store'
@@ -17,7 +17,7 @@ import {
   isInCircle,
   isInPolygon,
   Point2d,
-  Polygon
+  Polygon,
 } from './utils'
 
 const GetShaderMaterial: React.FC<{

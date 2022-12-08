@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { OUTLINE_WIDTH } from '../style'
 
 export const ToggleLabel = styled.label<{ disabled?: boolean }>`
@@ -28,7 +28,6 @@ const CHECK_ANGLE = 220
 
 export const CheckboxInput = styled.input`
   appearance: none;
-  background-color: white;
   margin: 0;
   position: relative;
 
@@ -62,9 +61,11 @@ export const CheckboxInput = styled.input`
     &::before {
       transform: scale(1) rotateZ(${CHECK_ANGLE}deg);
     }
+
     &::after {
       transform: scale(1) rotateZ(${CHECK_ANGLE + 90}deg);
     }
+
     border-color: ${({ theme }) => theme.secondary};
   }
 `

@@ -1,22 +1,22 @@
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { MOBILE } from '../../../../theme/mediaQueries'
 
 export const Wrapper = styled.div`
+  margin: 0 auto;
   width: 100%;
+  padding: 1rem 3rem;
 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 2rem;
+
   ${MOBILE} {
     flex-direction: column;
     align-items: center;
-  }
-  gap: 2rem;
-  padding: 1rem 3rem;
-  ${MOBILE} {
     padding: 1rem;
   }
-  margin: 0 auto;
+
   color: ${({ theme }) => theme.text};
 `
 

@@ -3,6 +3,7 @@ import Icon from '@mdi/react'
 import React, { useRef } from 'react'
 import { Link, To, useLocation } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
+import themeStore from '../../../../theme/store'
 import { dark, light } from '../../../../theme/themes'
 import particleSettings from '../../particleControlCard/store'
 import {
@@ -21,9 +22,10 @@ import {
 const Header: React.FC = () => {
   const location = useLocation()
   const [expanded, setExpanded] = React.useState<boolean>(false)
-  const gearRef = useRef<HTMLDivElement>(null)
+  const gearRef = useRef<HTMLButtonElement>(null)
 
   const settingsSnap = useSnapshot(particleSettings)
+  const themeSnap = useSnapshot(themeStore)
 
   const navItems: { route: string; label: string; onClick: () => void; to: To }[] = [
     {
@@ -87,7 +89,7 @@ const Header: React.FC = () => {
               to={item.to}
               key={item.label}
               onClick={item.onClick}
-              active={location.pathname === item.route}
+              $active={location.pathname === item.route}
             >
               {item.label}
             </NavItem>
@@ -108,10 +110,10 @@ const Header: React.FC = () => {
             </NavIcon>
           )}
           <NavIcon
-            title={`Change to ${settingsSnap.theme === 'light' ? 'dark' : 'light'} mode`}
+            title={`Change to ${themeSnap.theme === 'light' ? 'dark' : 'light'} mode`}
             onClick={() => {
-              if (settingsSnap.theme === 'light') {
-                particleSettings.theme = 'dark'
+              if (themeSnap.theme === 'light') {
+                themeStore.theme = 'dark'
                 if (
                   settingsSnap.colorA === light.primary &&
                   settingsSnap.colorB === light.secondary
@@ -120,7 +122,7 @@ const Header: React.FC = () => {
                   particleSettings.colorB = dark.secondary
                 }
               } else {
-                particleSettings.theme = 'light'
+                themeStore.theme = 'light'
                 if (
                   settingsSnap.colorA === dark.primary &&
                   settingsSnap.colorB === dark.secondary
@@ -154,7 +156,7 @@ const Header: React.FC = () => {
               as={Link}
               to={item.to}
               onClick={item.onClick}
-              active={location.pathname === item.route}
+              $active={location.pathname === item.route}
             >
               {item.label}
             </PopupItem>

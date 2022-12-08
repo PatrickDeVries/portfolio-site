@@ -1,11 +1,10 @@
-import { useProxy } from 'valtio/macro'
+import React from 'react'
 import Layout from '../common/components/layout'
 import ParticleControlCard from '../common/components/particleControlCard'
 import particleSettings from '../common/components/particleControlCard/store'
 import { GearIndicator, Instructions, Wrapper } from './style'
 
 const Particles: React.FC = () => {
-  useProxy(particleSettings)
   return (
     <Layout>
       <ParticleControlCard />

@@ -1,9 +1,4 @@
-import styled, {
-  css,
-  DefaultTheme,
-  FlattenInterpolation,
-  ThemeProps,
-} from 'styled-components/macro'
+import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components'
 import { Variant } from '../../types/inputs'
 
 const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultTheme>>> = {
@@ -21,6 +16,7 @@ const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultThem
     background-color: ${({ theme }) => theme.background};
     color: ${({ theme }) => theme.focus};
     border-color: ${({ theme }) => theme.focus};
+
     &:disabled {
       color: ${({ theme }) => theme.disabled};
       border-color: ${({ theme }) => theme.disabled};
@@ -30,6 +26,7 @@ const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultThem
     background-color: ${({ theme }) => theme.focus};
     color: ${({ theme }) => theme.background};
     border-color: ${({ theme }) => theme.backgroundHighlight};
+
     &:disabled {
       color: ${({ theme }) => theme.disabled};
       border-color: ${({ theme }) => theme.disabled};

@@ -1,7 +1,7 @@
 import { mdiEmail, mdiGithub, mdiLinkedin, mdiMessage, mdiPhone } from '@mdi/js'
 import Icon from '@mdi/react'
 import React from 'react'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import Layout from '../common/components/layout'
 import { ContactText, SocialLink, SocialLinks, Wrapper } from './style'
 
@@ -12,7 +12,7 @@ interface Social {
   text: string
 }
 
-const socials: Social[] = [
+const SOCIALS: Social[] = [
   {
     site: 'LinkedIn',
     href: 'https://www.linkedin.com/in/pcdevri/',
@@ -37,7 +37,7 @@ const Contact: React.FC = () => {
       <Wrapper>
         <ContactText>Contact me:</ContactText>
         <SocialLinks>
-          {socials.map(social => (
+          {SOCIALS.map(social => (
             <SocialLink key={social.site} as={'a'} href={social.href}>
               <Icon path={social.src} size="10rem" color={theme.secondary} />
               <div>{social.text}</div>

@@ -1,8 +1,9 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 import { MOBILE } from '../../theme/mediaQueries'
 
 export const Wrapper = styled.div`
   padding: 2rem;
+
   ${MOBILE} {
     padding: 1rem;
   }
@@ -40,6 +41,7 @@ export const ReadmeStats = styled.img`
   border-radius: 0.5rem;
   border: 1px solid ${({ theme }) => theme.secondary};
   width: calc(50% - 1rem);
+
   ${MOBILE} {
     width: 100%;
   }

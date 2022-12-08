@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { TextLabel } from '../style'
 import { InputProps } from '../types'
 import { TextInput } from './style'

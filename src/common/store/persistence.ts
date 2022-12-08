@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle'
-import { PersistStrategy, ProxyPersistStorageEngine } from 'valtio-persist'
+import { PersistStrategy, ProxyPersistStorageEngine } from './valtio-persist'
 
-const storage: ProxyPersistStorageEngine = {
+const STORAGE: ProxyPersistStorageEngine = {
   getItem: name => window.localStorage.getItem(name),
   setItem: (name, value) => window.localStorage.setItem(name, value),
   removeItem: name => window.localStorage.removeItem(name),
@@ -10,6 +10,6 @@ const storage: ProxyPersistStorageEngine = {
 
 export const persistence = {
   persistStrategies: PersistStrategy.SingleFile,
-  getStorage: () => storage,
+  getStorage: () => STORAGE,
   onBeforeBulkWrite: throttle(bulkWrite => bulkWrite(), 1000),
 }

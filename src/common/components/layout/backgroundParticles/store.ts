@@ -1,6 +1,6 @@
 import React from 'react'
 import { proxy } from 'valtio'
-import { MAX_PARTICLES } from './consts'
+import { MAX_PARTICLES } from './constants'
 
 export type Positions = {
   viewport: { width: number; height: number; top: number }

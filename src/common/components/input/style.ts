@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components/macro'
+import styled, { css } from 'styled-components'
 import { InputProps } from './types'
 
 export const OUTLINE_WIDTH = `0.1em`

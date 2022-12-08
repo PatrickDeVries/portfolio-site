@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro'
+import styled from 'styled-components'
 
 export const GreetingBlock = styled.div<{ controlsOpen?: boolean }>`
   flex: 1;

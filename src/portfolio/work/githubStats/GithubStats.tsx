@@ -1,5 +1,5 @@
 import React from 'react'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { Wrapper } from './style'
 
 const colorArg = (color: string) => color.replace('#', '')

@@ -1,8 +1,10 @@
 module.exports = {
-  tabWidth: 2,
-  singleQuote: true,
   arrowParens: 'avoid',
-  trailingComma: 'all',
+  plugins: ['prettier-plugin-organize-imports'],
   printWidth: 100,
+  quoteProps: 'as-needed',
   semi: false,
+  singleQuote: true,
+  tabWidth: 2,
+  trailingComma: 'all',
 }

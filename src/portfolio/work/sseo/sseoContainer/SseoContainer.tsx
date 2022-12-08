@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useTheme } from 'styled-components/macro'
+import { useTheme } from 'styled-components'
 import { useSnapshot } from 'valtio'
 import Button from '../../../../common/components/button'
 import Input from '../../../../common/components/input'

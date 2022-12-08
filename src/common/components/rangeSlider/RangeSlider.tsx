@@ -50,7 +50,7 @@ const RangeSlider: React.FC<Props> = ({
           <Label>{labels?.min ?? min}</Label>
           <Label>{labels?.max ?? max}</Label>
         </Labels>
-        <RangeWrapper min={min} max={max} value={value}>
+        <RangeWrapper percentFilled={(value - min) / (max - min)}>
           <div></div>
           <input
             type="range"

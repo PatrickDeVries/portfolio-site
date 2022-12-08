@@ -1,5 +1,5 @@
-import derived from './derived'
-import sseo, { INITIAL_STATE } from './store'
+import sseo from './store'
 
-export { INITIAL_STATE, derived }
+export * from './derived'
+export * from './initial'
 export default sseo
