@@ -1,3 +1,4 @@
-import Layout from './Layout'
+import Layout, { LayoutFallback } from './Layout'
 
+export { LayoutFallback }
 export default Layout

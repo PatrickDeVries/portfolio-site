@@ -11,7 +11,7 @@ const PARTICLE_WHITELIST: RouteObject[] = [
   { path: '/particles' },
 ]
 interface Props {
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 const Layout: React.FC<Props> = ({ children }) => {
@@ -34,6 +34,21 @@ const Layout: React.FC<Props> = ({ children }) => {
         </Body>
       </Main>
     </>
+  )
+}
+
+export const LayoutFallback: React.FC = () => {
+  const location = useLocation()
+  const bodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [location.pathname])
+  return (
+    <Main>
+      <Header />
+      <Body tint={!matchPath(location.pathname, '/particles')} ref={bodyRef} />
+    </Main>
   )
 }
 

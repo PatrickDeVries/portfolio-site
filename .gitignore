@@ -9,4 +9,5 @@
 !.yarn/versions
 
 # production
+/dist
 /build
