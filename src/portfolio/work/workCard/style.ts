@@ -9,11 +9,12 @@ export const HeaderText = styled.span`
 export const StyledCard = styled.div<{ $isLink: boolean }>`
   align-self: stretch;
 
+  padding: 1rem;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem;
 
   background-color: ${({ theme }) => theme.backgroundHighlight};
   border: 1px solid ${({ theme }) => theme.secondary};
