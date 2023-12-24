@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const GreetingBlock = styled.div<{ controlsOpen?: boolean }>`
+export const GreetingBlock = styled.div`
   flex: 1;
   padding: 1rem;
 

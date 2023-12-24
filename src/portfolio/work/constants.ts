@@ -31,7 +31,8 @@ export const MY_WORK: Record<string, WorkItem[]> = {
     {
       header: 'Logseq Plugin: Colored Threads',
       image: '/logseq-plugin-colored-threads.svg',
-      description: 'I created a plugin for Logseq to meet a personal desire of having my indentation be colored according to indent level, inspired by my VSCode editor. The open-source plugin is now listed on the Logseq plugin marketplace.',
+      description:
+        'I created a plugin for Logseq to meet a personal desire of having my indentation be colored according to indent level, inspired by my VSCode editor. The open-source plugin is now listed on the Logseq plugin marketplace.',
       tags: ['TypeScript', 'Open Source', 'Logseq', 'Plugin'],
       href: 'https://github.com/patrickdevries/logseq-plugin-colored-threads',
     },

@@ -64,7 +64,7 @@ const SseoContainer: React.FC = () => {
                   />
                   <Button
                     color={theme.primary}
-                    variant="outline"
+                    $variant="outline"
                     onClick={() => setSelectedPlayer(playerKey)}
                     disabled={stateSnap.rankings[playerKey] !== undefined}
                   >
@@ -76,7 +76,7 @@ const SseoContainer: React.FC = () => {
                 .filter(({ player }) => player === playerKey)
                 .map(({ balls }) =>
                   balls.map(ball => (
-                    <PoolBall key={`ball-${ball}`} num={ball} sunk>
+                    <PoolBall key={`ball-${ball}`} $num={ball} $isSunk>
                       <div>{ball}</div>
                     </PoolBall>
                   )),
@@ -94,7 +94,7 @@ const SseoContainer: React.FC = () => {
                   <PoolBall
                     title="Click to add to queue"
                     key={`ball-${ball}`}
-                    num={ballNum}
+                    $num={ballNum}
                     onClick={() => {
                       sseo.balls[ballNum] = 'queued'
                     }}
@@ -121,7 +121,7 @@ const SseoContainer: React.FC = () => {
               ))}
             </select>
             <Button
-              variant="outline"
+              $variant="outline"
               color={theme.focus}
               disabled={!Object.values(stateSnap.balls).some(status => status === 'queued')}
               onClick={() => {
@@ -196,7 +196,7 @@ const SseoContainer: React.FC = () => {
                     <PoolBall
                       title="Click to remove from queue"
                       key={`ball-${ball}`}
-                      num={ballNum}
+                      $num={ballNum}
                       onClick={() => {
                         sseo.balls[ballNum] = 'table'
                       }}
@@ -217,7 +217,7 @@ const SseoContainer: React.FC = () => {
           )}
           {stateSnap.shots.length > 0 && (
             <Button
-              variant="outline"
+              $variant="outline"
               color={theme.danger}
               onClick={() => {
                 const lastShot = stateSnap.shots.at(-1)

@@ -1,7 +1,7 @@
-import styled, { css, DefaultTheme, FlattenInterpolation, ThemeProps } from 'styled-components'
+import styled, { css, Interpolation } from 'styled-components'
 import { Variant } from '../../types/inputs'
 
-const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultTheme>>> = {
+const VARIANT_STYLE: Record<Variant, Interpolation<object>> = {
   text: css`
     background-color: transparent;
     color: ${({ theme }) => theme.focus};
@@ -34,7 +34,7 @@ const VARIANT_STYLE: Record<Variant, FlattenInterpolation<ThemeProps<DefaultThem
   `,
 }
 
-export const Button = styled.button<{ variant?: Variant }>`
+export const Button = styled.button<{ $variant?: Variant }>`
   all: unset;
   box-sizing: border-box;
 
@@ -61,5 +61,5 @@ export const Button = styled.button<{ variant?: Variant }>`
     pointer-events: none;
   }
 
-  ${({ variant = 'fill' }) => VARIANT_STYLE[variant]}
+  ${({ $variant = 'fill' }) => VARIANT_STYLE[$variant]}
 `

@@ -1,19 +1,19 @@
 import styled from 'styled-components'
 import { DESKTOP, MOBILE } from '../../../theme/mediaQueries'
 
-export const ControlCard = styled.div<{ controlsOpen?: boolean }>`
+export const ControlCard = styled.div<{ $areControlsOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundHighlight}77;
   z-index: 1;
   border-radius: 0.5rem;
-  padding: ${({ controlsOpen }) => (controlsOpen ? '1rem' : '0')};
-  overflow-y: ${({ controlsOpen }) => (controlsOpen ? 'auto' : 'hidden')};
+  padding: ${({ $areControlsOpen }) => ($areControlsOpen ? '1rem' : '0')};
+  overflow-y: ${({ $areControlsOpen }) => ($areControlsOpen ? 'auto' : 'hidden')};
 
-  flex: ${({ controlsOpen }) => (controlsOpen ? '1' : '0')};
+  flex: ${({ $areControlsOpen }) => ($areControlsOpen ? '1' : '0')};
   width: 100%;
   transition: all 0.25s ease;
 
-  ${({ controlsOpen }) =>
-    !controlsOpen &&
+  ${({ $areControlsOpen }) =>
+    !$areControlsOpen &&
     `
     pointer-events: none;
     pointer: unset;
