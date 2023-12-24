@@ -1,5 +1,5 @@
+import { DESKTOP, MOBILE } from '@/common/theme/media-queries'
 import styled, { css } from 'styled-components'
-import { DESKTOP, MOBILE } from '../../../theme/media-queries'
 
 export const HeaderText = styled.span`
   font-size: 1.4rem;

@@ -1,5 +1,5 @@
+import { TABLET } from '@/common/theme/media-queries'
 import styled from 'styled-components'
-import { TABLET } from '../../theme/media-queries'
 
 export const Wrapper = styled.div`
   padding: 2rem;

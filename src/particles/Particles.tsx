@@ -1,8 +1,8 @@
+import Layout from '@/common/components/Layout'
+import ParticleControlCard from '@/common/components/ParticleControlCard'
+import particleSettings from '@/common/components/ParticleControlCard/store'
 import React from 'react'
 import { useSnapshot } from 'valtio'
-import Layout from '../common/components/Layout'
-import ParticleControlCard from '../common/components/ParticleControlCard'
-import particleSettings from '../common/components/ParticleControlCard/store'
 import { GearIndicator, Instructions, Wrapper } from './style'
 
 const Particles: React.FC = () => {

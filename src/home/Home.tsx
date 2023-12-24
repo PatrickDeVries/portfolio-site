@@ -1,6 +1,6 @@
+import Button from '@/common/components/Button'
+import Layout from '@/common/components/Layout'
 import { Link } from 'react-router-dom'
-import Button from '../common/components/Button'
-import Layout from '../common/components/Layout'
 import { GreetingBlock, IntroText } from './style'
 
 const Home: React.FC = () => (

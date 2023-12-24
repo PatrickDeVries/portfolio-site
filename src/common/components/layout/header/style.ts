@@ -1,6 +1,6 @@
+import { DESKTOP, TABLET } from '@/common/theme/media-queries'
 import { mix } from 'polished'
 import styled, { css } from 'styled-components'
-import { DESKTOP, TABLET } from '../../../../theme/media-queries'
 
 export const Wrapper = styled.nav`
   position: relative;

@@ -1,4 +1,4 @@
-import { DARK } from '../../../../theme/themes'
+import { DARK } from '@/common/theme'
 import { BackgroundControl, MouseShape } from './types'
 
 export const INITIAL_SETTINGS: BackgroundControl = {

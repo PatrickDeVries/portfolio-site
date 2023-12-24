@@ -1,5 +1,5 @@
+import { DESKTOP, TABLET } from '@/common/theme/media-queries'
 import styled from 'styled-components'
-import { DESKTOP, TABLET } from '../../../theme/media-queries'
 
 export const ControlCard = styled.div<{ $areControlsOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundHighlight}77;

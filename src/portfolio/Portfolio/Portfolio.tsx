@@ -1,5 +1,5 @@
+import Layout from '@/common/components/Layout'
 import React from 'react'
-import Layout from '../../common/components/Layout'
 import GithubStats from './GithubStats'
 import WorkCard from './WorkCard'
 import { MY_WORK } from './constants'

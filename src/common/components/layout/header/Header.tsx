@@ -1,11 +1,11 @@
+import particleSettings from '@/common/components/ParticleControlCard/store'
+import { DARK, LIGHT } from '@/common/theme'
+import store from '@/common/theme/store'
 import React, { useRef } from 'react'
 import { HiOutlineCog } from 'react-icons/hi'
 import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md'
 import { Link, To, useLocation } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
-import store from '../../../../theme/store'
-import { DARK, LIGHT } from '../../../../theme/themes'
-import particleSettings from '../../ParticleControlCard/store'
 import {
   Hamburger,
   HamburgerBar,

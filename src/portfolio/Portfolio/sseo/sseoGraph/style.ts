@@ -1,6 +1,6 @@
+import { TABLET } from '@/common/theme/media-queries'
 import { mix } from 'polished'
 import styled, { css } from 'styled-components'
-import { TABLET } from '../../../../theme/media-queries'
 import { BallType, BallTypeCombo } from '../types'
 /* stylelint-disable named-grid-areas-no-invalid */
 

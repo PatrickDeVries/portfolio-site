@@ -1,5 +1,5 @@
-import { persistence } from '../../../store/persistence'
-import proxyWithPersist from '../../../store/valtio-persist'
+import { persistence } from '@/common/store/persistence'
+import proxyWithPersist from '@/common/store/valtio-persist'
 import { DEFAULT_SETTINGS, INITIAL_SETTINGS } from './initial'
 
 const particleSettings = proxyWithPersist({
