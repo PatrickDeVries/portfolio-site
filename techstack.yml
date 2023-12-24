@@ -1,0 +1,532 @@
+repo_name: PatrickDeVries/cra-personal-site
+report_id: 25e2a84eed9f8ddd3d1326706da54b73
+repo_type: Public
+timestamp: '2023-11-09T15:21:18+00:00'
+requested_by: PatrickDeVries
+provider: github
+branch: main
+detected_tools_count: 39
+tools:
+- name: CSS 3
+  description: The latest evolution of the Cascading Style Sheets language
+  website_url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/6727/css.png
+  detection_source: Repo Metadata
+- name: JavaScript
+  description: Lightweight, interpreted, object-oriented language with first-class
+    functions
+  website_url: https://developer.mozilla.org/en-US/docs/Web/JavaScript
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1209/javascript.jpeg
+  detection_source: Repo Metadata
+- name: TypeScript
+  description: A superset of JavaScript that compiles to clean JavaScript output
+  website_url: http://www.typescriptlang.org
+  license: Apache-2.0
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Languages
+  image_url: https://img.stackshare.io/service/1612/bynNY5dJ.jpg
+  detection_source: Repo Metadata
+- name: Node.js
+  description: A platform built on Chrome's JavaScript runtime for easily building
+    fast, scalable network applications
+  website_url: http://nodejs.org/
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Frameworks (Full Stack)
+  image_url: https://img.stackshare.io/service/1011/n1JRsFeB_400x400.png
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-05-18 03:40:04.000000000 Z
+- name: React
+  description: A JavaScript library for building user interfaces
+  website_url: https://reactjs.org/
+  version: 18.2.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript UI Libraries
+  image_url: https://img.stackshare.io/service/1020/OYIaJ1KK.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: React Router
+  description: A complete routing solution for React.js
+  website_url: https://github.com/rackt/react-router
+  version: 6.4.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: JavaScript Framework Components
+  image_url: https://img.stackshare.io/service/3350/8261421.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: styled-components
+  description: Visual primitives for the component age. Use the best bits of ES6 and
+    CSS to style your apps without stress.
+  website_url: https://styled-components.com
+  version: 5.3.6
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: JavaScript Framework Components
+  image_url: https://img.stackshare.io/service/6749/styled-components.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: ESLint
+  description: The fully pluggable JavaScript code quality tool
+  website_url: http://eslint.org/
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Code Review
+  image_url: https://img.stackshare.io/service/3337/Q4L7Jncy.jpg
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-05-18 03:40:04.000000000 Z
+- name: Git
+  description: Fast, scalable, distributed revision control system
+  website_url: http://git-scm.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Version Control System
+  image_url: https://img.stackshare.io/service/1046/git.png
+  detection_source: Repo Metadata
+- name: Prettier
+  description: 'Prettier is an opinionated code formatter. '
+  website_url: https://prettier.io/
+  version: 2.8.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Code Review
+  image_url: https://img.stackshare.io/service/7035/default_66f265943abed56bcdbfca1c866a4261b1fbb063.jpg
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: Stylelint
+  description: A mighty, modern CSS linter
+  website_url: http://stylelint.io/
+  version: 14.16.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Code Review
+  image_url: https://img.stackshare.io/service/5446/V9JsvPul_400x400.jpg
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: Yarn
+  description: A new package manager for JavaScript
+  website_url: https://yarnpkg.com/
+  open_source: true
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Front End Package Manager
+  image_url: https://img.stackshare.io/service/5848/44mC-kJ3.jpg
+  detection_source: yarn.lock
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-05-18 04:56:34.000000000 Z
+- name: npm
+  description: The package manager for JavaScript.
+  website_url: https://www.npmjs.com/
+  open_source: false
+  hosted_saas: false
+  category: Build, Test, Deploy
+  sub_category: Front End Package Manager
+  image_url: https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-05-18 03:40:04.000000000 Z
+- name: Poli
+  description: 'An easy-to-use SQL reporting application '
+  website_url: https://github.com/shzlw/poli
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Analytics
+  sub_category: Business Intelligence
+  image_url: https://img.stackshare.io/service/11232/no-img-open-source.png
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-05-18 03:40:04.000000000 Z
+- name: Lodash
+  description: A JavaScript utility library
+  website_url: https://lodash.com
+  version: 4.17.21
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: Javascript Utilities & Libraries
+  image_url: https://img.stackshare.io/service/2438/lodash.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: three.js
+  description: A JavaScript 3D library
+  website_url: https://threejs.org/
+  version: 0.140.2
+  open_source: true
+  hosted_saas: false
+  category: Languages & Frameworks
+  sub_category: Game Development
+  image_url: https://img.stackshare.io/service/5883/preview.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: "@types/lodash"
+  description: TypeScript definitions for Lo-Dash
+  package_url: https://www.npmjs.com/@types/lodash
+  version: 4.14.191
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15945/default_54b691c123fc8979741e800e4dcd3936c0f3b246.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: "@types/lodash-es"
+  description: TypeScript definitions for lodash-es
+  package_url: https://www.npmjs.com/@types/lodash-es
+  version: 4.17.6
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17516/default_911633508f32a5d5016c37ab38144cd661ceb682.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: "@types/node"
+  description: TypeScript definitions for Node.js
+  package_url: https://www.npmjs.com/@types/node
+  version: 16.18.6
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15809/default_5e5e8ac63beda29f31f1844df64d4b8247570a66.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: "@types/react"
+  description: TypeScript definitions for React
+  package_url: https://www.npmjs.com/@types/react
+  version: 18.0.9
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15894/default_1d65e37e65b7f80761374f0202776043277d505d.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: "@types/react-dom"
+  description: TypeScript definitions for React
+  package_url: https://www.npmjs.com/@types/react-dom
+  version: 18.0.9
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15946/default_54b691c123fc8979741e800e4dcd3936c0f3b246.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: "@types/styled-components"
+  description: TypeScript definitions for styled-components
+  package_url: https://www.npmjs.com/@types/styled-components
+  version: 5.1.26
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16494/default_2e7c1d6d94467a56325f7c984571015e8713a450.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: "@typescript-eslint/parser"
+  description: An ESLint custom parser which leverages TypeScript ESTree
+  package_url: https://www.npmjs.com/@typescript-eslint/parser
+  version: 5.45.1
+  license: BSD-2-Clause
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15980/default_732016a20524708efe7a4c77497fe9bfeea19ba6.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: babel-plugin-macros
+  description: Allows you to build compile-time libraries
+  package_url: https://www.npmjs.com/babel-plugin-macros
+  version: 3.1.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17191/default_fbe883dfc6d978f82179fa11bdf634af1b6751fa.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: babel-plugin-styled-components
+  description: Improve the debugging experience and add server-side rendering support
+    to styled-components
+  package_url: https://www.npmjs.com/babel-plugin-styled-components
+  version: 2.0.7
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16651/default_6dad4e42e12d47cc6edfbdea036dae12f91abebb.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: eslint-config-react-app
+  description: ESLint configuration used by Create React App
+  package_url: https://www.npmjs.com/eslint-config-react-app
+  version: 7.0.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16088/default_c7b204838197013798409fa2b4dafce450edc7fb.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: eslint-plugin-jsx-a11y
+  description: Static AST checker for accessibility rules on JSX elements
+  package_url: https://www.npmjs.com/eslint-plugin-jsx-a11y
+  version: 6.6.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15845/default_6743ba96cf149a3c3c68a185199f9705d6eff80e.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: gh-pages
+  description: Publish to a gh-pages branch on GitHub
+  package_url: https://www.npmjs.com/gh-pages
+  version: 4.0.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15967/default_732016a20524708efe7a4c77497fe9bfeea19ba6.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: lodash-es
+  description: Lodash exported as ES modules
+  package_url: https://www.npmjs.com/lodash-es
+  version: 4.17.21
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16587/default_ebd83b4f0415be108d977ea72558b13fd7c5283d.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: polished
+  description: A lightweight toolset for writing styles in Javascript
+  package_url: https://www.npmjs.com/polished
+  version: 4.2.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16665/default_ee69dab268e6a52104564fd4259549f5b48a25d4.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-05-20 05:13:57.000000000 Z
+- name: postcss
+  description: Tool for transforming styles with JS plugins
+  package_url: https://www.npmjs.com/postcss
+  version: 7.0.39
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16012/default_7a88bebb451873cc63bd99007de5bd3bb8ef85de.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+  vulnerabilities:
+  - name: PostCSS line return parsing error
+    cve_id: CVE-2023-44270
+    cve_url: https://github.com/advisories/GHSA-7fh5-64p2-3v2j
+    detected_date: Oct 4
+    severity: moderate
+    first_patched: 8.4.31
+- name: postcss-scss
+  description: SCSS parser for PostCSS
+  package_url: https://www.npmjs.com/postcss-scss
+  version: 4.0.6
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16233/default_dc80ff0a17bac19253430a4f0f586714841116db.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: react-dom
+  description: React package for working with the DOM
+  package_url: https://www.npmjs.com/react-dom
+  version: 18.2.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/15808/default_14fd11531839d935f920b6d55bd6f3528c890ad7.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: react-icons
+  description: SVG React icons of popular icon packs using ES6 imports
+  package_url: https://www.npmjs.com/react-icons
+  version: 4.7.1
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16909/default_7b9968788548874538c601457e8dcd9c74bd2051.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: react-router-dom
+  description: DOM bindings for React Router
+  package_url: https://www.npmjs.com/react-router-dom
+  version: 6.4.5
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16025/default_e25d1fbb04a118c79fb444294461417342bd03bf.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 14:34:42.000000000 Z
+- name: stylelint-config-prettier
+  description: Turns off all rules that are unnecessary or might conflict with Prettier
+  package_url: https://www.npmjs.com/stylelint-config-prettier
+  version: 9.0.4
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16896/default_e65289f03a07faa8d49ce16c483f18c4f8a98db9.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: stylelint-config-recommended
+  description: Recommended shareable config for stylelint
+  package_url: https://www.npmjs.com/stylelint-config-recommended
+  version: 9.0.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17664/default_551bd6e1eb9aebdd20755ea11f70c7494c135ca4.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: stylelint-processor-styled-components
+  description: A stylelint processor for styled-components
+  package_url: https://www.npmjs.com/stylelint-processor-styled-components
+  version: 1.10.0
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/17708/default_9693d58c90f5c726ee648423687212d2a94266da.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
+- name: three
+  description: JavaScript 3D library
+  package_url: https://www.npmjs.com/three
+  version: 0.140.2
+  license: MIT
+  open_source: true
+  hosted_saas: false
+  category: Libraries
+  sub_category: npm Packages
+  image_url: https://img.stackshare.io/package/16653/default_cc0f40a737548852d2ee666c132c258c9a2c0cad.png
+  detection_source_url: yarn.lock
+  detection_source: package.json
+  last_updated_by: Patrick DeVries
+  last_updated_on: 2022-12-08 05:48:51.000000000 Z
