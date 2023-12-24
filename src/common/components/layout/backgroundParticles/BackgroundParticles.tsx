@@ -1,8 +1,8 @@
 import { Canvas } from '@react-three/fiber'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import './particlematerial'
 import Particles from './Particles'
+import './particle-material'
 import { BgCanvas } from './style'
 
 type Props = {
