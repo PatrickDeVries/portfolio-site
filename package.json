@@ -5,7 +5,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predeploy": "bun lint && bun build",
+    "predeploy": "bun lint && bun run build",
     "preview": "vite preview",
     "deploy": "bun predeploy && gh-pages -d dist",
     "dev": "vite dev",
