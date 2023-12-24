@@ -9,6 +9,8 @@ import { fragment, vertex } from './particle-material'
 import particlePositions, { randomizeLocations } from './store'
 import {
   Circle,
+  Point2d,
+  Polygon,
   escapeRadius,
   generateRectangleFromCenter,
   generateStar,
@@ -16,8 +18,6 @@ import {
   isCircle,
   isInCircle,
   isInPolygon,
-  Point2d,
-  Polygon,
 } from './utils'
 
 const GetShaderMaterial: React.FC<{
