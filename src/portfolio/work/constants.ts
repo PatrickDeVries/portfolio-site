@@ -1,6 +1,6 @@
 import { WorkItem } from './types'
 
-export const myWork: Record<string, WorkItem[]> = {
+export const MY_WORK: Record<string, WorkItem[]> = {
   Certifications: [
     {
       header: 'AZ-900 - Azure Fundamentals',
@@ -26,7 +26,14 @@ export const myWork: Record<string, WorkItem[]> = {
       description:
         'I co-created and maintain this open-source React library of opinionated hooks with full TypeScript support. too-many-hooks seeks to provide reusable and dev-friendly hooks for as many use-cases as possible.',
       tags: ['TypeScript', 'React', 'Hooks', 'Open Source'],
-      href: 'https://github.com/kboodle/too-many-hooks',
+      href: 'https://github.com/yobgob/too-many-hooks',
+    },
+    {
+      header: 'Logseq Plugin: Colored Threads',
+      image: '/logseq-plugin-colored-threads.svg',
+      description: 'I created a plugin for Logseq to meet a personal desire of having my indentation be colored according to indent level, inspired by my VSCode editor. The open-source plugin is now listed on the Logseq plugin marketplace.',
+      tags: ['TypeScript', 'Open Source', 'Logseq', 'Plugin'],
+      href: 'https://github.com/patrickdevries/logseq-plugin-colored-threads',
     },
     {
       header: 'Foundry UI',
