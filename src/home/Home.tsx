@@ -7,9 +7,9 @@ const Home: React.FC = () => (
   <Layout>
     <GreetingBlock>
       <IntroText>
-        {`Hello, I'm `} <b>Patrick DeVries</b>, a full-stack developer
+        Hello, I&apos;m &nbsp;<b>Patrick DeVries</b>, a full-stack developer
       </IntroText>
-      <Button as={Link} variant="text" to="/portfolio">
+      <Button as={Link} to="/portfolio" $variant="text">
         Check out my projects
       </Button>
     </GreetingBlock>

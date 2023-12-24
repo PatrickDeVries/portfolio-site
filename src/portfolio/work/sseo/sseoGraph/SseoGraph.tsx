@@ -40,18 +40,18 @@ const SseoGraph: React.FC<Props> = ({ game, decided }) => {
     <Wrapper>
       <GraphLabels>
         <div></div>
-        <GridHeader ballType={BallType.Solid}>{formatBallType(BallType.Solid)}</GridHeader>
-        <GridHeader ballType={BallType.Stripe}>{formatBallType(BallType.Stripe)}</GridHeader>
-        <GridHeader ballType={BallType.Even}>{formatBallType(BallType.Even)}</GridHeader>
-        <GridHeader ballType={BallType.Odd}>{formatBallType(BallType.Odd)}</GridHeader>
+        <GridHeader $ballType={BallType.Solid}>{formatBallType(BallType.Solid)}</GridHeader>
+        <GridHeader $ballType={BallType.Stripe}>{formatBallType(BallType.Stripe)}</GridHeader>
+        <GridHeader $ballType={BallType.Even}>{formatBallType(BallType.Even)}</GridHeader>
+        <GridHeader $ballType={BallType.Odd}>{formatBallType(BallType.Odd)}</GridHeader>
         <GraphBody>
           <GridCell>
             {Object.values(Player).map(player => (
               <Label
                 key={`${BallTypeCombo.SolidEven}-${player}`}
-                location={getLocation(player, decided, quarters)}
-                index={getIndex(player, quarters)}
-                rank={game.rankings[player]}
+                $location={getLocation(player, decided, quarters)}
+                $index={getIndex(player, quarters)}
+                $rank={game.rankings[player]}
               >
                 <span>
                   {formatPlayerName(player, game.names)}

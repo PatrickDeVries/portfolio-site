@@ -141,19 +141,19 @@ const Header: React.FC = () => {
           </NavIcon>
           <NavIcon
             title="Open navigation"
-            mobileOnly
+            $isMobileOnly
             onClick={() => {
               setExpanded(!expanded)
             }}
           >
-            <Hamburger expanded={expanded} size="1.5rem">
+            <Hamburger $isExpanded={expanded} $size="1.5rem">
               <HamburgerBar />
               <HamburgerBar />
               <HamburgerBar />
             </Hamburger>
           </NavIcon>
         </IconGroup>
-        <Popup expanded={expanded}>
+        <Popup $isExpanded={expanded}>
           {navItems.map(item => (
             <PopupItem
               key={item.label}

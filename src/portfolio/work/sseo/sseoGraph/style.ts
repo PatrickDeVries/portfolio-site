@@ -28,11 +28,11 @@ export const GraphBody = styled.div`
   grid-template: 1fr 1fr / 1fr 1fr;
 `
 
-export const GridHeader = styled.div<{ ballType: BallType }>`
+export const GridHeader = styled.div<{ $ballType: BallType }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  grid-area: ${({ ballType }) => ballType};
+  grid-area: ${({ $ballType }) => $ballType};
   padding: 1rem;
 
   text-align: center;
@@ -42,8 +42,8 @@ export const GridHeader = styled.div<{ ballType: BallType }>`
     font-size: 1rem;
   }
 
-  ${({ ballType }) =>
-    (ballType === BallType.Even || ballType === BallType.Odd) &&
+  ${({ $ballType }) =>
+    ($ballType === BallType.Even || $ballType === BallType.Odd) &&
     css`
       writing-mode: vertical-lr;
       transform: scale(-1, -1);
@@ -71,39 +71,39 @@ export const GridCell = styled.div`
 `
 
 export const Label = styled.div<{
-  location?: BallType | BallTypeCombo | 'hidden'
-  index?: -1 | 0 | 1
-  rank?: number
+  $location?: BallType | BallTypeCombo | 'hidden'
+  $index?: -1 | 0 | 1
+  $rank?: number
 }>`
   position: absolute;
   width: 50%;
   height: 50%;
 
-  top: ${({ location, index }) =>
-    location === BallType.Solid || location === BallType.Stripe || location === 'hidden'
+  top: ${({ $location, $index }) =>
+    $location === BallType.Solid || $location === BallType.Stripe || $location === 'hidden'
       ? '25%'
-      : location === BallType.Odd
+      : $location === BallType.Odd
         ? '50%'
-        : location === BallType.Even
+        : $location === BallType.Even
           ? '0'
-          : location === BallTypeCombo.SolidEven || location === BallTypeCombo.StripeEven
-            ? index === 0
+          : $location === BallTypeCombo.SolidEven || $location === BallTypeCombo.StripeEven
+            ? $index === 0
               ? '-12.5%'
-              : index === 1
+              : $index === 1
                 ? '12.5%'
                 : '0'
-            : index === 0
+            : $index === 0
               ? '37.5%'
-              : index === 1
+              : $index === 1
                 ? '62.5%'
                 : '50%'};
 
-  left: ${({ location }) =>
-    location === BallType.Even || location === BallType.Odd || location === 'hidden'
+  left: ${({ $location }) =>
+    $location === BallType.Even || $location === BallType.Odd || $location === 'hidden'
       ? '25%'
-      : location === BallTypeCombo.StripeEven ||
-          location === BallTypeCombo.StripeOdd ||
-          location === BallType.Stripe
+      : $location === BallTypeCombo.StripeEven ||
+          $location === BallTypeCombo.StripeOdd ||
+          $location === BallType.Stripe
         ? '50%'
         : '0'};
 
@@ -121,10 +121,10 @@ export const Label = styled.div<{
     background-color: ${({ theme }) => theme.backgroundHighlight};
     text-align: center;
     font-size: 1.8rem;
-    ${({ rank, theme }) =>
-      rank !== undefined &&
+    ${({ $rank, theme }) =>
+      $rank !== undefined &&
       css`
-        color: ${mix((rank - 1) / 3, theme.danger, theme.primary)};
+        color: ${mix(($rank - 1) / 3, theme.danger, theme.primary)};
       `}
 
     ${MOBILE} {
@@ -132,8 +132,8 @@ export const Label = styled.div<{
     }
   }
 
-  ${({ location }) =>
-    location === 'hidden' &&
+  ${({ $location }) =>
+    $location === 'hidden' &&
     css`
       display: none;
     `}

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { MOBILE } from '../theme/mediaQueries'
 
-export const Wrapper = styled.div<{ firstHit?: boolean }>`
+export const Wrapper = styled.div<{ $isFirstHit?: boolean }>`
   position: fixed;
   top: 2rem;
   right: 3.5rem;
@@ -10,7 +10,7 @@ export const Wrapper = styled.div<{ firstHit?: boolean }>`
     right: 6rem;
   }
 
-  ${({ firstHit }) => !firstHit && 'transform: translateY(-100vh);'}
+  ${({ $isFirstHit }) => !$isFirstHit && 'transform: translateY(-100vh);'}
 
   padding: 1rem;
   display: flex;

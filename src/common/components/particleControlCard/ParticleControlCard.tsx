@@ -13,7 +13,7 @@ const ParticleControlCard: React.FC = () => {
 
   return (
     <>
-      <ControlCard controlsOpen={particleSnap.controlsOpen}>
+      <ControlCard $areControlsOpen={particleSnap.controlsOpen}>
         <span>Controls</span>
         <ControlRows>
           <RangeSlider

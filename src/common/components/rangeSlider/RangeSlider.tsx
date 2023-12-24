@@ -50,7 +50,8 @@ const RangeSlider: React.FC<Props> = ({
           <Label>{labels?.min ?? min}</Label>
           <Label>{labels?.max ?? max}</Label>
         </Labels>
-        <RangeWrapper percentFilled={(value - min) / (max - min)}>
+        {/* @ts-expect-error React types are bad for CSS variables */}
+        <RangeWrapper $percentFilled={(value - min) / (max - min)}>
           <div></div>
           <input
             type="range"

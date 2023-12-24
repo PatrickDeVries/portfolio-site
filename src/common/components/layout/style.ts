@@ -14,7 +14,7 @@ export const Main = styled.div`
   overflow: hidden;
 `
 
-export const Body = styled.div<{ tint?: boolean }>`
+export const Body = styled.div<{ $tint?: boolean }>`
   height: 100%;
   width: 100%;
   z-index: 1;
@@ -23,7 +23,6 @@ export const Body = styled.div<{ tint?: boolean }>`
   flex-direction: column;
   align-items: center;
 
-  overflow-y: auto;
-  overflow-x: hidden;
-  ${({ tint, theme }) => tint && `background-color: ${theme.background}77;`}
+  overflow: hidden auto;
+  ${({ $tint, theme }) => $tint && `background-color: ${theme.background}77;`}
 `

@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 
-/* stylelint-disable property-no-vendor-prefix */
-
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -24,13 +22,6 @@ export const Header = styled.div`
   input[type='number'] {
     all: unset;
 
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    -moz-appearance: textfield;
     background-color: ${({ theme }) => theme.backgroundHighlight};
     color: ${({ theme }) => theme.text};
     padding: 0.1rem 0.5rem;
@@ -58,6 +49,7 @@ interface RangeWrapperProps {
   percentFilled: number
 }
 
+// @ts-expect-error React types are bad for CSS variables
 export const RangeWrapper = styled.div.attrs<RangeWrapperProps>(({ percentFilled }) => ({
   style: {
     '--percent-filled': percentFilled,
@@ -85,7 +77,7 @@ export const RangeWrapper = styled.div.attrs<RangeWrapperProps>(({ percentFilled
   }
 
   input[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none;
+    appearance: none;
     z-index: 3;
     height: 16px;
     width: 16px;

@@ -79,7 +79,7 @@ export const PopupItem = styled(NavItem)`
   justify-content: center;
 `
 
-export const Popup = styled.div<{ expanded?: boolean }>`
+export const Popup = styled.div<{ $isExpanded?: boolean }>`
   width: 100vw;
 
   display: flex;
@@ -89,7 +89,7 @@ export const Popup = styled.div<{ expanded?: boolean }>`
   position: absolute;
   top: 100%;
   right: -100vw;
-  transform: translateX(${({ expanded }) => (expanded ? '-100vw' : '0')});
+  transform: translateX(${({ $isExpanded }) => ($isExpanded ? '-100vw' : '0')});
   transition: transform 0.15s ease;
 
   z-index: 3;
@@ -112,7 +112,7 @@ export const IconGroup = styled.div`
   align-items: center;
 `
 
-export const NavIcon = styled.button<{ mobileOnly?: boolean }>`
+export const NavIcon = styled.button<{ $isMobileOnly?: boolean }>`
   appearance: none;
   outline: none;
   border: none;
@@ -137,9 +137,13 @@ export const NavIcon = styled.button<{ mobileOnly?: boolean }>`
   user-select: none;
   cursor: pointer;
 
-  ${DESKTOP} {
-    ${({ mobileOnly }) => mobileOnly && 'display: none;'};
-  }
+  ${({ $isMobileOnly }) =>
+    $isMobileOnly &&
+    css`
+      ${DESKTOP} {
+        display: none;
+      }
+    `}
 `
 
 export const HamburgerBar = styled.div`
@@ -154,15 +158,15 @@ export const HamburgerBar = styled.div`
   transition: all 0.15s ease 0.15s;
 `
 
-export const Hamburger = styled.div<{ expanded?: boolean; size?: string }>`
+export const Hamburger = styled.div<{ $isExpanded?: boolean; $size?: string }>`
   position: relative;
 
-  height: ${({ size }) => size};
-  width: ${({ size }) => size};
+  height: ${({ $size }) => $size};
+  width: ${({ $size }) => $size};
 
   ${HamburgerBar}:nth-child(1) {
-    ${({ expanded }) =>
-      expanded
+    ${({ $isExpanded }) =>
+      $isExpanded
         ? css`
             top: 50%;
             transform: translateY(-50%) rotateZ(45deg);
@@ -175,8 +179,8 @@ export const Hamburger = styled.div<{ expanded?: boolean; size?: string }>`
 
   ${HamburgerBar}:nth-child(2) {
     top: 50%;
-    ${({ expanded }) =>
-      expanded
+    ${({ $isExpanded }) =>
+      $isExpanded
         ? css`
             transform: translateY(-50%) rotateZ(135deg);
           `
@@ -186,8 +190,8 @@ export const Hamburger = styled.div<{ expanded?: boolean; size?: string }>`
   }
 
   ${HamburgerBar}:nth-child(3) {
-    ${({ expanded }) =>
-      expanded
+    ${({ $isExpanded }) =>
+      $isExpanded
         ? css`
             bottom: 50%;
             transform: translateY(50%) rotateZ(-45deg);

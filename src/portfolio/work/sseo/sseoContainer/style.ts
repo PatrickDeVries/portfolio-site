@@ -90,16 +90,16 @@ export const BallsWrapper = styled.div`
   font-size: 1.2rem;
 `
 
-export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
+export const PoolBall = styled.div<{ $num: number; $isSunk?: boolean }>`
   position: relative;
   width: 2em;
   height: 2em;
   border-radius: 50%;
-  background-color: ${({ num }) => BALL_COLORS[(num - 1) % 8]};
+  background-color: ${({ $num }) => BALL_COLORS[($num - 1) % 8]};
   box-sizing: border-box;
 
-  ${({ sunk }) =>
-    !sunk &&
+  ${({ $isSunk }) =>
+    !$isSunk &&
     css`
       cursor: pointer;
     `}
@@ -111,8 +111,8 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
 
   user-select: none;
 
-  ${({ num }) =>
-    num > 8 &&
+  ${({ $num }) =>
+    $num > 8 &&
     css`
       ::before {
         content: '';
