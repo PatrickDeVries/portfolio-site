@@ -1,4 +1,4 @@
-import StyleProvider from './StyleProvider/StyleProvider'
+import StyleProvider from './StyleProvider'
 
 export * from './media-queries'
 export * from './themes'
