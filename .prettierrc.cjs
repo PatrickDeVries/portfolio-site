@@ -1,6 +1,6 @@
 module.exports = {
   arrowParens: 'avoid',
-  plugins: ['prettier-plugin-organize-imports'],
+  // plugins: ['prettier-plugin-organize-imports'],
   printWidth: 100,
   quoteProps: 'as-needed',
   semi: false,

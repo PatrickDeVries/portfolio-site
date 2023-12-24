@@ -1,6 +1,6 @@
 import RouteProvider from '@/common/providers/RouteProvider'
 import StyleProvider from '@/common/theme'
-import '@/theme/global.css'
+import '@/common/theme/global.css'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'

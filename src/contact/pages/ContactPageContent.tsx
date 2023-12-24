@@ -1,4 +1,3 @@
-import Layout from '@/common/components/Layout'
 import React from 'react'
 import { BsGithub } from 'react-icons/bs'
 import { MdEmail, MdLocalPhone, MdMessage } from 'react-icons/md'
@@ -13,7 +12,7 @@ interface Social {
   text: string
 }
 
-const Contact: React.FC = () => {
+const ContactPageContent: React.FC = () => {
   const theme = useTheme()
 
   const SOCIALS: Social[] = [
@@ -50,20 +49,18 @@ const Contact: React.FC = () => {
   ]
 
   return (
-    <Layout>
-      <Wrapper>
-        <ContactText>Contact me:</ContactText>
-        <SocialLinks>
-          {SOCIALS.map(social => (
-            <SocialLink key={social.site} as={'a'} href={social.href}>
-              {social.icon}
-              <div>{social.text}</div>
-            </SocialLink>
-          ))}
-        </SocialLinks>
-      </Wrapper>
-    </Layout>
+    <Wrapper>
+      <ContactText>Contact me:</ContactText>
+      <SocialLinks>
+        {SOCIALS.map(social => (
+          <SocialLink key={social.site} as={'a'} href={social.href}>
+            {social.icon}
+            <div>{social.text}</div>
+          </SocialLink>
+        ))}
+      </SocialLinks>
+    </Wrapper>
   )
 }
 
-export default Contact
+export default ContactPageContent

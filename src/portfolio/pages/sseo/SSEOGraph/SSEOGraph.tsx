@@ -33,7 +33,7 @@ const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1
   return quarters[quarter as BallTypeCombo][0] === player ? 0 : 1
 }
 
-const SseoGraph: React.FC<Props> = ({ game, decided }) => {
+const SSEOGraph: React.FC<Props> = ({ game, decided }) => {
   const quarters = useMemo(() => getQuarters(game.roles), [game.roles])
 
   return (
@@ -74,4 +74,4 @@ const SseoGraph: React.FC<Props> = ({ game, decided }) => {
   )
 }
 
-export default SseoGraph
+export default SSEOGraph
