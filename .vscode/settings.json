@@ -8,15 +8,9 @@
   "editor.formatOnPaste": false,
   "prettier.enable": true,
   "search.exclude": {
-    ".yarn": true,
-    ".pnp.*": true,
     "dist": true
   },
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "eslint.nodePath": ".yarn/sdks",
-  "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "cSpell.words": ["sseo"],
-  "stylelint.packageManager": "yarn",
   "stylelint.validate": ["css", "less", "postcss", "typescript", "typescriptreact", "scss"]
 }

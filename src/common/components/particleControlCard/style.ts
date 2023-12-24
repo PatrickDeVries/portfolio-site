@@ -1,5 +1,5 @@
+import { DESKTOP, TABLET } from '@/common/theme/media-queries'
 import styled from 'styled-components'
-import { DESKTOP, MOBILE } from '../../../theme/mediaQueries'
 
 export const ControlCard = styled.div<{ $areControlsOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundHighlight}77;
@@ -44,7 +44,7 @@ export const ControlRows = styled.div`
     }
   }
 
-  ${MOBILE} {
+  ${TABLET} {
     > div,
     > label {
       width: calc(50% - 0.5rem);
@@ -87,7 +87,7 @@ export const Footer = styled.div`
     }
   }
 
-  ${MOBILE} {
+  ${TABLET} {
     > button {
       width: 100%;
       justify-content: center;

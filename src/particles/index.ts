@@ -1,3 +1,3 @@
-import Particles from './Particles'
+import ParticlesPages from './ParticlesPages'
 
-export default Particles
+export default ParticlesPages

@@ -3,7 +3,7 @@ module.exports = {
   parserOptions: {
     project: 'tsconfig.eslint.json',
   },
-  plugins: ['jsx-a11y'],
+  plugins: ['jsx-a11y', 'import'],
   rules: {
     'react/jsx-key': 'warn',
     '@typescript-eslint/no-explicit-any': 'warn',
@@ -28,5 +28,9 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-unnecessary-condition': 'warn',
+    'import/newline-after-import': ['warn', { count: 1 }],
+    'import/first': 'warn',
+    'import/no-useless-path-segments': ['warn', { noUselessIndex: true }],
+    'arrow-body-style': [1, 'as-needed'],
   },
 }

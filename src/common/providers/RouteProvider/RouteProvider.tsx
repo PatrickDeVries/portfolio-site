@@ -1,7 +1,11 @@
+import Layout from '@/common/components/Layout'
 import React from 'react'
-import { useRoutes } from 'react-router-dom'
-import routes from './routes'
+import Router from './Router'
 
-const RouteProvider: React.FC = () => useRoutes(routes)
+const RouteProvider: React.FC = () => (
+  <Layout>
+    <Router />
+  </Layout>
+)
 
 export default RouteProvider

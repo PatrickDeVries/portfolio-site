@@ -1,5 +1,5 @@
+import { Variant } from '@/common/types/inputs'
 import styled, { css, Interpolation } from 'styled-components'
-import { Variant } from '../../types/inputs'
 
 const VARIANT_STYLE: Record<Variant, Interpolation<object>> = {
   text: css`

@@ -1,6 +1,6 @@
+import { DESKTOP, TABLET } from '@/common/theme/media-queries'
 import { mix } from 'polished'
 import styled, { css } from 'styled-components'
-import { DESKTOP, MOBILE } from '../../../../theme/mediaQueries'
 
 export const Wrapper = styled.nav`
   position: relative;
@@ -41,7 +41,7 @@ export const NavGroup = styled.div`
 
   height: 100%;
 
-  ${MOBILE} {
+  ${TABLET} {
     display: none;
   }
 `
