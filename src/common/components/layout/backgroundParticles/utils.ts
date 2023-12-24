@@ -125,8 +125,8 @@ export const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
   (((goalAngle - angle + Math.PI) % PI2) - Math.PI < turnV
     ? goalAngle
     : goalAngle > (angle + Math.PI) % PI2
-    ? angle - turnV
-    : angle + turnV) % PI2
+      ? angle - turnV
+      : angle + turnV) % PI2
 
 export const escapeRadius = (
   point: Point2d & { angle: number; turnV: number },

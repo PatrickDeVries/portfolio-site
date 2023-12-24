@@ -42,13 +42,16 @@ Full tech stack [here](/techstack.md)
 <div align="center">
 
 # Tech Stack File
-![](https://img.stackshare.io/repo.svg "repo") [PatrickDeVries/cra-personal-site](https://github.com/PatrickDeVries/cra-personal-site)![](https://img.stackshare.io/public_badge.svg "public")
+
+![](https://img.stackshare.io/repo.svg 'repo') [PatrickDeVries/cra-personal-site](https://github.com/PatrickDeVries/cra-personal-site)![](https://img.stackshare.io/public_badge.svg 'public')
 <br/><br/>
 |39<br/>Tools used|11/09/23 <br/>Report generated|
 |------|------|
+
 </div>
 
 ## <img src='https://img.stackshare.io/languages.svg'/> Languages (3)
+
 <table><tr>
   <td align='center'>
   <img width='36' height='36' src='https://img.stackshare.io/service/6727/css.png' alt='CSS 3'>
@@ -78,6 +81,7 @@ Full tech stack [here](/techstack.md)
 </table>
 
 ## <img src='https://img.stackshare.io/frameworks.svg'/> Frameworks (4)
+
 <table><tr>
   <td align='center'>
   <img width='36' height='36' src='https://img.stackshare.io/service/1011/n1JRsFeB_400x400.png' alt='Node.js'>
@@ -115,6 +119,7 @@ Full tech stack [here](/techstack.md)
 </table>
 
 ## <img src='https://img.stackshare.io/devops.svg'/> DevOps (6)
+
 <table><tr>
   <td align='center'>
   <img width='36' height='36' src='https://img.stackshare.io/service/3337/Q4L7Jncy.jpg' alt='ESLint'>
@@ -168,6 +173,7 @@ Full tech stack [here](/techstack.md)
 </table>
 
 ## <img src='https://img.stackshare.io/saas.svg'/> Software as a Service (SaaS) (1)
+
 <table><tr>
   <td align='center'>
   <img width='36' height='36' src='https://img.stackshare.io/service/11232/no-img-open-source.png' alt='Poli'>
@@ -181,6 +187,7 @@ Full tech stack [here](/techstack.md)
 </table>
 
 ## Other (2)
+
 <table><tr>
   <td align='center'>
   <img width='36' height='36' src='https://img.stackshare.io/service/2438/lodash.png' alt='Lodash'>
@@ -201,36 +208,35 @@ Full tech stack [here](/techstack.md)
 </tr>
 </table>
 
-
 ## <img src='https://img.stackshare.io/group.svg' /> Open source packages (23)</h2>
 
 ## <img width='24' height='24' src='https://img.stackshare.io/service/1120/lejvzrnlpb308aftn31u.png'/> npm (23)
 
-|NAME|VERSION|LAST UPDATED|LAST UPDATED BY|LICENSE|VULNERABILITIES|
-|:------|:------|:------|:------|:------|:------|
-|[@types/lodash](https://www.npmjs.com/@types/lodash)|v4.14.191|12/08/22|Patrick DeVries |MIT|N/A|
-|[@types/lodash-es](https://www.npmjs.com/@types/lodash-es)|v4.17.6|12/08/22|Patrick DeVries |MIT|N/A|
-|[@types/node](https://www.npmjs.com/@types/node)|v16.18.6|12/08/22|Patrick DeVries |MIT|N/A|
-|[@types/react](https://www.npmjs.com/@types/react)|v18.0.9|12/08/22|Patrick DeVries |MIT|N/A|
-|[@types/react-dom](https://www.npmjs.com/@types/react-dom)|v18.0.9|12/08/22|Patrick DeVries |MIT|N/A|
-|[@types/styled-components](https://www.npmjs.com/@types/styled-components)|v5.1.26|12/08/22|Patrick DeVries |MIT|N/A|
-|[@typescript-eslint/parser](https://www.npmjs.com/@typescript-eslint/parser)|v5.45.1|12/08/22|Patrick DeVries |BSD-2-Clause|N/A|
-|[babel-plugin-macros](https://www.npmjs.com/babel-plugin-macros)|v3.1.0|12/08/22|Patrick DeVries |MIT|N/A|
-|[babel-plugin-styled-components](https://www.npmjs.com/babel-plugin-styled-components)|v2.0.7|12/08/22|Patrick DeVries |MIT|N/A|
-|[eslint-config-react-app](https://www.npmjs.com/eslint-config-react-app)|v7.0.1|12/08/22|Patrick DeVries |MIT|N/A|
-|[eslint-plugin-jsx-a11y](https://www.npmjs.com/eslint-plugin-jsx-a11y)|v6.6.1|12/08/22|Patrick DeVries |MIT|N/A|
-|[gh-pages](https://www.npmjs.com/gh-pages)|v4.0.0|12/08/22|Patrick DeVries |MIT|N/A|
-|[lodash-es](https://www.npmjs.com/lodash-es)|v4.17.21|12/08/22|Patrick DeVries |MIT|N/A|
-|[polished](https://www.npmjs.com/polished)|v4.2.2|05/20/22|Patrick DeVries |MIT|N/A|
-|[postcss](https://www.npmjs.com/postcss)|v7.0.39|12/08/22|Patrick DeVries |MIT|[CVE-2023-44270](https://github.com/advisories/GHSA-7fh5-64p2-3v2j) (Moderate)|
-|[postcss-scss](https://www.npmjs.com/postcss-scss)|v4.0.6|12/08/22|Patrick DeVries |MIT|N/A|
-|[react-dom](https://www.npmjs.com/react-dom)|v18.2.0|12/08/22|Patrick DeVries |MIT|N/A|
-|[react-icons](https://www.npmjs.com/react-icons)|v4.7.1|12/08/22|Patrick DeVries |MIT|N/A|
-|[react-router-dom](https://www.npmjs.com/react-router-dom)|v6.4.5|12/08/22|Patrick DeVries |MIT|N/A|
-|[stylelint-config-prettier](https://www.npmjs.com/stylelint-config-prettier)|v9.0.4|12/08/22|Patrick DeVries |MIT|N/A|
-|[stylelint-config-recommended](https://www.npmjs.com/stylelint-config-recommended)|v9.0.0|12/08/22|Patrick DeVries |MIT|N/A|
-|[stylelint-processor-styled-components](https://www.npmjs.com/stylelint-processor-styled-components)|v1.10.0|12/08/22|Patrick DeVries |MIT|N/A|
-|[three](https://www.npmjs.com/three)|v0.140.2|12/08/22|Patrick DeVries |MIT|N/A|
+| NAME                                                                                                 | VERSION   | LAST UPDATED | LAST UPDATED BY | LICENSE      | VULNERABILITIES                                                                |
+| :--------------------------------------------------------------------------------------------------- | :-------- | :----------- | :-------------- | :----------- | :----------------------------------------------------------------------------- |
+| [@types/lodash](https://www.npmjs.com/@types/lodash)                                                 | v4.14.191 | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [@types/lodash-es](https://www.npmjs.com/@types/lodash-es)                                           | v4.17.6   | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [@types/node](https://www.npmjs.com/@types/node)                                                     | v16.18.6  | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [@types/react](https://www.npmjs.com/@types/react)                                                   | v18.0.9   | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [@types/react-dom](https://www.npmjs.com/@types/react-dom)                                           | v18.0.9   | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [@types/styled-components](https://www.npmjs.com/@types/styled-components)                           | v5.1.26   | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [@typescript-eslint/parser](https://www.npmjs.com/@typescript-eslint/parser)                         | v5.45.1   | 12/08/22     | Patrick DeVries | BSD-2-Clause | N/A                                                                            |
+| [babel-plugin-macros](https://www.npmjs.com/babel-plugin-macros)                                     | v3.1.0    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [babel-plugin-styled-components](https://www.npmjs.com/babel-plugin-styled-components)               | v2.0.7    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [eslint-config-react-app](https://www.npmjs.com/eslint-config-react-app)                             | v7.0.1    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [eslint-plugin-jsx-a11y](https://www.npmjs.com/eslint-plugin-jsx-a11y)                               | v6.6.1    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [gh-pages](https://www.npmjs.com/gh-pages)                                                           | v4.0.0    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [lodash-es](https://www.npmjs.com/lodash-es)                                                         | v4.17.21  | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [polished](https://www.npmjs.com/polished)                                                           | v4.2.2    | 05/20/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [postcss](https://www.npmjs.com/postcss)                                                             | v7.0.39   | 12/08/22     | Patrick DeVries | MIT          | [CVE-2023-44270](https://github.com/advisories/GHSA-7fh5-64p2-3v2j) (Moderate) |
+| [postcss-scss](https://www.npmjs.com/postcss-scss)                                                   | v4.0.6    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [react-dom](https://www.npmjs.com/react-dom)                                                         | v18.2.0   | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [react-icons](https://www.npmjs.com/react-icons)                                                     | v4.7.1    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [react-router-dom](https://www.npmjs.com/react-router-dom)                                           | v6.4.5    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [stylelint-config-prettier](https://www.npmjs.com/stylelint-config-prettier)                         | v9.0.4    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [stylelint-config-recommended](https://www.npmjs.com/stylelint-config-recommended)                   | v9.0.0    | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [stylelint-processor-styled-components](https://www.npmjs.com/stylelint-processor-styled-components) | v1.10.0   | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
+| [three](https://www.npmjs.com/three)                                                                 | v0.140.2  | 12/08/22     | Patrick DeVries | MIT          | N/A                                                                            |
 
 <br/>
 <div align='center'>

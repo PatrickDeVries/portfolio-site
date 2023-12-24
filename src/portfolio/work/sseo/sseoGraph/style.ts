@@ -83,29 +83,29 @@ export const Label = styled.div<{
     location === BallType.Solid || location === BallType.Stripe || location === 'hidden'
       ? '25%'
       : location === BallType.Odd
-      ? '50%'
-      : location === BallType.Even
-      ? '0'
-      : location === BallTypeCombo.SolidEven || location === BallTypeCombo.StripeEven
-      ? index === 0
-        ? '-12.5%'
-        : index === 1
-        ? '12.5%'
-        : '0'
-      : index === 0
-      ? '37.5%'
-      : index === 1
-      ? '62.5%'
-      : '50%'};
+        ? '50%'
+        : location === BallType.Even
+          ? '0'
+          : location === BallTypeCombo.SolidEven || location === BallTypeCombo.StripeEven
+            ? index === 0
+              ? '-12.5%'
+              : index === 1
+                ? '12.5%'
+                : '0'
+            : index === 0
+              ? '37.5%'
+              : index === 1
+                ? '62.5%'
+                : '50%'};
 
   left: ${({ location }) =>
     location === BallType.Even || location === BallType.Odd || location === 'hidden'
       ? '25%'
       : location === BallTypeCombo.StripeEven ||
-        location === BallTypeCombo.StripeOdd ||
-        location === BallType.Stripe
-      ? '50%'
-      : '0'};
+          location === BallTypeCombo.StripeOdd ||
+          location === BallType.Stripe
+        ? '50%'
+        : '0'};
 
   display: flex;
   align-items: center;

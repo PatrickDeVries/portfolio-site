@@ -4,8 +4,8 @@ import * as THREE from 'three'
 import { Points, ShaderMaterial } from 'three'
 import particleSettings, { MouseShape } from '../../particleControlCard/store'
 import { MAX_PARTICLES } from './constants'
-import './particlematerial'
-import { fragment, vertex } from './particlematerial'
+import './particle-material'
+import { fragment, vertex } from './particle-material'
 import particlePositions, { randomizeLocations } from './store'
 import {
   Circle,
@@ -86,41 +86,45 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
             },
           ]
         : pathname === '/portfolio'
-        ? [
-            {
-              x: -viewport.width / 4,
-              y: -viewport.height / 4 - viewportTop / 2,
-              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-            },
-            {
-              x: -viewport.width / 4,
-              y: viewport.height / 4 - viewportTop / 2,
-              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-            },
-            {
-              x: viewport.width / 4,
-              y: -viewport.height / 4 - viewportTop / 2,
-              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-            },
-            {
-              x: viewport.width / 4,
-              y: viewport.height / 4 - viewportTop / 2,
-              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-            },
-          ]
-        : pathname === '/contact'
-        ? [
-            {
-              vertices: generateRectangleFromCenter(
-                { x: 0, y: -viewportTop / 2 },
-                viewport.height -
-                  (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
-                viewport.width -
-                  (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
-              ),
-            },
-          ]
-        : [],
+          ? [
+              {
+                x: -viewport.width / 4,
+                y: -viewport.height / 4 - viewportTop / 2,
+                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+              },
+              {
+                x: -viewport.width / 4,
+                y: viewport.height / 4 - viewportTop / 2,
+                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+              },
+              {
+                x: viewport.width / 4,
+                y: -viewport.height / 4 - viewportTop / 2,
+                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+              },
+              {
+                x: viewport.width / 4,
+                y: viewport.height / 4 - viewportTop / 2,
+                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+              },
+            ]
+          : pathname === '/contact'
+            ? [
+                {
+                  vertices: generateRectangleFromCenter(
+                    { x: 0, y: -viewportTop / 2 },
+                    viewport.height -
+                      (viewport.height > viewport.width
+                        ? viewport.height / 10
+                        : viewport.width / 10),
+                    viewport.width -
+                      (viewport.height > viewport.width
+                        ? viewport.height / 10
+                        : viewport.width / 10),
+                  ),
+                },
+              ]
+            : [],
     [pathname, viewport.height, viewport.width, viewportTop],
   )
 
@@ -197,14 +201,14 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
       particleSettings.mouseShape === MouseShape.Circle
         ? ({ ...mouse.current, radius: particleSettings.mouseSize } as Circle)
         : particleSettings.mouseShape === MouseShape.Star
-        ? ({ vertices: generateStar(particleSettings.mouseSize, mouse.current) } as Polygon)
-        : ({
-            vertices: generateRectangleFromCenter(
-              mouse.current,
-              particleSettings.mouseSize * 2,
-              particleSettings.mouseSize * 2,
-            ),
-          } as Polygon)
+          ? ({ vertices: generateStar(particleSettings.mouseSize, mouse.current) } as Polygon)
+          : ({
+              vertices: generateRectangleFromCenter(
+                mouse.current,
+                particleSettings.mouseSize * 2,
+                particleSettings.mouseSize * 2,
+              ),
+            } as Polygon)
 
     let mouseMax: Point2d = !isCircle(mouseBounds)
       ? {
