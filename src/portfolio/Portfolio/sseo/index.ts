@@ -1,4 +1,4 @@
 import SseoContainer from './SseoContainer'
-import SseoGraph from './sseoGraph'
+import SseoGraph from './SseoGraph'
 
 export { SseoContainer, SseoGraph }

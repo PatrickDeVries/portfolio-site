@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from '../../common/components/Layout'
-import WorkCard from './2workCard'
 import GithubStats from './GithubStats'
+import WorkCard from './WorkCard'
 import { MY_WORK } from './constants'
 import { SectionHeader, WorkItems, Wrapper } from './style'
 
