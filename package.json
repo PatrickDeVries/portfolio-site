@@ -7,7 +7,7 @@
   "scripts": {
     "predeploy": "bun lint && bun run build",
     "preview": "vite preview",
-    "deploy": "bun predeploy && gh-pages -d dist",
+    "deploy": "gh-pages -d dist",
     "dev": "vite dev",
     "build": "tsc && vite build",
     "format": "prettier --write .",
