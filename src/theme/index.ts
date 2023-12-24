@@ -1,6 +1,6 @@
-import StyleProvider from './StyleProvider'
+import StyleProvider from './StyleProvider/StyleProvider'
 
-export * from './mediaQueries'
+export * from './media-queries'
 export * from './themes'
 export * from './types'
 export default StyleProvider

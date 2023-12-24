@@ -3,7 +3,7 @@ import { BsGithub } from 'react-icons/bs'
 import { MdEmail, MdLocalPhone, MdMessage } from 'react-icons/md'
 import { RiLinkedinBoxFill } from 'react-icons/ri'
 import { useTheme } from 'styled-components'
-import Layout from '../common/components/layout'
+import Layout from '../common/components/Layout'
 import { ContactText, SocialLink, SocialLinks, Wrapper } from './style'
 
 interface Social {

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { MOBILE } from '../../../theme/mediaQueries'
+import { TABLET } from '../../../theme/media-queries'
 
 export const Wrapper = styled.img`
   width: calc(50% - 1rem);
@@ -9,7 +9,7 @@ export const Wrapper = styled.img`
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.backgroundHighlight};
 
-  ${MOBILE} {
+  ${TABLET} {
     width: 100%;
   }
 `

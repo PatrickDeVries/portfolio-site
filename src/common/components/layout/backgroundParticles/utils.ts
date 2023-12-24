@@ -24,9 +24,8 @@ export type Polygon = {
 ///
 
 /// Circle
-export const isInCircle = (point: Point2d, circle: Circle): boolean => {
-  return Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius
-}
+export const isInCircle = (point: Point2d, circle: Circle): boolean =>
+  Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius
 
 /// Polygon
 export const isInPolygon = (
@@ -145,33 +144,30 @@ export const generateRectangleFromCenter = (
   center: Point2d,
   height: number,
   width: number,
-): Point2d[] => {
-  return [
-    {
-      x: center.x - width / 2,
-      y: center.y - height / 2,
-    },
-    {
-      x: center.x + width / 2,
-      y: center.y - height / 2,
-    },
-    {
-      x: center.x + width / 2,
-      y: center.y + height / 2,
-    },
-    {
-      x: center.x - width / 2,
-      y: center.y + height / 2,
-    },
-  ]
-}
+): Point2d[] => [
+  {
+    x: center.x - width / 2,
+    y: center.y - height / 2,
+  },
+  {
+    x: center.x + width / 2,
+    y: center.y - height / 2,
+  },
+  {
+    x: center.x + width / 2,
+    y: center.y + height / 2,
+  },
+  {
+    x: center.x - width / 2,
+    y: center.y + height / 2,
+  },
+]
 
-export const generatePentagon = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point2d[] => {
-  return Array.from({ length: 5 }, (_, k) => ({
+export const generatePentagon = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point2d[] =>
+  Array.from({ length: 5 }, (_, k) => ({
     x: scale * Math.sin(((Math.PI * 2) / 5) * k) + offset.x,
     y: scale * Math.cos(((Math.PI * 2) / 5) * k) + offset.y,
   }))
-}
 
 export const generateStar = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point2d[] => {
   const pentagon = generatePentagon(scale, offset)

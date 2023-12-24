@@ -1,6 +1,6 @@
 import React from 'react'
-import Checkbox from './checkbox'
-import Text from './text'
+import Checkbox from './Checkbox'
+import Text from './Text'
 import { InputProps } from './types'
 
 const INPUTS = {

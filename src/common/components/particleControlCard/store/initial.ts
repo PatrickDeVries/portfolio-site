@@ -1,4 +1,4 @@
-import { dark } from '../../../../theme/themes'
+import { DARK } from '../../../../theme/themes'
 import { BackgroundControl, MouseShape } from './types'
 
 export const INITIAL_SETTINGS: BackgroundControl = {
@@ -14,8 +14,8 @@ export const INITIAL_SETTINGS: BackgroundControl = {
   mouseSize: 1,
   mouseShape: MouseShape.Circle,
 
-  colorA: dark.primary,
-  colorB: dark.secondary,
+  colorA: DARK.primary,
+  colorB: DARK.secondary,
 }
 
 export const DEFAULT_SETTINGS: Partial<BackgroundControl> = {
@@ -28,6 +28,6 @@ export const DEFAULT_SETTINGS: Partial<BackgroundControl> = {
   mouseSize: 1,
   mouseShape: MouseShape.Circle,
 
-  colorA: dark.primary,
-  colorB: dark.secondary,
+  colorA: DARK.primary,
+  colorB: DARK.secondary,
 }

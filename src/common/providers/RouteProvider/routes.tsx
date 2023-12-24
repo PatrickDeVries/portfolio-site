@@ -1,11 +1,11 @@
-import Layout, { LayoutFallback } from '@/common/components/layout'
+import Layout, { LayoutFallback } from '@/common/components/Layout'
 import React, { lazy } from 'react'
 import { RouteObject } from 'react-router-dom'
 import { FallbackMessage } from './style'
 
-const Home = lazy(() => import('@/home'))
-const Particles = lazy(() => import('@/particles'))
-const Contact = lazy(() => import('@/contact'))
+const Home = lazy(() => import('@/Home'))
+const Particles = lazy(() => import('@/Particles'))
+const Contact = lazy(() => import('@/Contact'))
 const PortfolioRoutes = lazy(() => import('@/portfolio'))
 
 const routes: RouteObject[] = [

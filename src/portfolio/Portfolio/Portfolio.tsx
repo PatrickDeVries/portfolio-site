@@ -1,9 +1,9 @@
 import React from 'react'
-import Layout from '../../common/components/layout'
+import Layout from '../../common/components/Layout'
+import WorkCard from './2workCard'
+import GithubStats from './GithubStats'
 import { MY_WORK } from './constants'
-import GithubStats from './githubStats'
 import { SectionHeader, WorkItems, Wrapper } from './style'
-import WorkCard from './workCard'
 
 const Portfolio: React.FC = () => (
   <Layout>

@@ -1,6 +1,6 @@
 import { mix } from 'polished'
 import styled, { css } from 'styled-components'
-import { MOBILE } from '../../../../theme/mediaQueries'
+import { TABLET } from '../../../../theme/media-queries'
 import { BallType, BallTypeCombo } from '../types'
 /* stylelint-disable named-grid-areas-no-invalid */
 
@@ -38,7 +38,7 @@ export const GridHeader = styled.div<{ $ballType: BallType }>`
   text-align: center;
   font-size: 1.4rem;
 
-  ${MOBILE} {
+  ${TABLET} {
     font-size: 1rem;
   }
 
@@ -127,7 +127,7 @@ export const Label = styled.div<{
         color: ${mix(($rank - 1) / 3, theme.danger, theme.primary)};
       `}
 
-    ${MOBILE} {
+    ${TABLET} {
       font-size: 1.2rem;
     }
   }

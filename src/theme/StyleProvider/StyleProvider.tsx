@@ -1,18 +1,19 @@
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useSnapshot } from 'valtio'
-import themeStore from './store'
-import { Global } from './style'
-import { dark, light } from './themes'
+import store from '../store'
+import { DARK, LIGHT } from '../themes'
+import Global from './Global'
+
 interface Props {
   children: React.ReactNode
 }
 
 const StyleProvider: React.FC<Props> = ({ children }) => {
-  const { theme } = useSnapshot(themeStore)
+  const { theme } = useSnapshot(store)
 
   return (
-    <ThemeProvider theme={theme === 'light' ? light : dark}>
+    <ThemeProvider theme={theme === 'light' ? LIGHT : DARK}>
       <Global />
       {children}
     </ThemeProvider>

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { MOBILE } from '../../../../theme/mediaQueries'
+import { TABLET } from '../../../../theme/media-queries'
 
 export const Wrapper = styled.div`
   margin: 0 auto;
@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
   justify-content: space-between;
   gap: 2rem;
 
-  ${MOBILE} {
+  ${TABLET} {
     flex-direction: column;
     align-items: center;
     padding: 1rem;

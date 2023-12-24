@@ -1,6 +1,6 @@
 import { Theme } from './styled'
 
-export const dark: Theme = {
+export const DARK: Theme = {
   name: 'dark',
   text: '#FFFFFF',
   primary: '#00FF9D',
@@ -14,7 +14,7 @@ export const dark: Theme = {
   disabled: '#777777',
 }
 
-export const light: Theme = {
+export const LIGHT: Theme = {
   name: 'light',
   text: '#000000',
   primary: '#12CE5A',

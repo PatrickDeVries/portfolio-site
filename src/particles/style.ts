@@ -1,12 +1,12 @@
 import styled from 'styled-components'
-import { MOBILE } from '../theme/mediaQueries'
+import { TABLET } from '../theme/media-queries'
 
 export const Wrapper = styled.div<{ $isFirstHit?: boolean }>`
   position: fixed;
   top: 2rem;
   right: 3.5rem;
 
-  ${MOBILE} {
+  ${TABLET} {
     right: 6rem;
   }
 

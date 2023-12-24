@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import { MOBILE } from '../../theme/mediaQueries'
+import { TABLET } from '../../theme/media-queries'
 
 export const Wrapper = styled.div`
   padding: 2rem;
 
-  ${MOBILE} {
+  ${TABLET} {
     padding: 1rem;
   }
 
@@ -31,7 +31,7 @@ export const WorkItems = styled.div`
   justify-content: space-between;
   gap: 2rem;
 
-  ${MOBILE} {
+  ${TABLET} {
     align-items: center;
     justify-content: center;
   }
@@ -42,7 +42,7 @@ export const ReadmeStats = styled.img`
   border: 1px solid ${({ theme }) => theme.secondary};
   width: calc(50% - 1rem);
 
-  ${MOBILE} {
+  ${TABLET} {
     width: 100%;
   }
 `

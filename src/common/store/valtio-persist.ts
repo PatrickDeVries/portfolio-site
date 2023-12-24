@@ -96,13 +96,9 @@ export default function proxyWithPersist<S extends object>(inputs: IProxyWithPer
           let write: Write
           if (value === null) {
             // delete it
-            write = () => {
-              return storage.removeItem(filePath)
-            }
+            write = () => storage.removeItem(filePath)
           } else {
-            write = () => {
-              return storage.setItem(filePath, JSON.stringify(value))
-            }
+            write = () => storage.setItem(filePath, JSON.stringify(value))
           }
           return onBeforeWrite(write, filePath)
         }),
@@ -178,9 +174,7 @@ export default function proxyWithPersist<S extends object>(inputs: IProxyWithPer
         } else if (strategy === PersistStrategy.MultiFile) {
           await Promise.all(
             allKeys
-              .filter(persistedFilePath => {
-                return persistedFilePath.startsWith(inputs.name + '-')
-              })
+              .filter(persistedFilePath => persistedFilePath.startsWith(inputs.name + '-'))
               .filter(persistedFilePath => {
                 if (isPersistingMainObject) {
                   return persistedFilePath.split('-')[0] === inputs.name

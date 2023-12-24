@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { RouteObject, matchPath, matchRoutes, useLocation } from 'react-router-dom'
-import BackgroundParticles from './backgroundParticles'
-import Header from './header'
+import BackgroundParticles from './BackgroundParticles'
+import Header from './Header'
 import { Body, Main } from './style'
 
 const PARTICLE_WHITELIST: RouteObject[] = [

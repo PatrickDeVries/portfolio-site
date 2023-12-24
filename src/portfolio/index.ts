@@ -1,6 +1,6 @@
 import { useRoutes } from 'react-router-dom'
-import routes from './routes'
+import ROUTES from './routes'
 
-const PortfolioRoutes: React.FC = () => useRoutes(routes)
+const PortfolioRoutes: React.FC = () => useRoutes(ROUTES)
 
 export default PortfolioRoutes

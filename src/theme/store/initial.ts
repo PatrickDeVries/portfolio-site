@@ -1,5 +1,5 @@
 import { ThemeStore } from './types'
 
-export const INITIAL_THEME: ThemeStore = {
+export const INITIAL: ThemeStore = {
   theme: 'dark',
 }

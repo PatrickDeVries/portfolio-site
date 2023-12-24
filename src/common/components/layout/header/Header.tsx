@@ -3,9 +3,9 @@ import { HiOutlineCog } from 'react-icons/hi'
 import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md'
 import { Link, To, useLocation } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
-import themeStore from '../../../../theme/store'
-import { dark, light } from '../../../../theme/themes'
-import particleSettings from '../../particleControlCard/store'
+import store from '../../../../theme/store'
+import { DARK, LIGHT } from '../../../../theme/themes'
+import particleSettings from '../../ParticleControlCard/store'
 import {
   Hamburger,
   HamburgerBar,
@@ -25,7 +25,7 @@ const Header: React.FC = () => {
   const gearRef = useRef<HTMLButtonElement>(null)
 
   const settingsSnap = useSnapshot(particleSettings)
-  const themeSnap = useSnapshot(themeStore)
+  const themeSnap = useSnapshot(store)
 
   const navItems: { route: string; label: string; onClick: () => void; to: To }[] = [
     {
@@ -113,22 +113,22 @@ const Header: React.FC = () => {
             title={`Change to ${themeSnap.theme === 'light' ? 'dark' : 'light'} mode`}
             onClick={() => {
               if (themeSnap.theme === 'light') {
-                themeStore.theme = 'dark'
+                store.theme = 'dark'
                 if (
-                  settingsSnap.colorA === light.primary &&
-                  settingsSnap.colorB === light.secondary
+                  settingsSnap.colorA === LIGHT.primary &&
+                  settingsSnap.colorB === LIGHT.secondary
                 ) {
-                  particleSettings.colorA = dark.primary
-                  particleSettings.colorB = dark.secondary
+                  particleSettings.colorA = DARK.primary
+                  particleSettings.colorB = DARK.secondary
                 }
               } else {
-                themeStore.theme = 'light'
+                store.theme = 'light'
                 if (
-                  settingsSnap.colorA === dark.primary &&
-                  settingsSnap.colorB === dark.secondary
+                  settingsSnap.colorA === DARK.primary &&
+                  settingsSnap.colorB === DARK.secondary
                 ) {
-                  particleSettings.colorA = light.primary
-                  particleSettings.colorB = light.secondary
+                  particleSettings.colorA = LIGHT.primary
+                  particleSettings.colorB = LIGHT.secondary
                 }
               }
             }}

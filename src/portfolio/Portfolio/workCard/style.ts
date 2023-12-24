@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { DESKTOP, SMALL_MOBILE } from '../../../theme/mediaQueries'
+import { DESKTOP, MOBILE } from '../../../theme/media-queries'
 
 export const HeaderText = styled.span`
   font-size: 1.4rem;
@@ -52,7 +52,7 @@ export const BodySection = styled.div`
 
   font-size: 1.2rem;
 
-  ${SMALL_MOBILE} {
+  ${MOBILE} {
     flex-direction: column;
     align-items: center;
   }

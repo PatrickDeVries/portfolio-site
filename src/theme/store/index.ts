@@ -1,5 +1,5 @@
-import themeStore from './store'
+import store from './store'
 
 export * from './initial'
 export * from './types'
-export default themeStore
+export default store
