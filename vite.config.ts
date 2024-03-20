@@ -14,9 +14,17 @@ export default defineConfig({
     ogPlugin({
       basic: {
         title: 'Patrick DeVries',
-        image: './open-graph-preview.png',
+        image: 'https://www.patrickdevries.com/og-image.png',
         description: "Patrick DeVries' portfolio website",
         locale: 'en_US',
+        type: 'website',
+        url: 'https://www.patrickdevries.com/',
+      },
+      twitter: {
+        title: 'Patrick DeVries',
+        image: 'https://www.patrickdevries.com/og-image.png',
+        description: "Patrick DeVries' portfolio website",
+        card: 'summary_large_image',
       },
     }),
     react({
