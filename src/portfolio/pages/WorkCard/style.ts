@@ -70,6 +70,10 @@ export const ScalingImg = styled.img`
 export const BodyText = styled.p`
   color: ${({ theme }) => theme.text};
   font-size: 1.4rem;
+
+  ${MOBILE} {
+    font-size: 1.2rem;
+  }
 `
 
 export const TagSection = styled.div`
