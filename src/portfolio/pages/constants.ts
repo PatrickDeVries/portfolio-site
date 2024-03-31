@@ -1,6 +1,33 @@
 import { WorkItem } from './types'
 
 export const MY_WORK: Record<string, WorkItem[]> = {
+  'Work Experience': [
+    {
+      header: 'Agricultural Finance Lender',
+      image: '/react-icon.svg',
+      description:
+        'As a senior consultant at Headstorm on an agricultural finance client, I served as a UI SME to completely rebuild an internal loan management tool. I helped architect a new React/.NET Core solution for the loan management portal, building all components from scratch and creating a blazingly fast, fully-customized, and live-collaborative tool. In this role I also maintained an internal legacy Angular/.NET application, a customer-facing Next.js/Node.js microservices application, and a few other smaller sites for third-party use.',
+      tags: [
+        'TypeScript',
+        'React',
+        'CSS',
+        'Styled Components',
+        'Vite',
+        'Orval',
+        '.NET',
+        '.NET Core',
+        'Node.js',
+        'Next.js',
+      ],
+    },
+    {
+      header: 'Fortune 500 Retail Company',
+      image: '/terraform-icon.svg',
+      description:
+        "As a consultant at Headstorm on a Fortune 500 retail client, I led an overhaul of their cloud deployment strategy. Created a unified ARM Template deployment solution, resolving conflicts between the company's devops and developer teams, who used Terraform and ARM templates respectively. The solution was a stop-gap fix until Terraform fully supported the Logic Apps that the developers were building.",
+      tags: ['Cloud', 'Azure', 'Terraform', 'ARM Templates', 'DevOps'],
+    },
+  ],
   Certifications: [
     {
       header: 'AZ-900 - Azure Fundamentals',
