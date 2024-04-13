@@ -117,9 +117,10 @@ export const getIntersection = (
 }
 
 ///
-/// Utilities for moving points based on geometries
+/// Utilities for moving particles based on geometries
 ///
 
+// find the angle a particle can turn to based off its goal
 export const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
   (((goalAngle - angle + Math.PI) % PI2) - Math.PI < turnV
     ? goalAngle
@@ -127,13 +128,14 @@ export const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
       ? angle - turnV
       : angle + turnV) % PI2
 
+// move a particle out of a circle
 export const escapeRadius = (
   point: Point2d & { angle: number; turnV: number },
   circle: Circle,
   boostSpeed = 1,
 ) => {
   const angleFromCircle = Math.atan2(point.y - circle.y, point.x - circle.x)
-  return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // slight boost to turn speed to make mouse circle cleaner
+  return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // boost to turn speed to make mouse circle cleaner
 }
 
 ///

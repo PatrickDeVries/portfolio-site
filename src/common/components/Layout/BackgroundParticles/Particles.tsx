@@ -6,7 +6,7 @@ import { Points, ShaderMaterial } from 'three'
 import { MAX_PARTICLES } from './constants'
 import './particle-material'
 import { fragment, vertex } from './particle-material'
-import particlePositions, { randomizeLocations } from './store'
+import positionStore, { randomizeLocations } from './store'
 import {
   Circle,
   Point2d,
@@ -70,63 +70,59 @@ type Props = {
 const Particles: React.FC<Props> = ({ top, pathname }) => {
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
-  particlePositions.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
+  positionStore.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
 
   const pointsRef = useRef<Points | null>(null)
 
-  const avoid = useMemo(
-    () =>
-      pathname === '/'
-        ? [
-            {
-              vertices: generateStar(
-                viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
-                { x: 0, y: -viewportTop },
-              ),
-            },
-          ]
-        : pathname === '/portfolio'
-          ? [
-              {
-                x: -viewport.width / 4,
-                y: -viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-              {
-                x: -viewport.width / 4,
-                y: viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-              {
-                x: viewport.width / 4,
-                y: -viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-              {
-                x: viewport.width / 4,
-                y: viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-            ]
-          : pathname === '/contact'
-            ? [
-                {
-                  vertices: generateRectangleFromCenter(
-                    { x: 0, y: -viewportTop / 2 },
-                    viewport.height -
-                      (viewport.height > viewport.width
-                        ? viewport.height / 10
-                        : viewport.width / 10),
-                    viewport.width -
-                      (viewport.height > viewport.width
-                        ? viewport.height / 10
-                        : viewport.width / 10),
-                  ),
-                },
-              ]
-            : [],
-    [pathname, viewport.height, viewport.width, viewportTop],
-  )
+  const fixedRepellents = useMemo(() => {
+    if (pathname === '/')
+      return [
+        {
+          vertices: generateStar(
+            viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
+            { x: 0, y: -viewportTop },
+          ),
+        },
+      ]
+    if (pathname === '/contact')
+      return [
+        {
+          vertices: generateRectangleFromCenter(
+            { x: 0, y: -viewportTop / 2 },
+            viewport.height -
+              (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
+            viewport.width -
+              (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
+          ),
+        },
+      ]
+    if (pathname === '/portfolio') {
+      return [
+        {
+          x: -viewport.width / 4,
+          y: -viewport.height / 4 - viewportTop / 2,
+          radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+        },
+        {
+          x: -viewport.width / 4,
+          y: viewport.height / 4 - viewportTop / 2,
+          radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+        },
+        {
+          x: viewport.width / 4,
+          y: -viewport.height / 4 - viewportTop / 2,
+          radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+        },
+        {
+          x: viewport.width / 4,
+          y: viewport.height / 4 - viewportTop / 2,
+          radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+        },
+      ]
+    }
+
+    return []
+  }, [pathname, viewport.height, viewport.width, viewportTop])
 
   const mouse = useRef<Point2d>({ x: 0, y: 0 })
 
@@ -150,7 +146,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
 
   const maxes: Point2d[] = useMemo(
     () =>
-      [...avoid].map(a =>
+      [...fixedRepellents].map(a =>
         isCircle(a)
           ? { x: 0, y: 0 }
           : {
@@ -164,12 +160,12 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
               ),
             },
       ),
-    [avoid],
+    [fixedRepellents],
   )
 
   const mins: Point2d[] = useMemo(
     () =>
-      [...avoid].map(a =>
+      [...fixedRepellents].map(a =>
         isCircle(a)
           ? { x: 0, y: 0 }
           : {
@@ -183,12 +179,13 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
               ),
             },
       ),
-    [avoid],
+    [fixedRepellents],
   )
 
   let ps: number[] = []
   let vs: number[] = []
   let as: number[] = []
+  // if there are not enough particles, create random particle positions, velocities, and angles
   if (ps.length < MAX_PARTICLES * 3) {
     const { positions, velocities, angles } = randomizeLocations()
     ps = positions
@@ -197,6 +194,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
   }
 
   const updatePositions = () => {
+    // get current mouse repellent information
     let mouseBounds: Circle | Polygon =
       particleSettings.mouseShape === MouseShape.Circle
         ? ({ ...mouse.current, radius: particleSettings.mouseSize } as Circle)
@@ -237,10 +235,12 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
       : { x: 0, y: 0 }
 
     if (pointsRef.current) {
+      // get current three.js representations of point data
       const pps = pointsRef.current.geometry.getAttribute('position')
       const pvs = pointsRef.current.geometry.getAttribute('velocity')
       const pas = pointsRef.current.geometry.getAttribute('angle')
 
+      // update each particle's position
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
         const angle = pas.getX(i)
         const v = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
@@ -248,11 +248,12 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
 
         pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
 
+        // handle bouncing off window boundaries
         const flipX = pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2
         const flipY =
           pps.getY(i) > viewport.height / 2 - viewportTop || pps.getY(i) < -viewport.height / 2
 
-        let mouseMoved = false
+        let particleWasMovedByMouse = false
         if (isCircle(mouseBounds)) {
           if (
             mouseBounds.radius > 0 &&
@@ -269,7 +270,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
                 1.5,
               ),
             )
-            mouseMoved = true
+            particleWasMovedByMouse = true
           }
         } else {
           if (
@@ -292,62 +293,63 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
                 1.5,
               ),
             )
-            mouseMoved = true
+            particleWasMovedByMouse = true
           }
         }
 
+        // if particle was repelled, continue to next particle
         if (
-          avoid
-            .map((boundary, bindex) => {
-              if (isCircle(boundary)) {
-                if (
-                  boundary.radius > 0 &&
-                  isInCircle(
-                    { x: pps.getX(i), y: pps.getY(i) },
+          particleWasMovedByMouse ||
+          fixedRepellents.some((boundary, boundaryIndex) => {
+            if (isCircle(boundary)) {
+              if (
+                boundary.radius > 0 &&
+                isInCircle(
+                  { x: pps.getX(i), y: pps.getY(i) },
+                  { x: boundary.x, y: boundary.y, radius: boundary.radius },
+                )
+              ) {
+                pas.setX(
+                  i,
+                  escapeRadius(
+                    { x: pps.getX(i), y: pps.getY(i), angle, turnV },
                     { x: boundary.x, y: boundary.y, radius: boundary.radius },
-                  )
-                ) {
-                  pas.setX(
-                    i,
-                    escapeRadius(
-                      { x: pps.getX(i), y: pps.getY(i), angle, turnV },
-                      { x: boundary.x, y: boundary.y, radius: boundary.radius },
-                      1.5,
-                    ),
-                  )
-                  return true
-                }
-              } else {
-                if (
-                  isInPolygon(
-                    { x: pps.getX(i), y: pps.getY(i) },
-                    maxes[bindex],
-                    mins[bindex],
-                    boundary.vertices,
-                  )
-                ) {
-                  pas.setX(
-                    i,
-                    escapeRadius(
-                      { x: pps.getX(i), y: pps.getY(i), angle, turnV },
-                      {
-                        x: (maxes[bindex].x + mins[bindex].x) / 2,
-                        y: (maxes[bindex].y + mins[bindex].y) / 2,
-                        radius: Math.max.apply(Math, [viewport.width, viewport.height]),
-                      },
-                      1.5,
-                    ),
-                  )
-                  return true
-                }
+                    1.5,
+                  ),
+                )
+                return true
               }
-              return false
-            })
-            .some(val => val) ||
-          mouseMoved
+            } else {
+              if (
+                isInPolygon(
+                  { x: pps.getX(i), y: pps.getY(i) },
+                  maxes[boundaryIndex],
+                  mins[boundaryIndex],
+                  boundary.vertices,
+                )
+              ) {
+                pas.setX(
+                  i,
+                  escapeRadius(
+                    { x: pps.getX(i), y: pps.getY(i), angle, turnV },
+                    {
+                      x: (maxes[boundaryIndex].x + mins[boundaryIndex].x) / 2,
+                      y: (maxes[boundaryIndex].y + mins[boundaryIndex].y) / 2,
+                      radius: Math.max.apply(Math, [viewport.width, viewport.height]),
+                    },
+                    1.5,
+                  ),
+                )
+                return true
+              }
+            }
+            return false
+          })
         ) {
           continue
         }
+
+        // if particle was not repelled, but is at a window boundary
         if (flipX || flipY) {
           pas.setX(
             i,
@@ -399,7 +401,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
     updatePositions()
 
     if (pointsRef.current) {
-      particlePositions.pointsRef = pointsRef
+      positionStore.pointsRef = pointsRef
       pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
     }
   })
