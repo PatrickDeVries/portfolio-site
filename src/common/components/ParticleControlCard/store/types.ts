@@ -1,12 +1,8 @@
+import { RepellentShape } from '../../Layout/BackgroundParticles/types'
+
 export type Mouse = {
   x: number
   y: number
-}
-
-export enum MouseShape {
-  Circle = 'Circle',
-  Square = 'Square',
-  Star = 'Star',
 }
 
 export type BackgroundControl = {
@@ -20,7 +16,7 @@ export type BackgroundControl = {
   turnVar: number
   freeThinkers: number
   mouseSize: number
-  mouseShape: MouseShape
+  mouseShape: RepellentShape
 
   colorA: string
   colorB: string

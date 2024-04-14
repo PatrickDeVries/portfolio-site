@@ -1,12 +1,16 @@
+import { titleize } from '@/common/formatters'
 import React from 'react'
 import { useSnapshot } from 'valtio'
 import Button from '../Button'
 import { MAX_PARTICLES } from '../Layout/BackgroundParticles/constants'
 import { randomizeLocations } from '../Layout/BackgroundParticles/store'
+import { RepellentShape } from '../Layout/BackgroundParticles/types'
 import RangeSlider from '../RangeSlider'
-import { MouseShape } from './store'
-import particleSettings, { resetSettings } from './store/store'
+import particleSettings, { resetSettings } from './store'
 import { ColorInput, ControlCard, ControlRows, Footer, Label } from './style'
+
+const formatMouseShape = (shape: RepellentShape) =>
+  shape === RepellentShape.Rectangle ? 'Square' : titleize(shape.toLocaleLowerCase())
 
 const ParticleControlCard: React.FC = () => {
   const particleSnap = useSnapshot(particleSettings)
@@ -99,13 +103,11 @@ const ParticleControlCard: React.FC = () => {
             Mouse shape
             <select
               value={particleSnap.mouseShape}
-              onChange={e =>
-                (particleSettings.mouseShape = MouseShape[e.target.value as MouseShape])
-              }
+              onChange={e => (particleSettings.mouseShape = e.target.value as RepellentShape)}
             >
-              {Object.keys(MouseShape).map(shape => (
+              {Object.values(RepellentShape).map(shape => (
                 <option key={shape} value={shape}>
-                  {shape}
+                  {formatMouseShape(shape)}
                 </option>
               ))}
             </select>
@@ -117,13 +119,11 @@ const ParticleControlCard: React.FC = () => {
             Mouse shape
             <select
               value={particleSnap.mouseShape}
-              onChange={e =>
-                (particleSettings.mouseShape = MouseShape[e.target.value as MouseShape])
-              }
+              onChange={e => (particleSettings.mouseShape = e.target.value as RepellentShape)}
             >
-              {Object.keys(MouseShape).map(shape => (
+              {Object.values(RepellentShape).map(shape => (
                 <option key={shape} value={shape}>
-                  {shape}
+                  {formatMouseShape(shape)}
                 </option>
               ))}
             </select>

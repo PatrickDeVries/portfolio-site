@@ -16,7 +16,7 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children }) => {
   const location = useLocation()
-  const bodyRef = useRef<HTMLDivElement>(null)
+  const bodyRef = useRef<HTMLBodyElement>(null)
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
@@ -39,7 +39,7 @@ const Layout: React.FC<Props> = ({ children }) => {
 
 export const LayoutFallback: React.FC = () => {
   const location = useLocation()
-  const bodyRef = useRef<HTMLDivElement>(null)
+  const bodyRef = useRef<HTMLBodyElement>(null)
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })

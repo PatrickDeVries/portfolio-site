@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@react-three/fiber": "^8.15.12",
+    "@yobgob/too-many-hooks": "^0.0.1",
     "eslint-plugin-import": "^2.29.1",
     "lodash-es": "^4.17.21",
     "polished": "^4.2.2",

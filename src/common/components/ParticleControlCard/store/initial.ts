@@ -1,5 +1,6 @@
 import { DARK } from '@/common/theme'
-import { BackgroundControl, MouseShape } from './types'
+import { RepellentShape } from '../../Layout/BackgroundParticles/types'
+import { BackgroundControl } from './types'
 
 export const INITIAL_SETTINGS: BackgroundControl = {
   firstHit: false,
@@ -12,7 +13,7 @@ export const INITIAL_SETTINGS: BackgroundControl = {
   turnVar: 0.03 * Math.PI,
   freeThinkers: 200,
   mouseSize: 1,
-  mouseShape: MouseShape.Circle,
+  mouseShape: RepellentShape.Circle,
 
   colorA: DARK.primary,
   colorB: DARK.secondary,
@@ -26,7 +27,7 @@ export const DEFAULT_SETTINGS: Partial<BackgroundControl> = {
   turnVar: 0.03 * Math.PI,
   freeThinkers: 200,
   mouseSize: 1,
-  mouseShape: MouseShape.Circle,
+  mouseShape: RepellentShape.Circle,
 
   colorA: DARK.primary,
   colorB: DARK.secondary,

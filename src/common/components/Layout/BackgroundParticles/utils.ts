@@ -1,34 +1,17 @@
+import { Circle, Point2d } from './types'
+
 export const PI2 = Math.PI * 2
-
-///
-/// Types
-///
-
-export type Point2d = {
-  x: number
-  y: number
-}
-
-export type Circle = Point2d & {
-  radius: number
-}
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isCircle = (b: any): b is Circle => typeof b.radius === 'number'
-
-export type Polygon = {
-  vertices: Point2d[]
-}
 
 ///
 /// Intersection checks
 ///
 
 /// Circle
-export const isInCircle = (point: Point2d, circle: Circle): boolean =>
+export const isPointInCircle = (point: Point2d, circle: Circle): boolean =>
   Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius
 
 /// Polygon
-export const isInPolygon = (
+export const isPointInPolygon = (
   point: Point2d,
   max: Point2d,
   min: Point2d,
@@ -117,9 +100,10 @@ export const getIntersection = (
 }
 
 ///
-/// Utilities for moving points based on geometries
+/// Utilities for moving particles based on geometries
 ///
 
+// find the angle a particle can turn to based off its goal
 export const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
   (((goalAngle - angle + Math.PI) % PI2) - Math.PI < turnV
     ? goalAngle
@@ -127,13 +111,14 @@ export const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
       ? angle - turnV
       : angle + turnV) % PI2
 
+// move a particle out of a circle
 export const escapeRadius = (
   point: Point2d & { angle: number; turnV: number },
   circle: Circle,
   boostSpeed = 1,
 ) => {
   const angleFromCircle = Math.atan2(point.y - circle.y, point.x - circle.x)
-  return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // slight boost to turn speed to make mouse circle cleaner
+  return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // boost to turn speed to make mouse circle cleaner
 }
 
 ///
@@ -163,6 +148,35 @@ export const generateRectangleFromCenter = (
   },
 ]
 
+export const generateRectangleFromBoundingRect = ({
+  top,
+  right,
+  bottom,
+  left,
+}: {
+  top: number
+  right: number
+  bottom: number
+  left: number
+}): Point2d[] => [
+  {
+    x: left,
+    y: top,
+  },
+  {
+    x: right,
+    y: top,
+  },
+  {
+    x: right,
+    y: bottom,
+  },
+  {
+    x: left,
+    y: bottom,
+  },
+]
+
 export const generatePentagon = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point2d[] =>
   Array.from({ length: 5 }, (_, k) => ({
     x: scale * Math.sin(((Math.PI * 2) / 5) * k) + offset.x,
@@ -184,4 +198,41 @@ export const generateStar = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point
     pentagon[4],
     getIntersection(pentagon[4], pentagon[1], pentagon[0], pentagon[3]) ?? { x: 0, y: 0 },
   ]
+}
+
+///
+/// DOM interfacing utils
+///
+
+// Based on https://www.geeksforgeeks.org/window-to-viewport-transformation-in-computer-graphics-with-implementation/
+export const projectWindowPointIntoViewport = (
+  point: Point2d,
+  viewportScale: {
+    xMin: number
+    xMax: number
+    yMin: number
+    yMax: number
+  },
+): Point2d => ({
+  x:
+    viewportScale.xMin +
+    (point.x - 0) * ((viewportScale.xMax - viewportScale.xMin) / (window.innerWidth - 0)),
+  y:
+    -viewportScale.yMin +
+    (point.y - 0) * ((-viewportScale.yMax - -viewportScale.yMin) / (window.innerHeight - 0)), // three.js coordinate system y axis is inverted to the window's coordinate system
+})
+
+export const getVisibleParticleRepellents = () => {
+  const allRepellents = document.querySelectorAll('*[data-repel-particles="true"]')
+  const visibleRepellents = Array.from(allRepellents).filter(repellent => {
+    const { top, bottom, left, right } = repellent.getBoundingClientRect()
+
+    const verticallyVisible =
+      (top > 0 && top < window.innerHeight) || (bottom > 0 && bottom < window.innerHeight)
+    const horizontallyVisible =
+      (left > 0 && left < window.innerWidth) || (right > 0 && right < window.innerWidth)
+
+    return verticallyVisible && horizontallyVisible
+  })
+  return visibleRepellents
 }

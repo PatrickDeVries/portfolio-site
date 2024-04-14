@@ -1,23 +1,24 @@
-import particleSettings, { MouseShape } from '@/common/components/ParticleControlCard/store'
+import particleSettings from '@/common/components/ParticleControlCard/store'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Points, ShaderMaterial } from 'three'
 import { MAX_PARTICLES } from './constants'
+import { usePoint2dMouse } from './hooks'
 import './particle-material'
 import { fragment, vertex } from './particle-material'
-import particlePositions, { randomizeLocations } from './store'
+import positionStore, { randomizeLocations } from './store'
+import { Circle, Point2d, Polygon, RepellentShape, isCircle } from './types'
 import {
-  Circle,
-  Point2d,
-  Polygon,
   escapeRadius,
+  generateRectangleFromBoundingRect,
   generateRectangleFromCenter,
   generateStar,
   getNewAngle,
-  isCircle,
-  isInCircle,
-  isInPolygon,
+  getVisibleParticleRepellents,
+  isPointInCircle,
+  isPointInPolygon,
+  projectWindowPointIntoViewport,
 } from './utils'
 
 const GetShaderMaterial: React.FC<{
@@ -70,284 +71,252 @@ type Props = {
 const Particles: React.FC<Props> = ({ top, pathname }) => {
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
-  particlePositions.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
+  const viewportScale = {
+    xMin: -viewport.width / 2,
+    xMax: viewport.width / 2,
+    yMin: -viewport.height / 2,
+    yMax: viewport.height / 2,
+  }
+  positionStore.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
 
   const pointsRef = useRef<Points | null>(null)
 
-  const avoid = useMemo(
+  // create fixed repellent boundaries based on route
+  const fixedRepellentShapes = useMemo(() => {
+    if (pathname === '/')
+      return [
+        {
+          vertices: generateStar(
+            viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
+            { x: 0, y: -viewportTop },
+          ),
+        },
+      ]
+    if (pathname === '/contact')
+      return [
+        {
+          vertices: generateRectangleFromCenter(
+            { x: 0, y: -viewportTop / 2 },
+            viewport.height -
+              (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
+            viewport.width -
+              (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
+          ),
+        },
+      ]
+
+    return []
+  }, [pathname, viewport.height, viewport.width, viewportTop])
+  const fixedRepellentMaxes: Point2d[] = useMemo(
     () =>
-      pathname === '/'
-        ? [
-            {
-              vertices: generateStar(
-                viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
-                { x: 0, y: -viewportTop },
-              ),
-            },
-          ]
-        : pathname === '/portfolio'
-          ? [
-              {
-                x: -viewport.width / 4,
-                y: -viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-              {
-                x: -viewport.width / 4,
-                y: viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-              {
-                x: viewport.width / 4,
-                y: -viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-              {
-                x: viewport.width / 4,
-                y: viewport.height / 4 - viewportTop / 2,
-                radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
-              },
-            ]
-          : pathname === '/contact'
-            ? [
-                {
-                  vertices: generateRectangleFromCenter(
-                    { x: 0, y: -viewportTop / 2 },
-                    viewport.height -
-                      (viewport.height > viewport.width
-                        ? viewport.height / 10
-                        : viewport.width / 10),
-                    viewport.width -
-                      (viewport.height > viewport.width
-                        ? viewport.height / 10
-                        : viewport.width / 10),
-                  ),
-                },
-              ]
-            : [],
-    [pathname, viewport.height, viewport.width, viewportTop],
-  )
-
-  const mouse = useRef<Point2d>({ x: 0, y: 0 })
-
-  document.onmousemove = event => {
-    mouse.current = {
-      x: ((event.clientX - 0) * viewport.width) / window.innerWidth + -viewport.width / 2,
-      y: ((event.clientY - 0) * -viewport.height) / window.innerHeight + viewport.height / 2,
-    }
-  }
-
-  document.ontouchmove = event => {
-    mouse.current = {
-      x:
-        ((event.changedTouches[0].clientX - 0) * viewport.width) / window.innerWidth +
-        -viewport.width / 2,
-      y:
-        ((event.changedTouches[0].clientY - 0) * -viewport.height) / window.innerHeight +
-        viewport.height / 2,
-    }
-  }
-
-  const maxes: Point2d[] = useMemo(
-    () =>
-      [...avoid].map(a =>
-        isCircle(a)
+      fixedRepellentShapes.map(repellent =>
+        isCircle(repellent)
           ? { x: 0, y: 0 }
           : {
               x: Math.max.apply(
                 Math,
-                a.vertices.map(v => v.x),
+                repellent.vertices.map(v => v.x),
               ),
               y: Math.max.apply(
                 Math,
-                a.vertices.map(v => v.y),
+                repellent.vertices.map(v => v.y),
               ),
             },
       ),
-    [avoid],
+    [fixedRepellentShapes],
   )
-
-  const mins: Point2d[] = useMemo(
+  const fixedRepellentMins: Point2d[] = useMemo(
     () =>
-      [...avoid].map(a =>
-        isCircle(a)
+      fixedRepellentShapes.map(repellent =>
+        isCircle(repellent)
           ? { x: 0, y: 0 }
           : {
               x: Math.min.apply(
                 Math,
-                a.vertices.map(v => v.x),
+                repellent.vertices.map(v => v.x),
               ),
               y: Math.min.apply(
                 Math,
-                a.vertices.map(v => v.y),
+                repellent.vertices.map(v => v.y),
               ),
             },
       ),
-    [avoid],
+    [fixedRepellentShapes],
   )
 
-  let ps: number[] = []
-  let vs: number[] = []
-  let as: number[] = []
-  if (ps.length < MAX_PARTICLES * 3) {
-    const { positions, velocities, angles } = randomizeLocations()
-    ps = positions
-    vs = velocities
-    as = angles
-  }
+  const mouse = usePoint2dMouse(viewport)
+
+  const { positions, velocities, angles } = randomizeLocations()
 
   const updatePositions = () => {
-    let mouseBounds: Circle | Polygon =
-      particleSettings.mouseShape === MouseShape.Circle
-        ? ({ ...mouse.current, radius: particleSettings.mouseSize } as Circle)
-        : particleSettings.mouseShape === MouseShape.Star
-          ? ({ vertices: generateStar(particleSettings.mouseSize, mouse.current) } as Polygon)
-          : ({
+    // get current mouse repellent information
+    const mouseShape: Circle | Polygon =
+      particleSettings.mouseShape === RepellentShape.Circle
+        ? { ...mouse.current, radius: particleSettings.mouseSize }
+        : particleSettings.mouseShape === RepellentShape.Star
+          ? { vertices: generateStar(particleSettings.mouseSize, mouse.current) }
+          : {
               vertices: generateRectangleFromCenter(
                 mouse.current,
                 particleSettings.mouseSize * 2,
                 particleSettings.mouseSize * 2,
               ),
-            } as Polygon)
-
-    let mouseMax: Point2d = !isCircle(mouseBounds)
-      ? {
+            }
+    const mouseMax: Point2d = isCircle(mouseShape)
+      ? { x: 0, y: 0 }
+      : {
           x: Math.max.apply(
             Math,
-            mouseBounds.vertices.map(v => v.x),
+            mouseShape.vertices.map(v => v.x),
           ),
           y: Math.max.apply(
             Math,
-            mouseBounds.vertices.map(v => v.y),
+            mouseShape.vertices.map(v => v.y),
           ),
         }
-      : { x: 0, y: 0 }
-
-    let mouseMin: Point2d = !isCircle(mouseBounds)
-      ? {
+    const mouseMin: Point2d = isCircle(mouseShape)
+      ? { x: 0, y: 0 }
+      : {
           x: Math.min.apply(
             Math,
-            mouseBounds.vertices.map(v => v.x),
+            mouseShape.vertices.map(v => v.x),
           ),
           y: Math.min.apply(
             Math,
-            mouseBounds.vertices.map(v => v.y),
+            mouseShape.vertices.map(v => v.y),
           ),
         }
-      : { x: 0, y: 0 }
+
+    // get other dynamic repellent information
+    const dynamicRepellents = getVisibleParticleRepellents()
+    const dynamicRepellentShapes: (Circle | Polygon)[] = dynamicRepellents.map(repellent => {
+      const { top, right, bottom, left } = repellent.getBoundingClientRect()
+      const repellentShape = repellent.getAttribute('data-repel-shape')
+
+      switch (repellentShape) {
+        case RepellentShape.Circle:
+          return {
+            ...projectWindowPointIntoViewport(
+              { x: (right - left) / 2, y: (bottom - top) / 2 },
+              viewportScale,
+            ),
+            radius: (bottom - top) / 2,
+          }
+        case RepellentShape.Rectangle:
+          return {
+            vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
+              projectWindowPointIntoViewport(point, viewportScale),
+            ),
+          }
+        case RepellentShape.Star:
+          return {
+            vertices: generateStar(bottom - top, {
+              x: (right - left) / 2,
+              y: (bottom - top) / 2,
+            }).map(point => projectWindowPointIntoViewport(point, viewportScale)),
+          }
+        default:
+          return {
+            vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
+              projectWindowPointIntoViewport(point, viewportScale),
+            ),
+          }
+      }
+    })
+    const dynamicRepellentMaxes: Point2d[] = dynamicRepellentShapes.map(repellent =>
+      isCircle(repellent)
+        ? { x: 0, y: 0 }
+        : {
+            x: Math.max.apply(
+              Math,
+              repellent.vertices.map(v => v.x),
+            ),
+            y: Math.max.apply(
+              Math,
+              repellent.vertices.map(v => v.y),
+            ),
+          },
+    )
+    const dynamicRepellentMins: Point2d[] = dynamicRepellentShapes.map(repellent =>
+      isCircle(repellent)
+        ? { x: 0, y: 0 }
+        : {
+            x: Math.min.apply(
+              Math,
+              repellent.vertices.map(v => v.x),
+            ),
+            y: Math.min.apply(
+              Math,
+              repellent.vertices.map(v => v.y),
+            ),
+          },
+    )
+
+    const allRepellentShapes = [mouseShape, ...dynamicRepellentShapes, ...fixedRepellentShapes]
+    const allRepellentMaxes = [mouseMax, ...dynamicRepellentMaxes, ...fixedRepellentMaxes]
+    const allRepellentMins = [mouseMin, ...dynamicRepellentMins, ...fixedRepellentMins]
 
     if (pointsRef.current) {
+      // get current three.js versions of point data
       const pps = pointsRef.current.geometry.getAttribute('position')
       const pvs = pointsRef.current.geometry.getAttribute('velocity')
       const pas = pointsRef.current.geometry.getAttribute('angle')
 
+      // update each particle's position
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
         const angle = pas.getX(i)
         const v = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
         const turnV = pvs.getY(i) * particleSettings.turnVar + particleSettings.baseTurnV
 
+        // update point position
         pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
 
+        const currentPoint = { x: pps.getX(i), y: pps.getY(i) }
+
+        const particleWasRepelled = allRepellentShapes.some((repellent, repellentIndex) => {
+          if (isCircle(repellent)) {
+            if (repellent.radius > 0 && isPointInCircle(currentPoint, repellent)) {
+              pas.setX(i, escapeRadius({ ...currentPoint, angle, turnV }, repellent, 1.5))
+              return true
+            }
+          } else {
+            if (
+              isPointInPolygon(
+                currentPoint,
+                allRepellentMaxes[repellentIndex],
+                allRepellentMins[repellentIndex],
+                repellent.vertices,
+              )
+            ) {
+              pas.setX(
+                i,
+                escapeRadius(
+                  { ...currentPoint, angle, turnV },
+                  {
+                    x:
+                      (allRepellentMaxes[repellentIndex].x + allRepellentMins[repellentIndex].x) /
+                      2,
+                    y:
+                      (allRepellentMaxes[repellentIndex].y + allRepellentMins[repellentIndex].y) /
+                      2,
+                    radius: Math.max.apply(Math, [viewport.width, viewport.height]),
+                  },
+                  1.5,
+                ),
+              )
+              return true
+            }
+          }
+          return false
+        })
+        if (particleWasRepelled) continue
+
+        // handle bouncing off window boundaries
         const flipX = pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2
         const flipY =
           pps.getY(i) > viewport.height / 2 - viewportTop || pps.getY(i) < -viewport.height / 2
 
-        let mouseMoved = false
-        if (isCircle(mouseBounds)) {
-          if (
-            mouseBounds.radius > 0 &&
-            isInCircle(
-              { x: pps.getX(i), y: pps.getY(i) },
-              { x: mouse.current.x, y: mouse.current.y, radius: mouseBounds.radius },
-            )
-          ) {
-            pas.setX(
-              i,
-              escapeRadius(
-                { x: pps.getX(i), y: pps.getY(i), angle, turnV },
-                { x: mouse.current.x, y: mouse.current.y, radius: mouseBounds.radius },
-                1.5,
-              ),
-            )
-            mouseMoved = true
-          }
-        } else {
-          if (
-            isInPolygon(
-              { x: pps.getX(i), y: pps.getY(i) },
-              mouseMax,
-              mouseMin,
-              mouseBounds.vertices,
-            )
-          ) {
-            pas.setX(
-              i,
-              escapeRadius(
-                { x: pps.getX(i), y: pps.getY(i), angle, turnV },
-                {
-                  x: (mouseMax.x + mouseMin.x) / 2,
-                  y: (mouseMax.y + mouseMin.y) / 2,
-                  radius: Math.max.apply(Math, [viewport.width, viewport.height]),
-                },
-                1.5,
-              ),
-            )
-            mouseMoved = true
-          }
-        }
-
-        if (
-          avoid
-            .map((boundary, bindex) => {
-              if (isCircle(boundary)) {
-                if (
-                  boundary.radius > 0 &&
-                  isInCircle(
-                    { x: pps.getX(i), y: pps.getY(i) },
-                    { x: boundary.x, y: boundary.y, radius: boundary.radius },
-                  )
-                ) {
-                  pas.setX(
-                    i,
-                    escapeRadius(
-                      { x: pps.getX(i), y: pps.getY(i), angle, turnV },
-                      { x: boundary.x, y: boundary.y, radius: boundary.radius },
-                      1.5,
-                    ),
-                  )
-                  return true
-                }
-              } else {
-                if (
-                  isInPolygon(
-                    { x: pps.getX(i), y: pps.getY(i) },
-                    maxes[bindex],
-                    mins[bindex],
-                    boundary.vertices,
-                  )
-                ) {
-                  pas.setX(
-                    i,
-                    escapeRadius(
-                      { x: pps.getX(i), y: pps.getY(i), angle, turnV },
-                      {
-                        x: (maxes[bindex].x + mins[bindex].x) / 2,
-                        y: (maxes[bindex].y + mins[bindex].y) / 2,
-                        radius: Math.max.apply(Math, [viewport.width, viewport.height]),
-                      },
-                      1.5,
-                    ),
-                  )
-                  return true
-                }
-              }
-              return false
-            })
-            .some(val => val) ||
-          mouseMoved
-        ) {
-          continue
-        }
+        // if particle was not repelled, but is at a window boundary
         if (flipX || flipY) {
           pas.setX(
             i,
@@ -399,12 +368,12 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
     updatePositions()
 
     if (pointsRef.current) {
-      particlePositions.pointsRef = pointsRef
+      positionStore.pointsRef = pointsRef
       pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
     }
   })
 
-  if (ps.length < MAX_PARTICLES * 3) {
+  if (positions.length < MAX_PARTICLES * 3) {
     return null
   }
 
@@ -414,19 +383,19 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
         <bufferAttribute
           attach="attributes-position"
           count={MAX_PARTICLES}
-          array={new Float32Array(ps)}
+          array={new Float32Array(positions)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-velocity"
           count={MAX_PARTICLES}
-          array={new Float32Array(vs)}
+          array={new Float32Array(velocities)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-angle"
           count={MAX_PARTICLES}
-          array={new Float32Array(as)}
+          array={new Float32Array(angles)}
           itemSize={1}
         />
       </bufferGeometry>
