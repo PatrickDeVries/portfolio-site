@@ -1,7 +1,7 @@
 import { Size } from '@react-three/fiber'
 import { useWindowListener } from '@yobgob/too-many-hooks'
 import { useRef } from 'react'
-import { Point2d } from '../utils'
+import { Point2d } from '../types'
 
 const usePoint2dMouse = (viewport: Size) => {
   const mouse = useRef<Point2d>({ x: 0, y: 0 })
