@@ -14,7 +14,7 @@ const WorkCard: React.FC<Props> = ({ item }) => (
     href={item.href}
     to={item.to}
     $isLink={!!item.href || !!item.to}
-    data-repel-particles={true}
+    data-repel-particles
     data-repel-shape={RepellentShape.Rectangle}
   >
     <HeaderText>{item.header}</HeaderText>

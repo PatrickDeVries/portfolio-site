@@ -16,7 +16,7 @@ const GithubStats: React.FC = () => {
         theme.secondary,
       )}&bg_color=${formatColorArg(theme.backgroundHighlight)}&hide_border=true&hide=issues`}
       alt="GitHub user stats for patrickdevries"
-      data-repel-particles={true}
+      data-repel-particles
       data-repel-shape={RepellentShape.Rectangle}
     />
   )
