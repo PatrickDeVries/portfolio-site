@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import { RouteObject, matchPath, matchRoutes, useLocation } from 'react-router-dom'
 import BackgroundParticles from './BackgroundParticles'
 import Header from './Header'
-import store from './store'
 import { Body, Main } from './style'
 
 const PARTICLE_WHITELIST: RouteObject[] = [
@@ -33,10 +32,7 @@ const Layout: React.FC<Props> = ({ children }) => {
         <Body
           $tint={!matchPath(location.pathname, '/particles')}
           ref={bodyRef}
-          onScroll={e => {
-            console.log('scrolled', e.currentTarget.scrollTop)
-            store.scrollPosition = e.currentTarget.scrollTop
-          }}
+          // onScroll={e => (store.scrollPosition = e.currentTarget.scrollTop)}
         >
           {children}
         </Body>

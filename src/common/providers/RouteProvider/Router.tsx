@@ -11,11 +11,11 @@ const ROUTES: RouteObject[] = [
     element: <HomePages />,
   },
   {
-    path: '/particles',
+    path: '/particles/*',
     element: <ParticlesPages />,
   },
   {
-    path: '/contact',
+    path: '/contact/*',
     element: <ContactPages />,
   },
   {
