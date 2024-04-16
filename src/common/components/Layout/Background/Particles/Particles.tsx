@@ -319,7 +319,11 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
             pps.getY(i) + v * Math.sin(pas.getX(i)) > viewport.height - viewportTop / 2 ||
             pps.getY(i) + v * Math.sin(pas.getX(i)) < -viewport.height / 2
           ) {
-            pps.setXY(i, 0, 0)
+            pps.setXY(
+              i,
+              Math.random() * viewport.width - viewport.width / 2,
+              Math.random() * viewport.height - viewport.height / 2 - viewport.top,
+            )
           }
         } else if (particleSettings.freeThinkers === 0) {
           let goalAngle = 0
