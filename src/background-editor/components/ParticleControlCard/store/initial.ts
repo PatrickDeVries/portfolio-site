@@ -1,5 +1,5 @@
+import { RepellentShape } from '@/common/components/Layout/Background/types'
 import { DARK } from '@/common/theme'
-import { RepellentShape } from '../../Layout/BackgroundParticles/types'
 import { BackgroundControl } from './types'
 
 export const INITIAL_SETTINGS: BackgroundControl = {

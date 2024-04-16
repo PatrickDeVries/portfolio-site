@@ -1,14 +1,14 @@
 import React, { useEffect, useRef } from 'react'
 import { RouteObject, matchPath, matchRoutes, useLocation } from 'react-router-dom'
-import BackgroundParticles from './BackgroundParticles'
+import Background from './Background'
 import Header from './Header'
 import { Body, Main } from './style'
 
-const PARTICLE_WHITELIST: RouteObject[] = [
+const BACKGROUND_WHITELIST: RouteObject[] = [
   { path: '/' },
-  { path: '/portfolio' },
+  { path: '/background-editor' },
   { path: '/contact' },
-  { path: '/particles' },
+  { path: '/portfolio' },
 ]
 interface Props {
   children: React.ReactNode
@@ -18,14 +18,10 @@ const Layout: React.FC<Props> = ({ children }) => {
   const location = useLocation()
   const bodyRef = useRef<HTMLBodyElement>(null)
 
-  useEffect(() => {
-    bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [location.pathname])
-
   return (
     <>
-      {matchRoutes(PARTICLE_WHITELIST, location.pathname) && (
-        <BackgroundParticles top={bodyRef.current?.offsetTop ?? 0} />
+      {matchRoutes(BACKGROUND_WHITELIST, location.pathname) && (
+        <Background top={bodyRef.current?.getBoundingClientRect().top ?? 0} />
       )}
       <Main>
         <Header />

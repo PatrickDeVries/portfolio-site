@@ -1,6 +1,6 @@
+import BackgroundEditorPages from '@/background-editor'
 import ContactPages from '@/contact'
 import HomePages from '@/home'
-import ParticlesPages from '@/particles'
 import PortfolioPages from '@/portfolio'
 import { RouteObject, useRoutes } from 'react-router-dom'
 import { FallbackMessage } from './style'
@@ -11,8 +11,8 @@ const ROUTES: RouteObject[] = [
     element: <HomePages />,
   },
   {
-    path: '/particles/*',
-    element: <ParticlesPages />,
+    path: '/background-editor/*',
+    element: <BackgroundEditorPages />,
   },
   {
     path: '/contact/*',

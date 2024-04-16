@@ -2,14 +2,13 @@ import { Canvas } from '@react-three/fiber'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import Particles from './Particles'
-import './particle-material'
 import { BgCanvas } from './style'
 
 type Props = {
   top: number
 }
 
-const BackgroundParticles: React.FC<Props> = ({ top }) => {
+const Background: React.FC<Props> = ({ top }) => {
   const location = useLocation()
 
   return (
@@ -24,4 +23,4 @@ const BackgroundParticles: React.FC<Props> = ({ top }) => {
   )
 }
 
-export default BackgroundParticles
+export default Background

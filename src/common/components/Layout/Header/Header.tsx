@@ -1,4 +1,4 @@
-import particleSettings from '@/common/components/ParticleControlCard/store'
+import particleSettings from '@/background-editor/components/ParticleControlCard/store'
 import { DARK, LIGHT } from '@/common/theme'
 import store from '@/common/theme/store'
 import React, { useRef } from 'react'
@@ -32,33 +32,25 @@ const Header: React.FC = () => {
       route: '/',
       label: 'Home',
       to: '/',
-      onClick: () => {
-        setExpanded(false)
-      },
+      onClick: () => setExpanded(false),
     },
     {
       route: '/portfolio',
       label: 'Portfolio',
       to: '/portfolio',
-      onClick: () => {
-        setExpanded(false)
-      },
+      onClick: () => setExpanded(false),
     },
     {
       route: '/contact',
       label: 'Contact',
       to: '/contact',
-      onClick: () => {
-        setExpanded(false)
-      },
+      onClick: () => setExpanded(false),
     },
     {
-      route: '/particles',
-      label: 'Particles',
-      to: '/particles',
-      onClick: () => {
-        setExpanded(false)
-      },
+      route: '/background-editor',
+      label: 'Background Editor',
+      to: '/background-editor',
+      onClick: () => setExpanded(false),
     },
   ]
 
@@ -96,7 +88,7 @@ const Header: React.FC = () => {
           ))}
         </NavGroup>
         <IconGroup>
-          {location.pathname === '/particles' && (
+          {location.pathname === '/background-editor' && (
             <NavIcon
               title="Edit background settings"
               onClick={() => {
