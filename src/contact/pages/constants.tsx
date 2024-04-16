@@ -1,4 +1,4 @@
-import { RepellentShape } from '@/common/components/Layout/BackgroundParticles/types'
+import { RepellentShape } from '@/common/components/Layout/Background/types'
 import { BsGithub } from 'react-icons/bs'
 import { MdEmail, MdLocalPhone, MdMessage } from 'react-icons/md'
 import { RiLinkedinBoxFill } from 'react-icons/ri'

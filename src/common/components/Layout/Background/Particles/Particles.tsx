@@ -1,14 +1,10 @@
-import particleSettings from '@/common/components/ParticleControlCard/store'
+import particleSettings from '@/background-editor/components/ParticleControlCard/store'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Points, ShaderMaterial } from 'three'
-import { MAX_PARTICLES } from './constants'
-import { usePoint2dMouse } from './hooks'
-import './particle-material'
-import { fragment, vertex } from './particle-material'
-import positionStore, { randomizeLocations } from './store'
-import { Circle, Point2d, Polygon, RepellentShape, isCircle } from './types'
+import { usePoint2dMouse } from '../hooks'
+import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
   PI2,
   escapeRadius,
@@ -21,7 +17,11 @@ import {
   isPointInPolygon,
   projectWindowPointIntoViewport,
   scaleWidthIntoViewport,
-} from './utils'
+} from '../utils'
+import { MAX_PARTICLES } from './constants'
+import './particle-material'
+import { fragment, vertex } from './particle-material'
+import positionStore, { randomizeLocations } from './store'
 
 const GetShaderMaterial: React.FC<{
   colorA: string

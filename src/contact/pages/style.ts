@@ -1,4 +1,4 @@
-import { RepellentShape } from '@/common/components/Layout/BackgroundParticles/types'
+import { RepellentShape } from '@/common/components/Layout/Background/types'
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`

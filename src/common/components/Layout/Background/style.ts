@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import './particle-material'
 
 export const BgCanvas = styled.div`
   position: fixed;

@@ -1,10 +1,10 @@
-import ParticleControlCard from '@/common/components/ParticleControlCard'
-import particleSettings from '@/common/components/ParticleControlCard/store'
 import React from 'react'
 import { useSnapshot } from 'valtio'
+import ParticleControlCard from '../components/ParticleControlCard'
+import particleSettings from '../components/ParticleControlCard/store'
 import { GearIndicator, Instructions, Wrapper } from './style'
 
-const ParticlesPageContent: React.FC = () => {
+const BackgroundEditorPageContent: React.FC = () => {
   const snap = useSnapshot(particleSettings)
 
   return (
@@ -18,4 +18,4 @@ const ParticlesPageContent: React.FC = () => {
   )
 }
 
-export default ParticlesPageContent
+export default BackgroundEditorPageContent
