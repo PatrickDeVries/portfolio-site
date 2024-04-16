@@ -1,4 +1,3 @@
-import { RepellentShape } from '@/common/components/Layout/BackgroundParticles/types'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { WorkItem } from '../types'
@@ -15,7 +14,6 @@ const WorkCard: React.FC<Props> = ({ item }) => (
     to={item.to}
     $isLink={!!item.href || !!item.to}
     data-repel-particles
-    data-repel-shape={RepellentShape.Rectangle}
   >
     <HeaderText>{item.header}</HeaderText>
     <BodySection>

@@ -222,6 +222,16 @@ export const projectWindowPointIntoViewport = (
     (point.y - 0) * ((-viewportScale.yMax - -viewportScale.yMin) / (window.innerHeight - 0)), // three.js coordinate system y axis is inverted to the window's coordinate system
 })
 
+export const scaleWidthIntoViewport = (
+  width: number,
+  viewportScale: {
+    xMin: number
+    xMax: number
+    yMin: number
+    yMax: number
+  },
+) => width * ((viewportScale.xMax - viewportScale.xMin) / (window.innerWidth - 0))
+
 export const getVisibleParticleRepellents = () => {
   const allRepellents = document.querySelectorAll('*[data-repel-particles="true"]')
   const visibleRepellents = Array.from(allRepellents).filter(repellent => {

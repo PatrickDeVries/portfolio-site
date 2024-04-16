@@ -8,8 +8,8 @@ const PortfolioPageContent: React.FC = () => (
   <Wrapper>
     {Object.keys(MY_WORK).map(section => (
       <section key={`${section}-section`}>
-        <SectionHeader>{section}:</SectionHeader>
-        <WorkItems key={`${section}-work-items`}>
+        <SectionHeader data-repel-particles>{section}:</SectionHeader>
+        <WorkItems>
           {MY_WORK[section].map(item => (
             <WorkCard key={item.header} item={item} />
           ))}
