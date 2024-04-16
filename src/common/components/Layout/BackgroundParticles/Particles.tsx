@@ -10,6 +10,7 @@ import { fragment, vertex } from './particle-material'
 import positionStore, { randomizeLocations } from './store'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from './types'
 import {
+  PI2,
   escapeRadius,
   generateRectangleFromBoundingRect,
   generateRectangleFromCenter,
@@ -19,6 +20,7 @@ import {
   isPointInCircle,
   isPointInPolygon,
   projectWindowPointIntoViewport,
+  scaleWidthIntoViewport,
 } from './utils'
 
 const GetShaderMaterial: React.FC<{
@@ -89,18 +91,6 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           vertices: generateStar(
             viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
             { x: 0, y: -viewportTop },
-          ),
-        },
-      ]
-    if (pathname === '/contact')
-      return [
-        {
-          vertices: generateRectangleFromCenter(
-            { x: 0, y: -viewportTop / 2 },
-            viewport.height -
-              (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
-            viewport.width -
-              (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
           ),
         },
       ]
@@ -197,10 +187,10 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
         case RepellentShape.Circle:
           return {
             ...projectWindowPointIntoViewport(
-              { x: (right - left) / 2, y: (bottom - top) / 2 },
+              { x: (right + left) / 2, y: (top + bottom) / 2 },
               viewportScale,
             ),
-            radius: (bottom - top) / 2,
+            radius: scaleWidthIntoViewport((right - left) / 2, viewportScale),
           }
         case RepellentShape.Rectangle:
           return {
@@ -211,8 +201,8 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
         case RepellentShape.Star:
           return {
             vertices: generateStar(bottom - top, {
-              x: (right - left) / 2,
-              y: (bottom - top) / 2,
+              x: (right + left) / 2,
+              y: (bottom + top) / 2,
             }).map(point => projectWindowPointIntoViewport(point, viewportScale)),
           }
         default:
@@ -276,7 +266,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
         const particleWasRepelled = allRepellentShapes.some((repellent, repellentIndex) => {
           if (isCircle(repellent)) {
             if (repellent.radius > 0 && isPointInCircle(currentPoint, repellent)) {
-              pas.setX(i, escapeRadius({ ...currentPoint, angle, turnV }, repellent, 1.5))
+              pas.setX(i, escapeRadius({ ...currentPoint, angle, turnV }, repellent, PI2))
               return true
             }
           } else {
@@ -301,7 +291,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
                       2,
                     radius: Math.max.apply(Math, [viewport.width, viewport.height]),
                   },
-                  1.5,
+                  PI2,
                 ),
               )
               return true

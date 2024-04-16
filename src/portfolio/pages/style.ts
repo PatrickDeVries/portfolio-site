@@ -5,16 +5,16 @@ export const Wrapper = styled.div`
   padding: 2rem;
 
   ${TABLET} {
-    padding: 1rem;
+    padding: 1.5rem;
   }
 
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
 `
 
 export const SectionHeader = styled.h2`
-  width: 100%;
+  width: fit-content;
   padding: 1rem;
   color: ${({ theme }) => theme.primary};
 

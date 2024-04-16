@@ -1,41 +1,53 @@
+import { RepellentShape } from '@/common/components/Layout/BackgroundParticles/types'
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   padding: 3rem;
-  margin-top: auto;
-  margin-bottom: auto;
+  height: 100%;
+
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 3rem;
 `
 
 export const ContactText = styled.div`
   font-size: 2rem;
+  padding: 1rem;
 `
 
 export const SocialLinks = styled.div`
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 3rem;
   display: flex;
-  gap: 2rem;
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  gap: 2rem;
 `
 
 export const SocialLink = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
 
-  text-decoration: none;
+  color: ${({ theme }) => theme.secondary};
 
-  color: ${({ theme }) => theme.text};
+  svg {
+    height: 10rem;
+    width: 10rem;
+  }
 
-  &:hover {
-    text-decoration: underline;
+  svg[data-repel-shape=${RepellentShape.Circle}] {
+    padding: 1rem;
+  }
+
+  &:hover,
+  &:focus {
+    outline: none;
+    color: ${({ theme }) => theme.primary};
+  }
+  &:focus {
+    filter: drop-shadow(-1px -1px 0px black) drop-shadow(1px -1px 0px black)
+      drop-shadow(1px 1px 0px black) drop-shadow(-1px 1px 0px black);
   }
 `

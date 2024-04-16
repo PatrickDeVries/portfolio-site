@@ -13,7 +13,6 @@ export const StyledCard = styled.div<{ $isLink: boolean }>`
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 1rem;
 
   background-color: ${({ theme }) => theme.backgroundHighlight};
@@ -32,38 +31,43 @@ export const StyledCard = styled.div<{ $isLink: boolean }>`
 
   text-decoration: none;
 
-  ${({ $isLink }) =>
+  ${({ $isLink, theme }) =>
     $isLink &&
     css`
-      &:hover {
+      ${HeaderText} {
+        text-decoration: underline;
+      }
+
+      &:hover,
+      &:focus {
         ${HeaderText} {
-          text-decoration: underline;
+          color: ${theme.primary};
         }
+        border: 1px solid ${theme.primary};
+        outline: none;
       }
     `}
 `
 
 export const BodySection = styled.div`
+  display: block;
+
+  padding: 1rem;
   width: 100%;
 
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-
   font-size: 1.2rem;
-
-  ${MOBILE} {
-    flex-direction: column;
-    align-items: center;
-  }
-  padding: 1rem;
 `
 
 export const ScalingImg = styled.img`
   display: block;
+
+  float: left;
+  padding: 1rem;
+
   max-height: 20vh;
   max-width: 100%;
-  object-fit: cover;
+
+  object-fit: contain;
   border-radius: 0.5rem;
 `
 
@@ -77,9 +81,11 @@ export const BodyText = styled.p`
 `
 
 export const TagSection = styled.div`
+  height: 100%;
   width: 100%;
 
   display: flex;
+  align-items: flex-start;
   flex-flow: row wrap-reverse;
   justify-content: flex-start;
   gap: 0.5rem;

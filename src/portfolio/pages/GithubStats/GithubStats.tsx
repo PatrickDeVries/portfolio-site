@@ -1,4 +1,3 @@
-import { RepellentShape } from '@/common/components/Layout/BackgroundParticles/types'
 import React from 'react'
 import { useTheme } from 'styled-components'
 import { Wrapper } from './style'
@@ -17,7 +16,6 @@ const GithubStats: React.FC = () => {
       )}&bg_color=${formatColorArg(theme.backgroundHighlight)}&hide_border=true&hide=issues`}
       alt="GitHub user stats for patrickdevries"
       data-repel-particles
-      data-repel-shape={RepellentShape.Rectangle}
     />
   )
 }
