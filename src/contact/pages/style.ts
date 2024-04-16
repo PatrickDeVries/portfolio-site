@@ -46,8 +46,9 @@ export const SocialLink = styled.div`
     outline: none;
     color: ${({ theme }) => theme.primary};
   }
+
   &:focus {
-    filter: drop-shadow(-1px -1px 0px black) drop-shadow(1px -1px 0px black)
-      drop-shadow(1px 1px 0px black) drop-shadow(-1px 1px 0px black);
+    filter: drop-shadow(-1px -1px 0 black) drop-shadow(1px -1px 0 black)
+      drop-shadow(1px 1px 0 black) drop-shadow(-1px 1px 0 black);
   }
 `

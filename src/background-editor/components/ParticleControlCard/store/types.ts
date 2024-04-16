@@ -1,4 +1,4 @@
-import { RepellentShape } from '../../Layout/Background/types'
+import { RepellentShape } from '@/common/components/Layout/Background/types'
 
 export type Mouse = {
   x: number
