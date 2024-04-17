@@ -1,5 +1,6 @@
 import { particleSettings } from '@/background-editor/components/control-cards'
 import { useFrame, useThree } from '@react-three/fiber'
+import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Points, ShaderMaterial } from 'three'
@@ -71,6 +72,16 @@ type Props = {
 }
 
 const Particles: React.FC<Props> = ({ top, pathname }) => {
+  useWindowListener('keyup', event => {
+    if (event.key === '=') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize + 0.5 < 5 ? particleSettings.mouseSize + 0.5 : 5
+    } else if (event.key === '-') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize - 0.5 > 0 ? particleSettings.mouseSize - 0.5 : 0
+    }
+  })
+
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
   const viewportScale = {

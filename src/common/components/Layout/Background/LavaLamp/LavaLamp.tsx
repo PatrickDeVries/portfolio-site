@@ -1,5 +1,6 @@
 import { lavaLampSettings } from '@/background-editor/components/control-cards'
 import { useFrame, useThree } from '@react-three/fiber'
+import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useMemo, useRef } from 'react'
 import { Points, Sphere, Vector3 } from 'three'
 import { usePoint2dMouse } from '../hooks'
@@ -25,6 +26,16 @@ type Props = {
 }
 
 const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
+  useWindowListener('keyup', event => {
+    if (event.key === '=') {
+      lavaLampSettings.mouseSize =
+        lavaLampSettings.mouseSize + 0.5 < 5 ? lavaLampSettings.mouseSize + 0.5 : 5
+    } else if (event.key === '-') {
+      lavaLampSettings.mouseSize =
+        lavaLampSettings.mouseSize - 0.5 > 0 ? lavaLampSettings.mouseSize - 0.5 : 0
+    }
+  })
+
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
   const viewportScale = {

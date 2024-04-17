@@ -1,6 +1,7 @@
 import { lavaLampSettings, particleSettings } from '@/background-editor/components/control-cards'
 import { DARK, LIGHT } from '@/common/theme'
 import themeStore from '@/common/theme/store'
+import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useRef } from 'react'
 import { GiBurstBlob } from 'react-icons/gi'
 import { HiOutlineCog } from 'react-icons/hi'
@@ -58,13 +59,11 @@ const Header: React.FC = () => {
     },
   ]
 
-  document.onkeyup = event => {
-    if (event.key === 'Escape') {
-      if (gearRef.current) {
-        gearRef.current.click()
-      }
+  useWindowListener('keyup', event => {
+    if (event.key === 'Escape' && gearRef.current) {
+      gearRef.current.click()
     }
-  }
+  })
 
   return (
     <>

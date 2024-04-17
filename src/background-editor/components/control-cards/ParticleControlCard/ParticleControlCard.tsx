@@ -3,7 +3,6 @@ import { MAX_PARTICLES, randomizeLocations } from '@/common/components/Layout/Ba
 import { RepellentShape } from '@/common/components/Layout/Background/types'
 import RangeSlider from '@/common/components/RangeSlider'
 import { titleize } from '@/common/formatters'
-import { useWindowListener } from '@yobgob/too-many-hooks'
 import React from 'react'
 import { useSnapshot } from 'valtio'
 import { ControlCard } from '../style'
@@ -15,16 +14,6 @@ const formatMouseShape = (shape: RepellentShape) =>
 
 const ParticleControlCard: React.FC = () => {
   const particleSnap = useSnapshot(particleSettings)
-
-  useWindowListener('keyup', event => {
-    if (event.key === '=') {
-      particleSettings.mouseSize =
-        particleSettings.mouseSize + 0.5 < 5 ? particleSettings.mouseSize + 0.5 : 5
-    } else if (event.key === '-') {
-      particleSettings.mouseSize =
-        particleSettings.mouseSize - 0.5 > 0 ? particleSettings.mouseSize - 0.5 : 0
-    }
-  })
 
   return (
     <>
