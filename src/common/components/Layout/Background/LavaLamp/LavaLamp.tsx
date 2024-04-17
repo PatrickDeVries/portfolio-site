@@ -1,8 +1,7 @@
 import particleSettings from '@/background-editor/components/ParticleControlCard/store'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useMemo, useRef } from 'react'
-import * as THREE from 'three'
-import { Points, ShaderMaterial } from 'three'
+import { Points } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
@@ -13,47 +12,10 @@ import {
   projectWindowPointIntoViewport,
   scaleWidthIntoViewport,
 } from '../utils'
+import LavaShaderMaterial from './LavaShaderMaterial'
 import { MAX_PARTICLES, PARTICLE_MAX_SPEED } from './constants'
-import './particle-material'
-import { fragment, vertex } from './particle-material'
 import positionStore, { randomizeLocations } from './store'
 import { getAccelerationFromTemperature, getConvectionHeatTransferPerFrame } from './utils'
-
-const LavaShaderMaterial: React.FC<{
-  colorA: string
-  colorB: string
-}> = props => {
-  const ref = useRef<ShaderMaterial | null>(null)
-
-  const uniforms = useMemo(
-    () =>
-      THREE.UniformsUtils.merge([
-        {
-          colorA: { value: new THREE.Color(props.colorA) },
-          colorB: { value: new THREE.Color(props.colorB) },
-        },
-      ]),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  )
-
-  useFrame(() => {
-    if (ref.current) {
-      ref.current.uniforms.colorA.value = new THREE.Color(props.colorA)
-      ref.current.uniforms.colorB.value = new THREE.Color(props.colorB)
-    }
-  })
-
-  return (
-    <shaderMaterial
-      ref={ref}
-      attach="material"
-      uniforms={uniforms}
-      vertexShader={vertex}
-      fragmentShader={fragment}
-    />
-  )
-}
 
 type Props = {
   top: number
@@ -247,8 +209,8 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
         const temperature = pts.getX(i)
         const velocity = pvs.getX(i)
 
-        const atTop = pps.getY(i) >= viewport.height / 2
-        const atBottom = pps.getY(i) <= -viewport.height / 2
+        const atTop = pps.getY(i) > viewport.height / 2 - viewportTop
+        const atBottom = pps.getY(i) < -viewport.height / 2
 
         if ((!atTop || velocity < 0) && (!atBottom || velocity > 0)) {
           pps.setXY(i, pps.getX(i), pps.getY(i) + velocity)
