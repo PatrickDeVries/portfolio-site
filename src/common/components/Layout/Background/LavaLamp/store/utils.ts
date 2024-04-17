@@ -1,5 +1,5 @@
 import { MAX_PARTICLES } from '../constants'
-import { getAccelerationFromTemperature, getTemperatureAtCoordinate } from '../utils'
+import { getAccelerationFromTemperature } from '../utils'
 import positionStore from './store'
 
 export const randomizeLocations = (): {
@@ -15,15 +15,16 @@ export const randomizeLocations = (): {
 
   for (let i = 0; i < MAX_PARTICLES; i++) {
     const randomY =
-      Math.random() * positionStore.viewport.height -
-      positionStore.viewport.height / 2 -
-      positionStore.viewport.top
+      (Math.random() * positionStore.viewport.height) / 4 -
+      positionStore.viewport.top -
+      positionStore.viewport.height / 2
+
     const randomX = Math.random() * positionStore.viewport.width - positionStore.viewport.width / 2
     positions.push(randomX, randomY, 0)
 
-    const temperature = getTemperatureAtCoordinate({ x: randomX, y: randomY })
-    temperatures.push(temperature)
-    velocities.push(getAccelerationFromTemperature(temperature))
+    const randomTemperature = Math.random() * 100
+    temperatures.push(randomTemperature)
+    velocities.push(getAccelerationFromTemperature(randomTemperature))
 
     let newA = Math.random() * 2 * Math.PI
     if (
