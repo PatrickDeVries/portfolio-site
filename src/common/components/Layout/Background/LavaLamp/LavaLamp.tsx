@@ -22,8 +22,6 @@ import { getAccelerationFromTemperature, getConvectionHeatTransferPerFrame } fro
 const LavaShaderMaterial: React.FC<{
   colorA: string
   colorB: string
-  bboxMin: number
-  bboxMax: number
 }> = props => {
   const ref = useRef<ShaderMaterial | null>(null)
 
@@ -33,8 +31,6 @@ const LavaShaderMaterial: React.FC<{
         {
           colorA: { value: new THREE.Color(props.colorA) },
           colorB: { value: new THREE.Color(props.colorB) },
-          bboxMin: { value: props.bboxMin },
-          bboxMax: { value: props.bboxMax },
         },
       ]),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,8 +41,6 @@ const LavaShaderMaterial: React.FC<{
     if (ref.current) {
       ref.current.uniforms.colorA.value = new THREE.Color(props.colorA)
       ref.current.uniforms.colorB.value = new THREE.Color(props.colorB)
-      ref.current.uniforms.bboxMin.value = props.bboxMin
-      ref.current.uniforms.bboxMax.value = props.bboxMax
     }
   })
 
@@ -325,12 +319,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
           itemSize={1}
         />
       </bufferGeometry>
-      <LavaShaderMaterial
-        colorA={particleSettings.colorA}
-        colorB={particleSettings.colorB}
-        bboxMin={-1}
-        bboxMax={1}
-      />
+      <LavaShaderMaterial colorA={particleSettings.colorA} colorB={particleSettings.colorB} />
     </points>
   )
 }
