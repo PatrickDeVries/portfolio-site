@@ -6,24 +6,20 @@ import { Points, ShaderMaterial } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
-  PI2,
-  escapeRadius,
   generateRectangleFromBoundingRect,
   generateRectangleFromCenter,
   generateStar,
-  getNewAngle,
   getVisibleParticleRepellents,
-  isPointInCircle,
-  isPointInPolygon,
   projectWindowPointIntoViewport,
   scaleWidthIntoViewport,
 } from '../utils'
-import { MAX_PARTICLES } from './constants'
+import { MAX_PARTICLES, PARTICLE_MAX_SPEED } from './constants'
 import './particle-material'
 import { fragment, vertex } from './particle-material'
 import positionStore, { randomizeLocations } from './store'
+import { getAccelerationFromTemperature, getConvectionHeatTransferPerFrame } from './utils'
 
-const ParticleShaderMaterial: React.FC<{
+const LavaShaderMaterial: React.FC<{
   colorA: string
   colorB: string
   bboxMin: number
@@ -70,7 +66,7 @@ type Props = {
   pathname: string
 }
 
-const Particles: React.FC<Props> = ({ top, pathname }) => {
+const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
   const viewportScale = {
@@ -136,7 +132,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
 
   const mouse = usePoint2dMouse(viewport)
 
-  const { positions, velocities, angles } = randomizeLocations()
+  const { positions, temperatures, velocities, angles } = randomizeLocations()
 
   const updatePositions = () => {
     // get current mouse repellent information
@@ -250,111 +246,41 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
       // get current three.js versions of point data
       const pps = pointsRef.current.geometry.getAttribute('position')
       const pvs = pointsRef.current.geometry.getAttribute('velocity')
-      const pas = pointsRef.current.geometry.getAttribute('angle')
+      const pts = pointsRef.current.geometry.getAttribute('temperature')
 
       // update each particle's position
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
-        const angle = pas.getX(i)
-        const v = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
-        const turnV = pvs.getY(i) * particleSettings.turnVar + particleSettings.baseTurnV
+        const temperature = pts.getX(i)
+        const velocity = pvs.getX(i)
 
-        // update point position
-        pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
+        const atTop = pps.getY(i) >= viewport.height / 2
+        const atBottom = pps.getY(i) <= -viewport.height / 2
 
-        const currentPoint = { x: pps.getX(i), y: pps.getY(i) }
-
-        const particleWasRepelled = allRepellentShapes.some((repellent, repellentIndex) => {
-          if (isCircle(repellent)) {
-            if (repellent.radius > 0 && isPointInCircle(currentPoint, repellent)) {
-              pas.setX(i, escapeRadius({ ...currentPoint, angle, turnV }, repellent, PI2))
-              return true
-            }
-          } else {
-            if (
-              isPointInPolygon(
-                currentPoint,
-                allRepellentMaxes[repellentIndex],
-                allRepellentMins[repellentIndex],
-                repellent.vertices,
-              )
-            ) {
-              pas.setX(
-                i,
-                escapeRadius(
-                  { ...currentPoint, angle, turnV },
-                  {
-                    x:
-                      (allRepellentMaxes[repellentIndex].x + allRepellentMins[repellentIndex].x) /
-                      2,
-                    y:
-                      (allRepellentMaxes[repellentIndex].y + allRepellentMins[repellentIndex].y) /
-                      2,
-                    radius: Math.max.apply(Math, [viewport.width, viewport.height]),
-                  },
-                  PI2,
-                ),
-              )
-              return true
-            }
-          }
-          return false
-        })
-        if (particleWasRepelled) continue
-
-        // handle bouncing off window boundaries
-        const flipX = pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2
-        const flipY =
-          pps.getY(i) > viewport.height / 2 - viewportTop || pps.getY(i) < -viewport.height / 2
-
-        // if particle was not repelled, but is at a window boundary
-        if (flipX || flipY) {
-          pas.setX(
-            i,
-            Math.atan2((flipY ? -v : v) * Math.sin(angle), (flipX ? -v : v) * Math.cos(angle)),
-          )
-          // reset if it has somehow escaped
-          if (
-            pps.getX(i) + v * Math.cos(pas.getX(i)) > viewport.width / 2 ||
-            pps.getX(i) + v * Math.cos(pas.getX(i)) < -viewport.width / 2 ||
-            pps.getY(i) + v * Math.sin(pas.getX(i)) > viewport.height - viewportTop / 2 ||
-            pps.getY(i) + v * Math.sin(pas.getX(i)) < -viewport.height / 2
-          ) {
-            pps.setXY(
-              i,
-              Math.random() * viewport.width - viewport.width / 2,
-              Math.random() * viewport.height - viewport.height / 2 - viewport.top,
-            )
-          }
-        } else if (particleSettings.freeThinkers === 0) {
-          let goalAngle = 0
-          if (i === 0) {
-            goalAngle = Math.atan2(
-              pps.getY(particleSettings.particleCount - 1) - pps.getY(i),
-              pps.getX(particleSettings.particleCount - 1) - pps.getX(i),
-            )
-          } else {
-            goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
-          }
-          const newAngle = getNewAngle(angle, goalAngle, turnV)
-
-          pas.setX(i, newAngle)
-        } else if (
-          i % Math.ceil(particleSettings.particleCount / particleSettings.freeThinkers) !== 0 &&
-          i > 0
-        ) {
-          // non-free particles
-          const goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
-          const newAngle = getNewAngle(angle, goalAngle, turnV)
-
-          pas.setX(i, newAngle)
+        if ((!atTop || velocity < 0) && (!atBottom || velocity > 0)) {
+          pps.setXY(i, pps.getX(i), pps.getY(i) + velocity)
         }
+
+        // get new location
+        const currentPoint = { x: pps.getX(i), y: pps.getY(i) }
+        const acceleration = getAccelerationFromTemperature(temperature)
+        const newVelocity = velocity + acceleration
+        if (newVelocity > PARTICLE_MAX_SPEED) {
+          pvs.setX(i, PARTICLE_MAX_SPEED)
+        } else if (newVelocity < -PARTICLE_MAX_SPEED) {
+          pvs.setX(i, -PARTICLE_MAX_SPEED)
+        } else {
+          pvs.setX(i, newVelocity)
+        }
+        const temperatureChange = getConvectionHeatTransferPerFrame(currentPoint, temperature)
+        pts.setX(i, temperature - temperatureChange)
       }
+
       pointsRef.current.geometry.setAttribute('position', pps)
       pointsRef.current.geometry.setAttribute('velocity', pvs)
-      pointsRef.current.geometry.setAttribute('angle', pas)
+      pointsRef.current.geometry.setAttribute('temperature', pts)
       pointsRef.current.geometry.attributes.position.needsUpdate = true
       pointsRef.current.geometry.attributes.velocity.needsUpdate = true
-      pointsRef.current.geometry.attributes.angle.needsUpdate = true
+      pointsRef.current.geometry.attributes.temperature.needsUpdate = true
     }
   }
 
@@ -381,10 +307,16 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           itemSize={3}
         />
         <bufferAttribute
+          attach="attributes-temperature"
+          count={MAX_PARTICLES}
+          array={new Float32Array(temperatures)}
+          itemSize={1}
+        />
+        <bufferAttribute
           attach="attributes-velocity"
           count={MAX_PARTICLES}
           array={new Float32Array(velocities)}
-          itemSize={3}
+          itemSize={1}
         />
         <bufferAttribute
           attach="attributes-angle"
@@ -393,7 +325,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           itemSize={1}
         />
       </bufferGeometry>
-      <ParticleShaderMaterial
+      <LavaShaderMaterial
         colorA={particleSettings.colorA}
         colorB={particleSettings.colorB}
         bboxMin={-1}
@@ -403,4 +335,4 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
   )
 }
 
-export default Particles
+export default LavaLamp

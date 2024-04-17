@@ -1,7 +1,10 @@
 import { Canvas } from '@react-three/fiber'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
+import { useSnapshot } from 'valtio'
+import LavaLamp from './LavaLamp'
 import Particles from './Particles'
+import backgroundStore from './store'
 import { BgCanvas } from './style'
 
 type Props = {
@@ -10,6 +13,7 @@ type Props = {
 
 const Background: React.FC<Props> = ({ top }) => {
   const location = useLocation()
+  const { background } = useSnapshot(backgroundStore)
 
   return (
     <BgCanvas id="bgCanvas">
@@ -17,7 +21,11 @@ const Background: React.FC<Props> = ({ top }) => {
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
         <pointLight position={[-10, -10, -10]} />
-        <Particles top={top} pathname={location.pathname} />
+        {background === 'particles' ? (
+          <Particles top={top} pathname={location.pathname} />
+        ) : (
+          <LavaLamp top={top} pathname={location.pathname} />
+        )}
       </Canvas>
     </BgCanvas>
   )

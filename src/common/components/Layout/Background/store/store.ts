@@ -2,12 +2,12 @@ import { persistence } from '@/common/store/persistence'
 import proxyWithPersist from '@/common/store/valtio-persist'
 import { INITIAL } from './initial'
 
-const themeStore = proxyWithPersist({
-  name: 'theme',
+const backgroundStore = proxyWithPersist({
+  name: 'background',
   initialState: INITIAL,
   version: 0,
   migrations: {},
   ...persistence,
 })
 
-export default themeStore
+export default backgroundStore
