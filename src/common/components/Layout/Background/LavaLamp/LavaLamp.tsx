@@ -5,8 +5,6 @@ import { Points, Sphere, Vector3 } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
-  PI2,
-  escapeRadius,
   generateRectangleFromBoundingRect,
   generateRectangleFromCenter,
   generateStar,
@@ -17,7 +15,7 @@ import {
   scaleWidthIntoViewport,
 } from '../utils'
 import LavaShaderMaterial from './LavaShaderMaterial'
-import { MAX_PARTICLES, PARTICLE_MAX_SPEED, PARTICLE_RADIUS } from './constants'
+import { MAX_PARTICLES, PARTICLE_MAX_VERTICAL_SPEED, PARTICLE_RADIUS } from './constants'
 import positionStore, { randomizeLocations } from './store'
 import { getAccelerationFromTemperature, getConvectionHeatTransferPerFrame } from './utils'
 
@@ -25,8 +23,6 @@ type Props = {
   top: number
   pathname: string
 }
-
-// TODO: remove angle, replace with a tracked horizontal velocity, update both velocities during particle collisions
 
 const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
   const viewport = useThree(rootState => rootState.viewport)
@@ -94,7 +90,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
 
   const mouse = usePoint2dMouse(viewport)
 
-  const { positions, temperatures, velocities, angles } = randomizeLocations()
+  const { positions, temperatures, velocities } = randomizeLocations()
 
   const updatePositions = () => {
     // get current mouse repellent information
@@ -111,7 +107,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
               ),
             }
     const mouseMax: Point2d = isCircle(mouseShape)
-      ? { x: 0, y: 0 }
+      ? { x: mouseShape.x + mouseShape.radius, y: mouseShape.y + mouseShape.radius }
       : {
           x: Math.max.apply(
             Math,
@@ -123,7 +119,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
           ),
         }
     const mouseMin: Point2d = isCircle(mouseShape)
-      ? { x: 0, y: 0 }
+      ? { x: mouseShape.x - mouseShape.radius, y: mouseShape.y - mouseShape.radius }
       : {
           x: Math.min.apply(
             Math,
@@ -173,7 +169,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
     })
     const dynamicRepellentMaxes: Point2d[] = dynamicRepellentShapes.map(repellent =>
       isCircle(repellent)
-        ? { x: 0, y: 0 }
+        ? { x: repellent.x + repellent.radius, y: repellent.y + repellent.radius }
         : {
             x: Math.max.apply(
               Math,
@@ -187,7 +183,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
     )
     const dynamicRepellentMins: Point2d[] = dynamicRepellentShapes.map(repellent =>
       isCircle(repellent)
-        ? { x: 0, y: 0 }
+        ? { x: repellent.x - repellent.radius, y: repellent.y - repellent.radius }
         : {
             x: Math.min.apply(
               Math,
@@ -203,13 +199,20 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
     const allRepellentShapes = [mouseShape, ...dynamicRepellentShapes, ...fixedRepellentShapes]
     const allRepellentMaxes = [mouseMax, ...dynamicRepellentMaxes, ...fixedRepellentMaxes]
     const allRepellentMins = [mouseMin, ...dynamicRepellentMins, ...fixedRepellentMins]
+    const allRepellentCenters = allRepellentShapes.map((repellent, repellentIndex) =>
+      isCircle(repellent)
+        ? { x: repellent.x, y: repellent.y }
+        : {
+            x: (allRepellentMins[repellentIndex].x + allRepellentMaxes[repellentIndex].x) / 2,
+            y: (allRepellentMins[repellentIndex].y + allRepellentMaxes[repellentIndex].y) / 2,
+          },
+    )
 
     if (pointsRef.current) {
       // get current three.js versions of point data
       const pps = pointsRef.current.geometry.getAttribute('position')
       const pvs = pointsRef.current.geometry.getAttribute('velocity')
       const pts = pointsRef.current.geometry.getAttribute('temperature')
-      const pas = pointsRef.current.geometry.getAttribute('angle')
 
       const pointBoundingSpheres = Array.from(
         { length: particleSettings.particleCount },
@@ -223,9 +226,61 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
       // update each particle's position
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
         const temperature = pts.getX(i)
-        let velocity = pvs.getX(i)
-        let angle = pas.getX(i)
+
+        let horizontalVelocity = pvs.getX(i)
+        let verticalVelocity = pvs.getY(i)
         const currentPoint = { x: pps.getX(i), y: pps.getY(i) }
+
+        // check for collisions with repellents
+        allRepellentShapes.some((repellent, repellentIndex) => {
+          const pointIsInRepellent = isCircle(repellent)
+            ? repellent.radius > 0 && isPointInCircle(currentPoint, repellent)
+            : isPointInPolygon(
+                currentPoint,
+                allRepellentMaxes[repellentIndex],
+                allRepellentMins[repellentIndex],
+                repellent.vertices,
+              )
+
+          if (pointIsInRepellent) {
+            const onTop =
+              currentPoint.y > allRepellentCenters[repellentIndex].y &&
+              currentPoint.y < allRepellentMaxes[repellentIndex].y
+            const hasCollidedWithTop = onTop && verticalVelocity < 0
+            const onBottom =
+              currentPoint.y < allRepellentCenters[repellentIndex].y &&
+              currentPoint.y > allRepellentMins[repellentIndex].y
+            const hasCollidedWithBottom = onBottom && verticalVelocity > 0
+            const onLeft =
+              currentPoint.x < allRepellentCenters[repellentIndex].x &&
+              currentPoint.x > allRepellentMins[repellentIndex].x
+            const hasCollidedWithLeft = onLeft && horizontalVelocity > 0
+            const onRight =
+              currentPoint.x > allRepellentCenters[repellentIndex].x &&
+              currentPoint.x < allRepellentMaxes[repellentIndex].x
+            const hasCollidedWithRight = onRight && horizontalVelocity < 0
+
+            if (hasCollidedWithTop || hasCollidedWithBottom) {
+              verticalVelocity = 0
+            }
+            if (hasCollidedWithLeft || hasCollidedWithRight) {
+              horizontalVelocity *= -1
+            }
+
+            if (
+              hasCollidedWithTop ||
+              hasCollidedWithBottom ||
+              hasCollidedWithLeft ||
+              hasCollidedWithRight
+            ) {
+              horizontalVelocity *= 10
+            }
+
+            return true
+          }
+
+          return false
+        })
 
         // check for particle collisions
         const particleBoundingSphere = pointBoundingSpheres[i]
@@ -235,142 +290,44 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
         const hasCollidedWithParticle = particleCollisionIndex !== -1
         if (hasCollidedWithParticle) {
           particleCollisionIndex += i + 1
-          const collidedParticleVelocity = pvs.getX(particleCollisionIndex)
-          const averageVelocity = (collidedParticleVelocity + velocity) / 2
 
-          pvs.setX(particleCollisionIndex, averageVelocity)
-          velocity = averageVelocity
+          // update velocities of particles
+          const collidedParticleVerticalVelocity = pvs.getY(particleCollisionIndex)
+          const averageVerticalVelocity = (collidedParticleVerticalVelocity + verticalVelocity) / 2
+
+          pvs.setY(particleCollisionIndex, averageVerticalVelocity)
+          verticalVelocity = averageVerticalVelocity
         }
 
-        let verticalVelocity = velocity
-        let horizontalVelocity = velocity
-
-        allRepellentShapes.some((repellent, repellentIndex) => {
-          if (isCircle(repellent)) {
-            if (repellent.radius > 0 && isPointInCircle(currentPoint, repellent)) {
-              angle =
-                escapeRadius(
-                  { ...currentPoint, angle: angle - Math.PI / 2, turnV: Math.PI / 2 },
-                  repellent,
-                  PI2,
-                ) -
-                Math.PI / 2
-              // pas.setX(
-              //   i,
-              //   escapeRadius(
-              //     { ...currentPoint, angle: angle - Math.PI / 2, turnV: Math.PI / 2 },
-              //     repellent,
-              //     PI2,
-              //   ),
-              // )
-              return true
-            }
-          } else {
-            if (
-              isPointInPolygon(
-                currentPoint,
-                allRepellentMaxes[repellentIndex],
-                allRepellentMins[repellentIndex],
-                repellent.vertices,
-              )
-            ) {
-              const onLeft =
-                Math.abs(allRepellentMins[repellentIndex].x - currentPoint.x) < PARTICLE_RADIUS
-              const onRight =
-                Math.abs(allRepellentMaxes[repellentIndex].x - currentPoint.x) < PARTICLE_RADIUS
-
-              const onTop =
-                Math.abs(allRepellentMaxes[repellentIndex].y - currentPoint.y) < PARTICLE_RADIUS
-              const onBottom =
-                Math.abs(allRepellentMins[repellentIndex].y - currentPoint.y) < PARTICLE_RADIUS
-              if (onTop && verticalVelocity < 0) {
-                horizontalVelocity = verticalVelocity
-                angle *= 5
-                verticalVelocity = 0
-                // pps.setY(i, allRepellentMaxes[repellentIndex].y + 0.01)
-              } else if (onBottom && verticalVelocity > 0) {
-                horizontalVelocity = verticalVelocity
-                angle *= 5
-                verticalVelocity = 0
-                // pps.setY(i, allRepellentMins[repellentIndex].y - 0.01)
-              } else if (onLeft && angle < 0) {
-                angle *= -1
-                // pps.setX(i, allRepellentMins[repellentIndex].x - 0.01)
-              } else if (onRight && angle > 0) {
-                angle *= -1
-                // pps.setX(i, allRepellentMaxes[repellentIndex].x + 0.01)
-              }
-              // angle =
-              //   escapeRadius(
-              //     { ...currentPoint, angle: angle - Math.PI / 2, turnV: Math.PI / 2 },
-              //     {
-              //       x:
-              //         (allRepellentMaxes[repellentIndex].x + allRepellentMins[repellentIndex].x) /
-              //         2,
-              //       y:
-              //         (allRepellentMaxes[repellentIndex].y + allRepellentMins[repellentIndex].y) /
-              //         2,
-              //       radius: Math.max.apply(Math, [viewport.width, viewport.height]),
-              //     },
-              //     PI2,
-              //   ) -
-              //   Math.PI / 2
-              // pas.setX(
-              //   i,
-              //   escapeRadius(
-              //     { ...currentPoint, angle, turnV },
-              // {
-              //   x:
-              //     (allRepellentMaxes[repellentIndex].x + allRepellentMins[repellentIndex].x) /
-              //     2,
-              //   y:
-              //     (allRepellentMaxes[repellentIndex].y + allRepellentMins[repellentIndex].y) /
-              //     2,
-              //   radius: Math.max.apply(Math, [viewport.width, viewport.height]),
-              // },
-              //     PI2,
-              //   ),
-              // )
-              return true
-            }
-          }
-          return false
-        })
-
-        // check for collision with top or bottom of screen
+        // check for and handle collision with screen boundaries
         const atTop = pps.getY(i) > viewport.height / 2 - viewportTop
-        const hasCollidedWithTop = atTop && velocity > 0
+        const hasCollidedWithTop = atTop && verticalVelocity > 0
         const atBottom = pps.getY(i) < -viewport.height / 2
-        const hasCollidedWithBottom = atBottom && velocity < 0
-        const hasCollidedWithVerticalBoundary = hasCollidedWithTop || hasCollidedWithBottom
-        if (hasCollidedWithVerticalBoundary) {
+        const hasCollidedWithBottom = atBottom && verticalVelocity < 0
+        const atLeft = pps.getX(i) > viewport.width / 2
+        const hasCollidedWithLeft = atLeft && horizontalVelocity < 0
+        const atRight = pps.getX(i) < -viewport.width / 2
+        const hasCollidedWithRight = atRight && horizontalVelocity > 0
+        if (hasCollidedWithTop || hasCollidedWithBottom) {
           verticalVelocity = 0
         }
-
-        const hasCollided = hasCollidedWithParticle || hasCollidedWithVerticalBoundary
-
-        horizontalVelocity = hasCollided
-          ? (Math.abs(velocity) * Math.sin(angle - Math.PI)) / 2
-          : Math.abs(velocity) * Math.sin(angle - Math.PI)
+        if (hasCollidedWithLeft || hasCollidedWithRight) {
+          horizontalVelocity *= -1
+        }
 
         // update particle location
         pps.setXY(i, pps.getX(i) + horizontalVelocity, pps.getY(i) + verticalVelocity)
 
-        // check for collision with left or right of screen and bounce if applicable
-        const atLeft = pps.getX(i) > viewport.width / 2
-        const atRight = pps.getX(i) < -viewport.width / 2
-        if (atLeft || atRight) pas.setX(i, -angle)
-
         // update velocity
         const newPoint = { x: pps.getX(i), y: pps.getY(i) }
         const acceleration = getAccelerationFromTemperature(temperature)
-        const newVelocity = velocity + acceleration
-        if (newVelocity > PARTICLE_MAX_SPEED) {
-          pvs.setX(i, PARTICLE_MAX_SPEED)
-        } else if (newVelocity < -PARTICLE_MAX_SPEED) {
-          pvs.setX(i, -PARTICLE_MAX_SPEED)
+        verticalVelocity = verticalVelocity + acceleration
+        if (verticalVelocity > PARTICLE_MAX_VERTICAL_SPEED) {
+          pvs.setY(i, PARTICLE_MAX_VERTICAL_SPEED)
+        } else if (verticalVelocity < -PARTICLE_MAX_VERTICAL_SPEED) {
+          pvs.setY(i, -PARTICLE_MAX_VERTICAL_SPEED)
         } else {
-          pvs.setX(i, newVelocity)
+          pvs.setY(i, verticalVelocity)
         }
 
         // update temperature
@@ -419,13 +376,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
           attach="attributes-velocity"
           count={MAX_PARTICLES}
           array={new Float32Array(velocities)}
-          itemSize={1}
-        />
-        <bufferAttribute
-          attach="attributes-angle"
-          count={MAX_PARTICLES}
-          array={new Float32Array(angles)}
-          itemSize={1}
+          itemSize={2}
         />
       </bufferGeometry>
       <LavaShaderMaterial colorA={particleSettings.colorA} colorB={particleSettings.colorB} />
