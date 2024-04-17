@@ -1,7 +1,7 @@
 import particleSettings from '@/background-editor/components/ParticleControlCard/store'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useMemo, useRef } from 'react'
-import { Points } from 'three'
+import { Points, Sphere, Vector3 } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
@@ -203,20 +203,63 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
       const pps = pointsRef.current.geometry.getAttribute('position')
       const pvs = pointsRef.current.geometry.getAttribute('velocity')
       const pts = pointsRef.current.geometry.getAttribute('temperature')
+      const pas = pointsRef.current.geometry.getAttribute('angle')
+
+      const pointBoundingSpheres = Array.from(
+        { length: particleSettings.particleCount },
+        (_, index) =>
+          new Sphere(new Vector3(pps.getX(index), pps.getY(index), pps.getZ(index)), 0.04),
+      )
+      // const particleDiameter = pointBoundingBoxes[0].max.x - pointBoundingBoxes[0].min.x
+
+      // console.log(particleDiameter)
 
       // update each particle's position
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
         const temperature = pts.getX(i)
-        const velocity = pvs.getX(i)
+        let velocity = pvs.getX(i)
+        const angle = pas.getX(i)
 
-        const atTop = pps.getY(i) > viewport.height / 2 - viewportTop
-        const atBottom = pps.getY(i) < -viewport.height / 2
+        // check for particle collisions
+        const particleBoundingSphere = pointBoundingSpheres[i]
+        let particleCollisionIndex = pointBoundingSpheres
+          .slice(i + 1)
+          .findIndex(sphere => particleBoundingSphere.intersectsSphere(sphere))
+        const hasCollidedWithParticle = particleCollisionIndex !== -1
+        if (hasCollidedWithParticle) {
+          particleCollisionIndex += i + 1
+          const collidedParticleVelocity = pvs.getX(particleCollisionIndex)
+          const averageVelocity = (collidedParticleVelocity + velocity) / 2
 
-        if ((!atTop || velocity < 0) && (!atBottom || velocity > 0)) {
-          pps.setXY(i, pps.getX(i), pps.getY(i) + velocity)
+          pvs.setX(particleCollisionIndex, averageVelocity)
+          velocity = averageVelocity
         }
 
-        // get new location
+        // check for collision with top or bottom of screen
+        const atTop = pps.getY(i) > viewport.height / 2 - viewportTop
+        const hasCollidedWithTop = atTop && velocity > 0
+        const atBottom = pps.getY(i) < -viewport.height / 2
+        const hasCollidedWithBottom = atBottom && velocity < 0
+        const hasCollidedWithVerticalBoundary = hasCollidedWithTop || hasCollidedWithBottom
+        if (hasCollidedWithVerticalBoundary) {
+          velocity = 0
+        }
+
+        const hasCollided = hasCollidedWithParticle || hasCollidedWithVerticalBoundary
+
+        const horizontalVelocity = hasCollided
+          ? (Math.abs(velocity) * Math.sin(angle - Math.PI)) / 2
+          : Math.abs(velocity) * Math.sin(angle - Math.PI)
+
+        // update particle location
+        pps.setXY(i, pps.getX(i) + horizontalVelocity, pps.getY(i) + velocity)
+
+        // check for collision with left or right of screen and bounce if applicable
+        const atLeft = pps.getX(i) > viewport.width / 2
+        const atRight = pps.getX(i) < -viewport.width / 2
+        if (atLeft || atRight) pas.setX(i, -angle)
+
+        // update velocity
         const currentPoint = { x: pps.getX(i), y: pps.getY(i) }
         const acceleration = getAccelerationFromTemperature(temperature)
         const newVelocity = velocity + acceleration
@@ -227,6 +270,8 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
         } else {
           pvs.setX(i, newVelocity)
         }
+
+        // update temperature
         const temperatureChange = getConvectionHeatTransferPerFrame(currentPoint, temperature)
         pts.setX(i, temperature - temperatureChange)
       }

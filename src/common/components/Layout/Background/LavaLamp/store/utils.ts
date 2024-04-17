@@ -15,7 +15,7 @@ export const randomizeLocations = (): {
 
   for (let i = 0; i < MAX_PARTICLES; i++) {
     const randomY =
-      (Math.random() * positionStore.viewport.height) / 4 -
+      Math.random() * positionStore.viewport.height -
       positionStore.viewport.top -
       positionStore.viewport.height / 2
 
@@ -25,18 +25,7 @@ export const randomizeLocations = (): {
     const randomTemperature = Math.random() * 100
     temperatures.push(randomTemperature)
     velocities.push(getAccelerationFromTemperature(randomTemperature))
-
-    let newA = Math.random() * 2 * Math.PI
-    if (
-      newA < 0.01 ||
-      newA > Math.PI - 0.01 ||
-      (newA < Math.PI / 2 + 0.01 && newA > Math.PI / 2 - 0.01) ||
-      (newA < Math.PI / 4 + 0.01 && newA > Math.PI / 4 - 0.01) ||
-      (newA < (Math.PI * 3) / 4 + 0.01 && newA > (Math.PI * 3) / 4 - 0.01)
-    ) {
-      newA += 0.03
-    }
-    angles.push(newA)
+    angles.push((Math.random() * Math.PI) / 8 - Math.PI / 16) // angle from -PI/16 to PI/16
   }
 
   if (positionStore.pointsRef.current) {
@@ -48,8 +37,10 @@ export const randomizeLocations = (): {
     for (let i = 0; i < MAX_PARTICLES; i++) {
       pps.setXYZ(i, positions[i * 3], positions[i * 3 + 1], 0)
       pts.setX(i, temperatures[i])
+      pvs.setX(i, velocities[i])
       pas.setX(i, angles[i])
     }
+
     positionStore.pointsRef.current.geometry.setAttribute('position', pps)
     positionStore.pointsRef.current.geometry.setAttribute('temperature', pts)
     positionStore.pointsRef.current.geometry.setAttribute('velocity', pvs)
