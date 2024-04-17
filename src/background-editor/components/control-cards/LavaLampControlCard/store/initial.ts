@@ -1,0 +1,26 @@
+import { RepellentShape } from '@/common/components/Layout/Background/types'
+import { DARK } from '@/common/theme'
+import { LavaLampSettings } from './types'
+
+export const INITIAL_SETTINGS: LavaLampSettings = {
+  isFirstHit: false,
+  areControlsOpen: false,
+
+  particleCount: 2000,
+
+  mouseSize: 1,
+  mouseShape: RepellentShape.Circle,
+
+  hotColor: DARK.hot,
+  coldColor: DARK.cold,
+}
+
+export const DEFAULT_SETTINGS: Partial<LavaLampSettings> = {
+  particleCount: 2000,
+
+  mouseSize: 1,
+  mouseShape: RepellentShape.Circle,
+
+  hotColor: DARK.hot,
+  coldColor: DARK.cold,
+}

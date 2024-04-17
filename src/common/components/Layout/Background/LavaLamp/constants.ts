@@ -1,4 +1,4 @@
-export const MAX_PARTICLES = 99999
+export const MAX_PARTICLES = 5000
 
 export const PARTICLE_CONVECTION_COEFFICIENT = 0.05
 

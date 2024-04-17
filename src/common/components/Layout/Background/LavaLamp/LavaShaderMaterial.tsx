@@ -15,8 +15,8 @@ const VERTEX = `
 `
 
 const FRAGMENT = `
-  uniform vec3 colorA; 
-  uniform vec3 colorB; 
+  uniform vec3 hotColor; 
+  uniform vec3 coldColor; 
   varying float temp;
 
   void main() {
@@ -24,13 +24,13 @@ const FRAGMENT = `
     if (distance > 1.0) {
         discard;
     }
-    gl_FragColor = vec4(mix(colorA, colorB, temp * .01), 1.0);
+    gl_FragColor = vec4(mix(coldColor, hotColor, temp * .01), 1.0);
   }
 `
 
 const LavaShaderMaterial: React.FC<{
-  colorA: string
-  colorB: string
+  hotColor: string
+  coldColor: string
 }> = props => {
   const ref = useRef<ShaderMaterial | null>(null)
 
@@ -38,8 +38,8 @@ const LavaShaderMaterial: React.FC<{
     () =>
       UniformsUtils.merge([
         {
-          colorA: { value: new Color(props.colorA) },
-          colorB: { value: new Color(props.colorB) },
+          hotColor: { value: new Color(props.hotColor) },
+          coldColor: { value: new Color(props.coldColor) },
         },
       ]),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,8 +48,8 @@ const LavaShaderMaterial: React.FC<{
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.uniforms.colorA.value = new Color(props.colorA)
-      ref.current.uniforms.colorB.value = new Color(props.colorB)
+      ref.current.uniforms.hotColor.value = new Color(props.hotColor)
+      ref.current.uniforms.coldColor.value = new Color(props.coldColor)
     }
   })
 

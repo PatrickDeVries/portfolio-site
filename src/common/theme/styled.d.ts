@@ -12,6 +12,8 @@ export interface Theme {
   empty: string
   focus: string
   disabled: string
+  hot: string
+  cold: string
 }
 
 declare module 'styled-components' {

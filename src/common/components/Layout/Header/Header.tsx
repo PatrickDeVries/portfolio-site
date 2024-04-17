@@ -1,4 +1,4 @@
-import particleSettings from '@/background-editor/components/ParticleControlCard/store'
+import { lavaLampSettings, particleSettings } from '@/background-editor/components/control-cards'
 import { DARK, LIGHT } from '@/common/theme'
 import themeStore from '@/common/theme/store'
 import React, { useRef } from 'react'
@@ -27,7 +27,7 @@ const Header: React.FC = () => {
   const [expanded, setExpanded] = React.useState<boolean>(false)
   const gearRef = useRef<HTMLButtonElement>(null)
 
-  const settingsSnap = useSnapshot(particleSettings)
+  const particleSettingsSnap = useSnapshot(particleSettings)
   const themeSnap = useSnapshot(themeStore)
   const backgroundSnap = useSnapshot(backgroundStore)
 
@@ -63,12 +63,6 @@ const Header: React.FC = () => {
       if (gearRef.current) {
         gearRef.current.click()
       }
-    } else if (event.key === '=') {
-      particleSettings.mouseSize =
-        particleSettings.mouseSize + 0.5 < 5 ? particleSettings.mouseSize + 0.5 : 5
-    } else if (event.key === '-') {
-      particleSettings.mouseSize =
-        particleSettings.mouseSize - 0.5 > 0 ? particleSettings.mouseSize - 0.5 : 0
     }
   }
 
@@ -96,8 +90,14 @@ const Header: React.FC = () => {
             <NavIcon
               title="Edit background settings"
               onClick={() => {
-                particleSettings.controlsOpen = !particleSettings.controlsOpen
-                particleSettings.firstHit = false
+                if (backgroundSnap.background === 'lava-lamp') {
+                  lavaLampSettings.areControlsOpen = !lavaLampSettings.areControlsOpen
+                  lavaLampSettings.isFirstHit = false
+                } else {
+                  particleSettings.areControlsOpen = !particleSettings.areControlsOpen
+                  particleSettings.isFirstHit = false
+                }
+
                 setExpanded(false)
               }}
               ref={gearRef}
@@ -129,8 +129,8 @@ const Header: React.FC = () => {
               if (themeSnap.theme === 'light') {
                 themeStore.theme = 'dark'
                 if (
-                  settingsSnap.colorA === LIGHT.primary &&
-                  settingsSnap.colorB === LIGHT.secondary
+                  particleSettingsSnap.colorA === LIGHT.primary &&
+                  particleSettingsSnap.colorB === LIGHT.secondary
                 ) {
                   particleSettings.colorA = DARK.primary
                   particleSettings.colorB = DARK.secondary
@@ -138,8 +138,8 @@ const Header: React.FC = () => {
               } else {
                 themeStore.theme = 'light'
                 if (
-                  settingsSnap.colorA === DARK.primary &&
-                  settingsSnap.colorB === DARK.secondary
+                  particleSettingsSnap.colorA === DARK.primary &&
+                  particleSettingsSnap.colorB === DARK.secondary
                 ) {
                   particleSettings.colorA = LIGHT.primary
                   particleSettings.colorB = LIGHT.secondary

@@ -1,5 +1,5 @@
 import { BackgroundStore } from './types'
 
 export const INITIAL: BackgroundStore = {
-  background: 'particles',
+  background: 'lava-lamp',
 }

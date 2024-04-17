@@ -1,4 +1,4 @@
-import particleSettings from '@/background-editor/components/ParticleControlCard/store'
+import { lavaLampSettings } from '@/background-editor/components/control-cards'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useMemo, useRef } from 'react'
 import { Points, Sphere, Vector3 } from 'three'
@@ -95,15 +95,15 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
   const updatePositions = () => {
     // get current mouse repellent information
     const mouseShape: Circle | Polygon =
-      particleSettings.mouseShape === RepellentShape.Circle
-        ? { ...mouse.current, radius: particleSettings.mouseSize }
-        : particleSettings.mouseShape === RepellentShape.Star
-          ? { vertices: generateStar(particleSettings.mouseSize, mouse.current) }
+      lavaLampSettings.mouseShape === RepellentShape.Circle
+        ? { ...mouse.current, radius: lavaLampSettings.mouseSize }
+        : lavaLampSettings.mouseShape === RepellentShape.Star
+          ? { vertices: generateStar(lavaLampSettings.mouseSize, mouse.current) }
           : {
               vertices: generateRectangleFromCenter(
                 mouse.current,
-                particleSettings.mouseSize * 2,
-                particleSettings.mouseSize * 2,
+                lavaLampSettings.mouseSize * 2,
+                lavaLampSettings.mouseSize * 2,
               ),
             }
     const mouseMax: Point2d = isCircle(mouseShape)
@@ -215,7 +215,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
       const pts = pointsRef.current.geometry.getAttribute('temperature')
 
       const pointBoundingSpheres = Array.from(
-        { length: particleSettings.particleCount },
+        { length: lavaLampSettings.particleCount },
         (_, index) =>
           new Sphere(
             new Vector3(pps.getX(index), pps.getY(index), pps.getZ(index)),
@@ -224,7 +224,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
       )
 
       // update each particle's position
-      for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
+      for (let i = 0, l = lavaLampSettings.particleCount; i < l; i++) {
         const temperature = pts.getX(i)
 
         let horizontalVelocity = pvs.getX(i)
@@ -349,7 +349,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
 
     if (pointsRef.current) {
       positionStore.pointsRef = pointsRef
-      pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
+      pointsRef.current.geometry.setDrawRange(0, lavaLampSettings.particleCount)
     }
   })
 
@@ -379,7 +379,10 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
           itemSize={2}
         />
       </bufferGeometry>
-      <LavaShaderMaterial colorA={particleSettings.colorA} colorB={particleSettings.colorB} />
+      <LavaShaderMaterial
+        hotColor={lavaLampSettings.hotColor}
+        coldColor={lavaLampSettings.coldColor}
+      />
     </points>
   )
 }

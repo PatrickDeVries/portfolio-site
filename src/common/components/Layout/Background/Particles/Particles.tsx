@@ -1,4 +1,4 @@
-import particleSettings from '@/background-editor/components/ParticleControlCard/store'
+import { particleSettings } from '@/background-editor/components/control-cards'
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useMemo, useRef } from 'react'
 import * as THREE from 'three'

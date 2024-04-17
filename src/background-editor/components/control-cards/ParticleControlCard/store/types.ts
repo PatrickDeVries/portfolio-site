@@ -1,13 +1,8 @@
 import { RepellentShape } from '@/common/components/Layout/Background/types'
 
-export type Mouse = {
-  x: number
-  y: number
-}
-
-export type BackgroundControl = {
-  firstHit: boolean
-  controlsOpen: boolean
+export type ParticleSettings = {
+  isFirstHit: boolean
+  areControlsOpen: boolean
 
   particleCount: number
   baseV: number
