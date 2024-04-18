@@ -17,7 +17,7 @@ export const ControlCardMenu = styled.fieldset<{ $areControlsOpen?: boolean }>`
     !$areControlsOpen &&
     css`
       pointer-events: none;
-      pointer: unset;
+      cursor: unset;
     `};
 
   transform: translateX(${({ $areControlsOpen }) => ($areControlsOpen ? '0' : '100%')});
