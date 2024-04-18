@@ -1,26 +1,32 @@
 import styled from 'styled-components'
 
-export const GreetingBlock = styled.div`
+export const PageWrapper = styled.div`
   flex: 1;
-  padding: 1rem;
+  padding: 1rem 2rem;
 
   display: flex;
-  align-items: center;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
 
-  filter: drop-shadow(0 0 4rem ${({ theme }) => theme.primary});
   font-size: 2rem;
 `
 
-export const IntroText = styled.span`
-  text-align: center;
-  color: ${({ theme }) => theme.text};
-  font-size: 3rem;
+export const IntroBlock = styled.div`
+  padding: 2rem;
 
-  > b {
-    color: ${({ theme }) => theme.secondary};
-    font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+`
+
+export const IntroText = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > span {
+    text-align: center;
+    font-size: 3rem;
   }
 `

@@ -13,7 +13,7 @@ const INPUTS = {
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type: keyof typeof INPUTS
   label?: string
-  variant?: 'outline' | 'fill'
+  $variant?: 'outline' | 'fill'
 }
 
 const Input: React.FC<InputProps> = ({ type = 'text', ...props }) =>

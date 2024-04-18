@@ -1,10 +1,11 @@
 import { lavaLampSettings } from '@/background-editor/components/control-cards'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useWindowListener } from '@yobgob/too-many-hooks'
-import React, { useMemo, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Points, Sphere, Vector3 } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
+import useFixedRepellents from '../useFixedRepellents'
 import {
   generateRectangleFromBoundingRect,
   generateRectangleFromCenter,
@@ -49,55 +50,10 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
   const pointsRef = useRef<Points | null>(null)
 
   // create fixed repellent boundaries based on route
-  const fixedRepellentShapes = useMemo(() => {
-    if (pathname === '/')
-      return [
-        {
-          vertices: generateStar(
-            viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
-            { x: 0, y: -viewportTop },
-          ),
-        },
-      ]
-
-    return []
-  }, [pathname, viewport.height, viewport.width, viewportTop])
-  const fixedRepellentMaxes: Point2d[] = useMemo(
-    () =>
-      fixedRepellentShapes.map(repellent =>
-        isCircle(repellent)
-          ? { x: 0, y: 0 }
-          : {
-              x: Math.max.apply(
-                Math,
-                repellent.vertices.map(v => v.x),
-              ),
-              y: Math.max.apply(
-                Math,
-                repellent.vertices.map(v => v.y),
-              ),
-            },
-      ),
-    [fixedRepellentShapes],
-  )
-  const fixedRepellentMins: Point2d[] = useMemo(
-    () =>
-      fixedRepellentShapes.map(repellent =>
-        isCircle(repellent)
-          ? { x: 0, y: 0 }
-          : {
-              x: Math.min.apply(
-                Math,
-                repellent.vertices.map(v => v.x),
-              ),
-              y: Math.min.apply(
-                Math,
-                repellent.vertices.map(v => v.y),
-              ),
-            },
-      ),
-    [fixedRepellentShapes],
-  )
+  const { fixedRepellentShapes, fixedRepellentMaxes, fixedRepellentMins } = useFixedRepellents({
+    pathname,
+    viewport,
+  })
 
   const mouse = usePoint2dMouse(viewport)
 
