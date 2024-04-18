@@ -1,14 +1,13 @@
-import { lavaLampSettings, particleSettings } from '@/background-editor/components/control-cards'
+import ControlCardGear from '@/background-editor/components/ControlCardGear'
 import { DARK, LIGHT } from '@/common/theme'
 import themeStore from '@/common/theme/store'
-import { useWindowListener } from '@yobgob/too-many-hooks'
-import React, { useRef } from 'react'
+import React from 'react'
 import { GiBurstBlob } from 'react-icons/gi'
-import { HiOutlineCog } from 'react-icons/hi'
 import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md'
 import { TbBounceRightFilled } from 'react-icons/tb'
 import { Link, To, useLocation } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
+import particleSettings from '../Background/Particles/settings-store'
 import backgroundStore from '../Background/store'
 import {
   Hamburger,
@@ -25,8 +24,7 @@ import {
 
 const Header: React.FC = () => {
   const location = useLocation()
-  const [expanded, setExpanded] = React.useState<boolean>(false)
-  const gearRef = useRef<HTMLButtonElement>(null)
+  const [isMobileMenuExpanded, setIsMobileMenuExpanded] = React.useState<boolean>(false)
 
   const particleSettingsSnap = useSnapshot(particleSettings)
   const themeSnap = useSnapshot(themeStore)
@@ -37,33 +35,27 @@ const Header: React.FC = () => {
       route: '/',
       label: 'Home',
       to: '/',
-      onClick: () => setExpanded(false),
+      onClick: () => setIsMobileMenuExpanded(false),
     },
     {
       route: '/portfolio',
       label: 'Portfolio',
       to: '/portfolio',
-      onClick: () => setExpanded(false),
+      onClick: () => setIsMobileMenuExpanded(false),
     },
     {
       route: '/contact',
       label: 'Contact',
       to: '/contact',
-      onClick: () => setExpanded(false),
+      onClick: () => setIsMobileMenuExpanded(false),
     },
     {
       route: '/background-editor',
       label: 'Background Editor',
       to: '/background-editor',
-      onClick: () => setExpanded(false),
+      onClick: () => setIsMobileMenuExpanded(false),
     },
   ]
-
-  useWindowListener('keyup', event => {
-    if (event.key === 'Escape' && gearRef.current) {
-      gearRef.current.click()
-    }
-  })
 
   return (
     <>
@@ -85,25 +77,7 @@ const Header: React.FC = () => {
           ))}
         </NavGroup>
         <IconGroup>
-          {location.pathname === '/background-editor' && (
-            <NavIcon
-              title="Edit background settings"
-              onClick={() => {
-                if (backgroundSnap.background === 'lava-lamp') {
-                  lavaLampSettings.areControlsOpen = !lavaLampSettings.areControlsOpen
-                  lavaLampSettings.isFirstHit = false
-                } else {
-                  particleSettings.areControlsOpen = !particleSettings.areControlsOpen
-                  particleSettings.isFirstHit = false
-                }
-
-                setExpanded(false)
-              }}
-              ref={gearRef}
-            >
-              <HiOutlineCog size="1.5rem" />
-            </NavIcon>
-          )}
+          {location.pathname === '/background-editor' && <ControlCardGear />}
           <NavIcon
             title={`Change background to ${
               backgroundSnap.background === 'particles' ? 'lava lamp' : 'particles'
@@ -156,17 +130,17 @@ const Header: React.FC = () => {
             title="Open navigation"
             $isMobileOnly
             onClick={() => {
-              setExpanded(!expanded)
+              setIsMobileMenuExpanded(!isMobileMenuExpanded)
             }}
           >
-            <Hamburger $isExpanded={expanded} $size="1.5rem">
+            <Hamburger $isExpanded={isMobileMenuExpanded} $size="1.5rem">
               <HamburgerBar />
               <HamburgerBar />
               <HamburgerBar />
             </Hamburger>
           </NavIcon>
         </IconGroup>
-        <Popup $isExpanded={expanded}>
+        <Popup $isExpanded={isMobileMenuExpanded}>
           {navItems.map(item => (
             <PopupItem
               key={item.label}

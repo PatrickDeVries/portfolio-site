@@ -1,4 +1,3 @@
-import { lavaLampSettings } from '@/background-editor/components/control-cards'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useRef } from 'react'
@@ -18,7 +17,8 @@ import {
 } from '../utils'
 import LavaShaderMaterial from './LavaShaderMaterial'
 import { MAX_PARTICLES, PARTICLE_MAX_VERTICAL_SPEED, PARTICLE_RADIUS } from './constants'
-import positionStore, { randomizeLocations } from './store'
+import positionStore, { randomizeLocations } from './position-store'
+import lavaLampSettings from './settings-store'
 import { getAccelerationFromTemperature, getConvectionHeatTransferPerFrame } from './utils'
 
 type Props = {

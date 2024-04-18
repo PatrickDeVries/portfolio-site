@@ -13,7 +13,7 @@ const VARIANT_STYLE: Record<Variant, Interpolation<object>> = {
     }
   `,
   outline: css`
-    background-color: ${({ theme }) => theme.background};
+    background-color: ${({ theme }) => theme.backgroundHighlight};
     color: ${({ theme }) => theme.text};
     border-color: ${({ theme }) => theme.secondary};
 

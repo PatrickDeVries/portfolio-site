@@ -74,7 +74,6 @@ export const NavItem = styled.button<{ $active?: boolean }>`
 
 export const PopupItem = styled(NavItem)`
   width: 100%;
-
   justify-content: center;
 `
 

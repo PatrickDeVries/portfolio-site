@@ -1,6 +1,6 @@
 import { Point2d } from '../types'
 import { GRAVITY, PARTICLE_AREA, PARTICLE_CONVECTION_COEFFICIENT } from './constants'
-import store from './store'
+import store from './position-store'
 
 export const getTemperatureAtCoordinate = ({ x, y }: Point2d): number => {
   const normalizedY = (y + store.viewport.height / 2) / store.viewport.height // y from 0 to 1

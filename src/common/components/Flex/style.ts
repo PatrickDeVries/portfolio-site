@@ -7,6 +7,7 @@ interface FlexProps {
   $justifyContent?: React.CSSProperties['justifyContent']
   $alignItems?: React.CSSProperties['alignItems']
   $gap?: React.CSSProperties['gap']
+  $stretch?: boolean
 }
 
 const Flex = styled.div<FlexProps>`
@@ -35,6 +36,11 @@ const Flex = styled.div<FlexProps>`
     $gap &&
     css`
       gap: ${$gap};
+    `}
+  ${({ $stretch }) =>
+    $stretch &&
+    css`
+      width: 100%;
     `}
 `
 

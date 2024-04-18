@@ -1,7 +1,7 @@
 import LavaLamp from './LavaLamp'
-import positionStore from './store'
+import positionStore from './position-store'
 
 export * from './constants'
-export * from './store'
+export * from './position-store'
 export { positionStore }
 export default LavaLamp

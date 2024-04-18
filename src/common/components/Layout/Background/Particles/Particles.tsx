@@ -1,4 +1,3 @@
-import { particleSettings } from '@/background-editor/components/control-cards'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useMemo, useRef } from 'react'
@@ -23,7 +22,8 @@ import {
 import { MAX_PARTICLES } from './constants'
 import './particle-material'
 import { fragment, vertex } from './particle-material'
-import positionStore, { randomizeLocations } from './store'
+import positionStore, { randomizeLocations } from './position-store'
+import particleSettings from './settings-store'
 
 const ParticleShaderMaterial: React.FC<{
   colorA: string
