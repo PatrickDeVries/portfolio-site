@@ -2,9 +2,7 @@ export const MAX_PARTICLES = 5000
 
 export const PARTICLE_CONVECTION_COEFFICIENT = 0.05
 
-export const PARTICLE_RADIUS = 0.04
-
-export const PARTICLE_AREA = Math.PI * PARTICLE_RADIUS ** 2
+export const PARTICLE_RADIUS = 0.06
 
 export const PARTICLE_MAX_VERTICAL_SPEED = 0.01
 

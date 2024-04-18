@@ -1,16 +1,19 @@
 import { useFrame } from '@react-three/fiber'
 import { useMemo, useRef } from 'react'
 import { Color, ShaderMaterial, UniformsUtils } from 'three'
+import { useSnapshot } from 'valtio'
+import lavaLampSettings from './settings-store'
 
 const VERTEX = `
   attribute float temperature;
+  uniform float particleScale;
   varying float temp;
   
   void main() {
     temp = temperature;
     vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * modelViewPosition;    
-    gl_PointSize = 10.0;  
+    gl_PointSize = 15.0 * particleScale;  
   }
 `
 
@@ -31,15 +34,18 @@ const FRAGMENT = `
 const LavaShaderMaterial: React.FC<{
   hotColor: string
   coldColor: string
-}> = props => {
+}> = ({ hotColor, coldColor }) => {
   const ref = useRef<ShaderMaterial | null>(null)
+
+  const { particleScale } = useSnapshot(lavaLampSettings)
 
   const uniforms = useMemo(
     () =>
       UniformsUtils.merge([
         {
-          hotColor: { value: new Color(props.hotColor) },
-          coldColor: { value: new Color(props.coldColor) },
+          hotColor: { value: new Color(hotColor) },
+          coldColor: { value: new Color(coldColor) },
+          particleScale: { value: particleScale },
         },
       ]),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,8 +54,9 @@ const LavaShaderMaterial: React.FC<{
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.uniforms.hotColor.value = new Color(props.hotColor)
-      ref.current.uniforms.coldColor.value = new Color(props.coldColor)
+      ref.current.uniforms.hotColor.value = new Color(hotColor)
+      ref.current.uniforms.coldColor.value = new Color(coldColor)
+      ref.current.uniforms.particleScale.value = particleScale
     }
   })
 

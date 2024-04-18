@@ -1,6 +1,7 @@
 import ControlCardGear from '@/background-editor/components/ControlCardGear'
 import { DARK, LIGHT } from '@/common/theme'
 import themeStore from '@/common/theme/store'
+import { useFlag } from '@yobgob/too-many-hooks'
 import React from 'react'
 import { GiBurstBlob } from 'react-icons/gi'
 import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md'
@@ -24,7 +25,8 @@ import {
 
 const Header: React.FC = () => {
   const location = useLocation()
-  const [isMobileMenuExpanded, setIsMobileMenuExpanded] = React.useState<boolean>(false)
+  const [isMobileMenuExpanded, { unflag: collapseMobileMenu, toggle: toggleIsMobileMenuExpanded }] =
+    useFlag(false)
 
   const particleSettingsSnap = useSnapshot(particleSettings)
   const themeSnap = useSnapshot(themeStore)
@@ -35,25 +37,25 @@ const Header: React.FC = () => {
       route: '/',
       label: 'Home',
       to: '/',
-      onClick: () => setIsMobileMenuExpanded(false),
+      onClick: collapseMobileMenu,
     },
     {
       route: '/portfolio',
       label: 'Portfolio',
       to: '/portfolio',
-      onClick: () => setIsMobileMenuExpanded(false),
+      onClick: collapseMobileMenu,
     },
     {
       route: '/contact',
       label: 'Contact',
       to: '/contact',
-      onClick: () => setIsMobileMenuExpanded(false),
+      onClick: collapseMobileMenu,
     },
     {
       route: '/background-editor',
       label: 'Background Editor',
       to: '/background-editor',
-      onClick: () => setIsMobileMenuExpanded(false),
+      onClick: collapseMobileMenu,
     },
   ]
 
@@ -126,13 +128,7 @@ const Header: React.FC = () => {
               <MdOutlineDarkMode size="1.5rem" />
             )}
           </NavIcon>
-          <NavIcon
-            title="Open navigation"
-            $isMobileOnly
-            onClick={() => {
-              setIsMobileMenuExpanded(!isMobileMenuExpanded)
-            }}
-          >
+          <NavIcon title="Open navigation" $isMobileOnly onClick={toggleIsMobileMenuExpanded}>
             <Hamburger $isExpanded={isMobileMenuExpanded} $size="1.5rem">
               <HamburgerBar />
               <HamburgerBar />

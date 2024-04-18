@@ -7,6 +7,7 @@ export const INITIAL_SETTINGS: LavaLampSettings = {
   areControlsOpen: false,
 
   particleCount: 2000,
+  particleScale: 1,
 
   mouseSize: 1,
   mouseShape: RepellentShape.Circle,
@@ -17,6 +18,7 @@ export const INITIAL_SETTINGS: LavaLampSettings = {
 
 export const DEFAULT_SETTINGS: Partial<LavaLampSettings> = {
   particleCount: 2000,
+  particleScale: 1,
 
   mouseSize: 1,
   mouseShape: RepellentShape.Circle,

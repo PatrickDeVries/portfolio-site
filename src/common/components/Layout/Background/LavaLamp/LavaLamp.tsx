@@ -186,7 +186,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
         (_, index) =>
           new Sphere(
             new Vector3(pps.getX(index), pps.getY(index), pps.getZ(index)),
-            PARTICLE_RADIUS,
+            PARTICLE_RADIUS * lavaLampSettings.particleScale,
           ),
       )
 

@@ -28,6 +28,13 @@ const LavaLampControlCard: React.FC = () => {
           label="Particle count"
         />
         <RangeSlider
+          value={lavaLampSnap.particleScale * 50}
+          min={1}
+          max={1000}
+          onChange={newVal => (lavaLampSettings.particleScale = newVal / 50)}
+          label="Particle radius"
+        />
+        <RangeSlider
           value={lavaLampSnap.mouseSize}
           min={0}
           max={5}

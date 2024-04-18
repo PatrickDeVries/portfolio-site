@@ -1,6 +1,7 @@
 import { Point2d } from '../types'
-import { GRAVITY, PARTICLE_AREA, PARTICLE_CONVECTION_COEFFICIENT } from './constants'
+import { GRAVITY, PARTICLE_CONVECTION_COEFFICIENT, PARTICLE_RADIUS } from './constants'
 import store from './position-store'
+import lavaLampSettings from './settings-store'
 
 export const getTemperatureAtCoordinate = ({ x, y }: Point2d): number => {
   const normalizedY = (y + store.viewport.height / 2) / store.viewport.height // y from 0 to 1
@@ -20,7 +21,8 @@ export const getConvectionHeatTransferPerFrame = (
   temperature: number,
 ): number => {
   const fluidTemperature = getTemperatureAtCoordinate({ y, x })
-  return PARTICLE_CONVECTION_COEFFICIENT * PARTICLE_AREA * (temperature - fluidTemperature)
+  const particleArea = Math.PI * (PARTICLE_RADIUS * lavaLampSettings.particleScale) ** 2
+  return PARTICLE_CONVECTION_COEFFICIENT * particleArea * (temperature - fluidTemperature)
 }
 
 export const getAccelerationFromTemperature = (temperature: number) => {

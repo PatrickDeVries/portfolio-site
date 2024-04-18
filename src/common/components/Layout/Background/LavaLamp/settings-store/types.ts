@@ -5,6 +5,7 @@ export type LavaLampSettings = {
   areControlsOpen: boolean
 
   particleCount: number
+  particleScale: number
 
   mouseSize: number
   mouseShape: RepellentShape
