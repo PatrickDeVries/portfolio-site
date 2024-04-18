@@ -1,10 +1,11 @@
-import particleSettings from '@/background-editor/components/ParticleControlCard/store'
 import { useFrame, useThree } from '@react-three/fiber'
+import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { Points, ShaderMaterial } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
+import useFixedRepellents from '../useFixedRepellents'
 import {
   PI2,
   escapeRadius,
@@ -21,9 +22,10 @@ import {
 import { MAX_PARTICLES } from './constants'
 import './particle-material'
 import { fragment, vertex } from './particle-material'
-import positionStore, { randomizeLocations } from './store'
+import positionStore, { randomizeLocations } from './position-store'
+import particleSettings from './settings-store'
 
-const GetShaderMaterial: React.FC<{
+const ParticleShaderMaterial: React.FC<{
   colorA: string
   colorB: string
   bboxMin: number
@@ -71,6 +73,16 @@ type Props = {
 }
 
 const Particles: React.FC<Props> = ({ top, pathname }) => {
+  useWindowListener('keyup', event => {
+    if (event.key === '=') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize + 0.5 < 5 ? particleSettings.mouseSize + 0.5 : 5
+    } else if (event.key === '-') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize - 0.5 > 0 ? particleSettings.mouseSize - 0.5 : 0
+    }
+  })
+
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
   const viewportScale = {
@@ -84,55 +96,10 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
   const pointsRef = useRef<Points | null>(null)
 
   // create fixed repellent boundaries based on route
-  const fixedRepellentShapes = useMemo(() => {
-    if (pathname === '/')
-      return [
-        {
-          vertices: generateStar(
-            viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
-            { x: 0, y: -viewportTop },
-          ),
-        },
-      ]
-
-    return []
-  }, [pathname, viewport.height, viewport.width, viewportTop])
-  const fixedRepellentMaxes: Point2d[] = useMemo(
-    () =>
-      fixedRepellentShapes.map(repellent =>
-        isCircle(repellent)
-          ? { x: 0, y: 0 }
-          : {
-              x: Math.max.apply(
-                Math,
-                repellent.vertices.map(v => v.x),
-              ),
-              y: Math.max.apply(
-                Math,
-                repellent.vertices.map(v => v.y),
-              ),
-            },
-      ),
-    [fixedRepellentShapes],
-  )
-  const fixedRepellentMins: Point2d[] = useMemo(
-    () =>
-      fixedRepellentShapes.map(repellent =>
-        isCircle(repellent)
-          ? { x: 0, y: 0 }
-          : {
-              x: Math.min.apply(
-                Math,
-                repellent.vertices.map(v => v.x),
-              ),
-              y: Math.min.apply(
-                Math,
-                repellent.vertices.map(v => v.y),
-              ),
-            },
-      ),
-    [fixedRepellentShapes],
-  )
+  const { fixedRepellentShapes, fixedRepellentMaxes, fixedRepellentMins } = useFixedRepellents({
+    pathname,
+    viewport,
+  })
 
   const mouse = usePoint2dMouse(viewport)
 
@@ -393,7 +360,7 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
           itemSize={1}
         />
       </bufferGeometry>
-      <GetShaderMaterial
+      <ParticleShaderMaterial
         colorA={particleSettings.colorA}
         colorB={particleSettings.colorB}
         bboxMin={-1}

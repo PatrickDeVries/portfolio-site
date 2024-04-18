@@ -1,24 +1,22 @@
 import styled, { css } from 'styled-components'
-import { InputProps } from './types'
-
-export const OUTLINE_WIDTH = `0.1em`
+import { InputProps } from './Input'
 
 export const TEXT_FIELD = css<InputProps>`
   appearance: none;
-  padding: 0.5em 0.75em;
-  font: inherit;
-  box-sizing: border-box;
-
-  background-color: ${({ variant, color, theme }) =>
-    variant === 'fill' ? color : theme.backgroundHighlight};
-  border-radius: calc(1em / 3);
-  border: ${({ variant }) => (variant === 'outline' ? OUTLINE_WIDTH : '0')} solid
-    ${({ color }) => color};
   outline: none;
 
+  height: 2.5rem;
+  padding: 0.5rem 0.75rem;
+
+  background-color: ${({ $variant, theme }) =>
+    $variant === 'outline' ? theme.backgroundHighlight : theme.background};
+  border-radius: calc(1rem / 3);
+  border: ${({ $variant }) => ($variant === 'outline' ? '1px' : '0')} solid
+    ${({ $variant, theme }) => ($variant === 'outline' ? theme.secondary : theme.background)};
   color: ${({ theme }) => theme.text};
 
-  &:focus-within {
+  &:focus-within,
+  &:active {
     border-color: ${({ theme }) => theme.focus};
   }
 `
@@ -26,6 +24,7 @@ export const TEXT_FIELD = css<InputProps>`
 export const TextLabel = styled.label`
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
-  text-indent: calc(${OUTLINE_WIDTH} + 0.75em);
+  gap: 0.25rem;
+
+  white-space: nowrap;
 `

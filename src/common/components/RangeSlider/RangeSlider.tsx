@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import { Header, Label, Labels, RangeWrapper, SliderWrapper, Wrapper } from './style'
+import Input from '../Input'
+import { Label, Labels, RangeInput, RangeWrapper, SliderWrapper, Wrapper } from './style'
 
 type Props = {
   label: string
@@ -33,18 +34,16 @@ const RangeSlider: React.FC<Props> = ({
 
   return (
     <Wrapper>
-      <Header>
-        {label}
-        <input
-          type="number"
-          value={value}
-          min={min}
-          max={max}
-          step={step}
-          onChange={e => onChange(getReturnVal(Number(e.target.value)))}
-          title={title}
-        />
-      </Header>
+      <Input
+        type="number"
+        label={label}
+        value={value}
+        min={min}
+        max={max}
+        step={step}
+        onChange={e => onChange(getReturnVal(Number(e.target.value)))}
+        title={title}
+      />
       <SliderWrapper>
         <Labels>
           <Label>{labels?.min ?? min}</Label>
@@ -52,8 +51,7 @@ const RangeSlider: React.FC<Props> = ({
         </Labels>
         {/* @ts-expect-error React types are bad for CSS variables */}
         <RangeWrapper $percentFilled={(value - min) / (max - min)}>
-          <div></div>
-          <input
+          <RangeInput
             type="range"
             value={value}
             min={min}

@@ -13,9 +13,19 @@ const VARIANT_STYLE: Record<Variant, Interpolation<object>> = {
     }
   `,
   outline: css`
-    background-color: ${({ theme }) => theme.background};
-    color: ${({ theme }) => theme.focus};
-    border-color: ${({ theme }) => theme.focus};
+    background-color: ${({ theme }) => theme.backgroundHighlight};
+    color: ${({ theme }) => theme.text};
+    border-color: ${({ theme }) => theme.secondary};
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: ${({ theme }) => theme.primary};
+    }
+
+    &:focus {
+      outline: ${({ theme }) => theme.focus};
+    }
 
     &:disabled {
       color: ${({ theme }) => theme.disabled};
@@ -23,9 +33,19 @@ const VARIANT_STYLE: Record<Variant, Interpolation<object>> = {
     }
   `,
   fill: css`
-    background-color: ${({ theme }) => theme.focus};
+    background-color: ${({ theme }) => theme.secondary};
     color: ${({ theme }) => theme.background};
-    border-color: ${({ theme }) => theme.backgroundHighlight};
+    border-color: ${({ theme }) => theme.secondary};
+
+    &:hover,
+    &:focus,
+    &:active {
+      border-color: ${({ theme }) => theme.background};
+    }
+
+    &:focus {
+      outline-color: ${({ theme }) => theme.focus};
+    }
 
     &:disabled {
       color: ${({ theme }) => theme.disabled};
@@ -53,13 +73,19 @@ export const Button = styled.button<{ $variant?: Variant }>`
   border: 1px solid;
 
   &:hover,
-  &:focus {
+  &:focus,
+  &:active {
     text-decoration: underline;
+  }
+
+  &:focus {
+    outline-width: 2px;
+    outline-style: solid;
   }
 
   &:disabled {
     pointer-events: none;
   }
 
-  ${({ $variant = 'fill' }) => VARIANT_STYLE[$variant]}
+  ${({ $variant = 'outline' }) => VARIANT_STYLE[$variant]}
 `

@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RouteObject, matchPath, matchRoutes, useLocation } from 'react-router-dom'
 import Background from './Background'
 import Header from './Header'
-import { Body, Main } from './style'
+import { Body, Main, Wrapper } from './style'
 
 const BACKGROUND_WHITELIST: RouteObject[] = [
   { path: '/' },
@@ -16,20 +16,20 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children }) => {
   const location = useLocation()
-  const bodyRef = useRef<HTMLBodyElement>(null)
+  const [bodyElement, setBodyElement] = useState<HTMLBodyElement | null>(null)
 
   return (
-    <>
+    <Wrapper>
       {matchRoutes(BACKGROUND_WHITELIST, location.pathname) && (
-        <Background top={bodyRef.current?.getBoundingClientRect().top ?? 0} />
+        <Background top={bodyElement?.getBoundingClientRect().top ?? 0} />
       )}
       <Main>
         <Header />
-        <Body $tint={!matchPath(location.pathname, '/particles')} ref={bodyRef}>
+        <Body $tint={!matchPath(location.pathname, '/particles')} ref={setBodyElement}>
           {children}
         </Body>
       </Main>
-    </>
+    </Wrapper>
   )
 }
 
@@ -42,10 +42,10 @@ export const LayoutFallback: React.FC = () => {
   }, [location.pathname])
 
   return (
-    <Main>
+    <Wrapper>
       <Header />
       <Body $tint={!matchPath(location.pathname, '/particles')} ref={bodyRef} />
-    </Main>
+    </Wrapper>
   )
 }
 

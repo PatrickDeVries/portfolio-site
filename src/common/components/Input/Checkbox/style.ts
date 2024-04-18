@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components'
-import { OUTLINE_WIDTH } from '../style'
 
 export const ToggleLabel = styled.label<{ disabled?: boolean }>`
   display: flex;
@@ -34,16 +33,16 @@ export const CheckboxInput = styled.input`
   box-sizing: border-box;
 
   font: inherit;
-  width: 1em;
+  width: 1rem;
   aspect-ratio: 1;
-  border: ${OUTLINE_WIDTH} solid ${({ theme }) => theme.text};
+  border: 1px solid ${({ theme }) => theme.text};
   background-color: ${({ theme }) => theme.backgroundHighlight};
 
   &::before {
     content: '';
     ${CHECK_POSITION}
-    width: 0.2em;
-    height: ${OUTLINE_WIDTH};
+    width: 0.2rem;
+    height: 1px;
     transform: scale(0) rotateZ(${CHECK_ANGLE}deg);
     background-color: ${({ theme }) => theme.secondary};
   }
@@ -51,8 +50,8 @@ export const CheckboxInput = styled.input`
   &::after {
     content: '';
     ${CHECK_POSITION}
-    width: 0.65em;
-    height: ${OUTLINE_WIDTH};
+    width: 0.65rem;
+    height: 1px;
     transform: scale(0) rotateZ(${CHECK_ANGLE + 90}deg);
     background-color: ${({ theme }) => theme.secondary};
   }

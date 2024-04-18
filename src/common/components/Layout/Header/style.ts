@@ -2,7 +2,7 @@ import { DESKTOP, TABLET } from '@/common/theme/media-queries'
 import { mix } from 'polished'
 import styled, { css } from 'styled-components'
 
-export const Wrapper = styled.nav`
+export const NavBar = styled.nav`
   position: relative;
 
   display: flex;
@@ -11,7 +11,6 @@ export const Wrapper = styled.nav`
   font-size: 1.4rem;
 
   width: 100%;
-  z-index: 2;
 
   background-color: ${({ theme }) => theme.backgroundHighlight};
   border-bottom: 1px ${({ theme }) => theme.secondary} solid;
@@ -75,24 +74,22 @@ export const NavItem = styled.button<{ $active?: boolean }>`
 
 export const PopupItem = styled(NavItem)`
   width: 100%;
-
   justify-content: center;
 `
 
 export const Popup = styled.div<{ $isExpanded?: boolean }>`
+  position: absolute;
+  top: 100%;
+  right: -100vw;
+
   width: 100vw;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  position: absolute;
-  top: 100%;
-  right: -100vw;
   transform: translateX(${({ $isExpanded }) => ($isExpanded ? '-100vw' : '0')});
   transition: transform 0.15s ease;
-
-  z-index: 3;
 
   background-color: ${({ theme }) => theme.backgroundHighlight};
   border: 1px ${({ theme }) => theme.secondary} solid;

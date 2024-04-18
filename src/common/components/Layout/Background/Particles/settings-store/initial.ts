@@ -1,10 +1,10 @@
 import { RepellentShape } from '@/common/components/Layout/Background/types'
 import { DARK } from '@/common/theme'
-import { BackgroundControl } from './types'
+import { ParticleSettings } from './types'
 
-export const INITIAL_SETTINGS: BackgroundControl = {
-  firstHit: false,
-  controlsOpen: false,
+export const INITIAL_SETTINGS: ParticleSettings = {
+  isFirstHit: false,
+  areControlsOpen: false,
 
   particleCount: 20000,
   baseV: 0.05,
@@ -19,7 +19,7 @@ export const INITIAL_SETTINGS: BackgroundControl = {
   colorB: DARK.secondary,
 }
 
-export const DEFAULT_SETTINGS: Partial<BackgroundControl> = {
+export const DEFAULT_SETTINGS: Partial<ParticleSettings> = {
   particleCount: 20000,
   baseV: 0.05,
   vVar: 0.003,

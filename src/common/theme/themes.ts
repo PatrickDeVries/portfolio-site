@@ -12,6 +12,8 @@ export const DARK: Theme = {
   empty: '#FFFFFF',
   focus: '#00FF00',
   disabled: '#777777',
+  hot: '#ABFFDF',
+  cold: '#004F31',
 }
 
 export const LIGHT: Theme = {
@@ -26,4 +28,6 @@ export const LIGHT: Theme = {
   empty: '#EEEEEE',
   focus: '#2C00A3',
   disabled: '#777777',
+  hot: '#ABFFDF',
+  cold: '#004F31',
 }

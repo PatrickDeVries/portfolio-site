@@ -11,16 +11,21 @@ const Global = createGlobalStyle`
       `linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight})`};
   }
 
-  input{
+  input {
     font-size: inherit;
     color: inherit;
   }
 
   *, *::before, *::after  {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  b {
+    color: ${({ theme }) => theme.secondary};
+    font-weight: 500;
+  }
 `
 
 export default Global
