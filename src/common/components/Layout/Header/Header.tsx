@@ -15,12 +15,12 @@ import {
   HamburgerBar,
   IconGroup,
   Logo,
+  NavBar,
   NavGroup,
   NavIcon,
   NavItem,
   Popup,
   PopupItem,
-  Wrapper,
 } from './style'
 
 const Header: React.FC = () => {
@@ -67,7 +67,7 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <Wrapper>
+      <NavBar>
         <Logo as={Link} to="/">
           Patrick DeVries
         </Logo>
@@ -179,7 +179,7 @@ const Header: React.FC = () => {
             </PopupItem>
           ))}
         </Popup>
-      </Wrapper>
+      </NavBar>
     </>
   )
 }

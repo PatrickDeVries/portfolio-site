@@ -1,12 +1,25 @@
 import styled from 'styled-components'
 
-export const Main = styled.div`
+export const Wrapper = styled.div`
+  position: relative;
+  /* top: 0;
+  left: 0; */
+
   height: 100vh;
   width: 100%;
 
   background-repeat: no-repeat;
   ${({ theme }) =>
     `background-image: linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight});`}
+`
+
+export const Main = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100vh;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -17,7 +30,6 @@ export const Main = styled.div`
 export const Body = styled.body<{ $tint?: boolean }>`
   height: 100%;
   width: 100%;
-  z-index: 1;
 
   display: flex;
   flex-direction: column;
