@@ -1,7 +1,7 @@
 import Button from '@/common/components/Button'
 import Flex from '@/common/components/Flex'
 import Input from '@/common/components/Input'
-import { MAX_PARTICLES, randomizeLocations } from '@/common/components/Layout/Background/Particles'
+import { MAX_PARTICLES } from '@/common/components/Layout/Background/Particles'
 import particleSettings, {
   resetSettings,
 } from '@/common/components/Layout/Background/Particles/settings-store'
@@ -91,7 +91,7 @@ const ParticleControlCard: React.FC = () => {
           max={5}
           step={0.01}
           onChange={newVal => (particleSettings.mouseSize = newVal)}
-          label="Mouse social distancing"
+          label="Mouse radius"
           title="Press '-' to shrink, '=' to grow"
         />
       </WrappingRow>
@@ -109,15 +109,7 @@ const ParticleControlCard: React.FC = () => {
           onChange={event => (particleSettings.colorB = event.target.value)}
         />
       </Flex>
-      <Flex $gap="1rem" $justifyContent="space-between">
-        <Button onClick={resetSettings}>Reset Settings</Button>
-        <Button
-          onClick={randomizeLocations}
-          title="This will randomize the positions of all particles"
-        >
-          Reset Particle Locations
-        </Button>
-      </Flex>
+      <Button onClick={resetSettings}>Reset Settings</Button>
     </ControlCard>
   )
 }

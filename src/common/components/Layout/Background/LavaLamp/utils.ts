@@ -1,7 +1,15 @@
 import { Point2d } from '../types'
-import { GRAVITY, PARTICLE_CONVECTION_COEFFICIENT, PARTICLE_RADIUS } from './constants'
+import {
+  GRAVITY,
+  LAMP_TEMPERATURE,
+  PARTICLE_COLLISION_RADIUS,
+  PARTICLE_CONVECTION_COEFFICIENT,
+} from './constants'
 import store from './position-store'
 import lavaLampSettings from './settings-store'
+
+export const scaleSetting = ({ base, scale }: { base: number; scale: number }): number =>
+  base * (scale > 0 ? scale : 1 / -scale)
 
 export const getTemperatureAtCoordinate = ({ x, y }: Point2d): number => {
   const normalizedY = (y + store.viewport.height / 2) / store.viewport.height // y from 0 to 1
@@ -12,7 +20,9 @@ export const getTemperatureAtCoordinate = ({ x, y }: Point2d): number => {
 
   const totalStrength = yStrength * 0.8 + xStrength * 0.2
 
-  return 100 * totalStrength
+  return (
+    scaleSetting({ base: LAMP_TEMPERATURE, scale: lavaLampSettings.lampTempScale }) * totalStrength
+  )
 }
 
 // Q = hc ∙ A ∙ (Ts – Tf)
@@ -21,8 +31,17 @@ export const getConvectionHeatTransferPerFrame = (
   temperature: number,
 ): number => {
   const fluidTemperature = getTemperatureAtCoordinate({ y, x })
-  const particleArea = Math.PI * (PARTICLE_RADIUS * lavaLampSettings.particleScale) ** 2
-  return PARTICLE_CONVECTION_COEFFICIENT * particleArea * (temperature - fluidTemperature)
+  const particleArea =
+    Math.PI *
+    scaleSetting({ base: PARTICLE_COLLISION_RADIUS, scale: lavaLampSettings.particleScale }) ** 2
+  return (
+    scaleSetting({
+      base: PARTICLE_CONVECTION_COEFFICIENT,
+      scale: lavaLampSettings.convectionCoefficientScale,
+    }) *
+    particleArea *
+    (temperature - fluidTemperature)
+  )
 }
 
 export const getAccelerationFromTemperature = (temperature: number) => {

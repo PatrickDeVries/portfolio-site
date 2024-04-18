@@ -1,7 +1,7 @@
 import Button from '@/common/components/Button'
 import Flex from '@/common/components/Flex'
 import Input from '@/common/components/Input'
-import { MAX_PARTICLES, randomizeLocations } from '@/common/components/Layout/Background/LavaLamp'
+import { MAX_PARTICLES } from '@/common/components/Layout/Background/LavaLamp'
 import lavaLampSettings, {
   resetSettings,
 } from '@/common/components/Layout/Background/LavaLamp/settings-store'
@@ -28,11 +28,34 @@ const LavaLampControlCard: React.FC = () => {
           label="Particle count"
         />
         <RangeSlider
-          value={lavaLampSnap.particleScale * 50}
-          min={1}
-          max={1000}
-          onChange={newVal => (lavaLampSettings.particleScale = newVal / 50)}
-          label="Particle radius"
+          value={lavaLampSnap.particleScale}
+          min={-10}
+          max={100}
+          onChange={newVal =>
+            (lavaLampSettings.particleScale =
+              newVal === 0 ? (lavaLampSnap.particleScale > 0 ? -1 : 1) : newVal)
+          }
+          label="Particle radius scale"
+        />
+        <RangeSlider
+          value={lavaLampSnap.convectionCoefficientScale}
+          min={-100}
+          max={100}
+          onChange={newVal =>
+            (lavaLampSettings.convectionCoefficientScale =
+              newVal === 0 ? (lavaLampSnap.convectionCoefficientScale > 0 ? -1 : 1) : newVal)
+          }
+          label="Convection coefficient scale"
+        />
+        <RangeSlider
+          value={lavaLampSnap.lampTempScale}
+          min={-100}
+          max={100}
+          onChange={newVal =>
+            (lavaLampSettings.lampTempScale =
+              newVal === 0 ? (lavaLampSnap.lampTempScale > 0 ? -1 : 1) : newVal)
+          }
+          label="Lamp temperature scale"
         />
         <RangeSlider
           value={lavaLampSnap.mouseSize}
@@ -40,7 +63,7 @@ const LavaLampControlCard: React.FC = () => {
           max={5}
           step={0.01}
           onChange={newVal => (lavaLampSettings.mouseSize = newVal)}
-          label="Mouse social distancing"
+          label="Mouse radius"
           title="Press '-' to shrink, '=' to grow"
         />
         <Select
@@ -67,10 +90,7 @@ const LavaLampControlCard: React.FC = () => {
           onChange={event => (lavaLampSettings.coldColor = event.target.value)}
         />
       </Flex>
-      <WrappingRow>
-        <Button onClick={resetSettings}>Reset Settings</Button>
-        <Button onClick={randomizeLocations}>Reset Particle Locations</Button>
-      </WrappingRow>
+      <Button onClick={resetSettings}>Reset Settings</Button>
     </ControlCard>
   )
 }

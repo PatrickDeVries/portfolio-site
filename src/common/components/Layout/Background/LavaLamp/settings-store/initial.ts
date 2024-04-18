@@ -6,8 +6,10 @@ export const INITIAL_SETTINGS: LavaLampSettings = {
   isFirstHit: false,
   areControlsOpen: false,
 
-  particleCount: 2000,
+  particleCount: 2500,
   particleScale: 1,
+  convectionCoefficientScale: 1,
+  lampTempScale: 1,
 
   mouseSize: 1,
   mouseShape: RepellentShape.Circle,
@@ -17,8 +19,10 @@ export const INITIAL_SETTINGS: LavaLampSettings = {
 }
 
 export const DEFAULT_SETTINGS: Partial<LavaLampSettings> = {
-  particleCount: 2000,
+  particleCount: 2500,
   particleScale: 1,
+  convectionCoefficientScale: 1,
+  lampTempScale: 1,
 
   mouseSize: 1,
   mouseShape: RepellentShape.Circle,

@@ -16,10 +16,14 @@ import {
   scaleWidthIntoViewport,
 } from '../utils'
 import LavaShaderMaterial from './LavaShaderMaterial'
-import { MAX_PARTICLES, PARTICLE_MAX_VERTICAL_SPEED, PARTICLE_RADIUS } from './constants'
+import { MAX_PARTICLES, PARTICLE_COLLISION_RADIUS, PARTICLE_MAX_VERTICAL_SPEED } from './constants'
 import positionStore, { randomizeLocations } from './position-store'
 import lavaLampSettings from './settings-store'
-import { getAccelerationFromTemperature, getConvectionHeatTransferPerFrame } from './utils'
+import {
+  getAccelerationFromTemperature,
+  getConvectionHeatTransferPerFrame,
+  scaleSetting,
+} from './utils'
 
 type Props = {
   top: number
@@ -186,7 +190,10 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
         (_, index) =>
           new Sphere(
             new Vector3(pps.getX(index), pps.getY(index), pps.getZ(index)),
-            PARTICLE_RADIUS * lavaLampSettings.particleScale,
+            scaleSetting({
+              base: PARTICLE_COLLISION_RADIUS,
+              scale: lavaLampSettings.particleScale,
+            }),
           ),
       )
 
