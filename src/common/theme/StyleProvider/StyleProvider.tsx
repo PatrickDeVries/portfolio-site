@@ -1,8 +1,8 @@
 import { DARK, LIGHT } from '@/common/theme'
+import themeStore from '@/common/theme/components/ThemeNavIcon/store'
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
 import { useSnapshot } from 'valtio'
-import themeStore from '../store'
 import Global from './Global'
 
 interface Props {

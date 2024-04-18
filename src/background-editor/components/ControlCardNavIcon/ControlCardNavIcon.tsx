@@ -1,14 +1,14 @@
+import backgroundStore from '@/background-editor/components/BackgroundNavIcon/store'
 import lavaLampSettings from '@/common/components/Layout/Background/LavaLamp/settings-store'
 import particleSettings from '@/common/components/Layout/Background/Particles/settings-store'
-import backgroundStore from '@/common/components/Layout/Background/store'
 import { NavIcon } from '@/common/components/Layout/Header/style'
 import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useRef } from 'react'
 import { HiOutlineCog } from 'react-icons/hi'
 import { useSnapshot } from 'valtio'
-import { LavaLampControlCard, ParticleControlCard } from './control-cards'
+import { LavaLampControlCard, ParticleControlCard } from '../control-cards'
 
-const ControlCardGear: React.FC = () => {
+const ControlCardNavIcon: React.FC = () => {
   const gearRef = useRef<HTMLButtonElement>(null)
   const backgroundSnap = useSnapshot(backgroundStore)
 
@@ -44,4 +44,4 @@ const ControlCardGear: React.FC = () => {
   )
 }
 
-export default ControlCardGear
+export default ControlCardNavIcon

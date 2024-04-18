@@ -2,9 +2,9 @@ import { Canvas } from '@react-three/fiber'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
+import backgroundStore from '../../../../background-editor/components/BackgroundNavIcon/store'
 import LavaLamp from './LavaLamp'
 import Particles from './Particles'
-import backgroundStore from './store'
 import { BgCanvas } from './style'
 
 type Props = {

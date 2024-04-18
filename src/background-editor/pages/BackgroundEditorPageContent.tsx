@@ -1,6 +1,6 @@
+import backgroundStore from '@/background-editor/components/BackgroundNavIcon/store'
 import lavaLampSettings from '@/common/components/Layout/Background/LavaLamp/settings-store'
 import particleSettings from '@/common/components/Layout/Background/Particles/settings-store'
-import backgroundStore from '@/common/components/Layout/Background/store'
 import React from 'react'
 import { useSnapshot } from 'valtio'
 import { GearIndicator, Instructions, Wrapper } from './style'

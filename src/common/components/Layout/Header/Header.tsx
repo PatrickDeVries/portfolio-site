@@ -1,15 +1,9 @@
-import ControlCardGear from '@/background-editor/components/ControlCardGear'
-import { DARK, LIGHT } from '@/common/theme'
-import themeStore from '@/common/theme/store'
+import BackgroundNavIcon from '@/background-editor/components/BackgroundNavIcon/BackgroundNavIcon'
+import ControlCardNavIcon from '@/background-editor/components/ControlCardNavIcon'
+import ThemeNavIcon from '@/common/theme/components/ThemeNavIcon'
 import { useFlag } from '@yobgob/too-many-hooks'
 import React from 'react'
-import { GiBurstBlob } from 'react-icons/gi'
-import { MdDarkMode, MdOutlineDarkMode } from 'react-icons/md'
-import { TbBounceRightFilled } from 'react-icons/tb'
 import { Link, To, useLocation } from 'react-router-dom'
-import { useSnapshot } from 'valtio'
-import particleSettings from '../Background/Particles/settings-store'
-import backgroundStore from '../Background/store'
 import {
   Hamburger,
   HamburgerBar,
@@ -27,10 +21,6 @@ const Header: React.FC = () => {
   const location = useLocation()
   const [isMobileMenuExpanded, { unflag: collapseMobileMenu, toggle: toggleIsMobileMenuExpanded }] =
     useFlag(false)
-
-  const particleSettingsSnap = useSnapshot(particleSettings)
-  const themeSnap = useSnapshot(themeStore)
-  const backgroundSnap = useSnapshot(backgroundStore)
 
   const navItems: { route: string; label: string; onClick: () => void; to: To }[] = [
     {
@@ -79,55 +69,10 @@ const Header: React.FC = () => {
           ))}
         </NavGroup>
         <IconGroup>
-          {location.pathname === '/background-editor' && <ControlCardGear />}
-          <NavIcon
-            title={`Change background to ${
-              backgroundSnap.background === 'particles' ? 'lava lamp' : 'particles'
-            } mode`}
-            onClick={() => {
-              if (backgroundSnap.background === 'particles') {
-                backgroundStore.background = 'lava-lamp'
-              } else {
-                backgroundStore.background = 'particles'
-              }
-            }}
-          >
-            {backgroundSnap.background === 'particles' ? (
-              <GiBurstBlob size="1.5rem" />
-            ) : (
-              <TbBounceRightFilled size="1.5rem" />
-            )}
-          </NavIcon>
-          <NavIcon
-            title={`Change to ${themeSnap.theme === 'light' ? 'dark' : 'light'} mode`}
-            onClick={() => {
-              if (themeSnap.theme === 'light') {
-                themeStore.theme = 'dark'
-                if (
-                  particleSettingsSnap.colorA === LIGHT.primary &&
-                  particleSettingsSnap.colorB === LIGHT.secondary
-                ) {
-                  particleSettings.colorA = DARK.primary
-                  particleSettings.colorB = DARK.secondary
-                }
-              } else {
-                themeStore.theme = 'light'
-                if (
-                  particleSettingsSnap.colorA === DARK.primary &&
-                  particleSettingsSnap.colorB === DARK.secondary
-                ) {
-                  particleSettings.colorA = LIGHT.primary
-                  particleSettings.colorB = LIGHT.secondary
-                }
-              }
-            }}
-          >
-            {themeSnap.theme === 'light' ? (
-              <MdDarkMode size="1.5rem" />
-            ) : (
-              <MdOutlineDarkMode size="1.5rem" />
-            )}
-          </NavIcon>
+          {location.pathname === '/background-editor' && <ControlCardNavIcon />}
+          <BackgroundNavIcon />
+          <ThemeNavIcon />
+
           <NavIcon title="Open navigation" $isMobileOnly onClick={toggleIsMobileMenuExpanded}>
             <Hamburger $isExpanded={isMobileMenuExpanded} $size="1.5rem">
               <HamburgerBar />
