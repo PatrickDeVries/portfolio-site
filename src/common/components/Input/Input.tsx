@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import Checkbox from './Checkbox'
+import Color from './Color'
 import Text from './Text'
-import { InputProps } from './types'
 
 const INPUTS = {
   checkbox: Checkbox,
   text: Text,
+  number: Text,
+  color: Color,
 }
 
-const Input: React.FC<InputProps> = ({ type, ...props }) =>
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  type: keyof typeof INPUTS
+  label?: string
+  variant?: 'outline' | 'fill'
+}
+
+const Input: React.FC<InputProps> = ({ type = 'text', ...props }) =>
   React.createElement(INPUTS[type], {
     type: type,
     ...props,

@@ -41,15 +41,8 @@ export const ControlRows = styled.div`
 
 export const Label = styled.label`
   display: flex;
-  gap: 1rem;
-  font-size: 0.8rem;
-`
-
-export const ColorInput = styled.input`
-  background-color: ${({ theme }) => theme.strongHighlight};
-  border: 1px solid ${({ theme }) => theme.secondary};
-  border-radius: 0.5rem;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 0.25rem;
 `
 
 export const Footer = styled.div`
