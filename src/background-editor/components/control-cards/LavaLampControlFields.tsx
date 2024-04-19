@@ -10,15 +10,14 @@ import RangeSlider from '@/common/components/RangeSlider'
 import Select from '@/common/components/Select'
 import React from 'react'
 import { useSnapshot } from 'valtio'
-import ControlCard from './ControlCard'
 import { formatMouseShape } from './formatters'
 import { WrappingRow } from './style'
 
-const LavaLampControlCard: React.FC = () => {
+const LavaLampControlFields: React.FC = () => {
   const lavaLampSnap = useSnapshot(lavaLampSettings)
 
   return (
-    <ControlCard areControlsOpen={lavaLampSnap.areControlsOpen}>
+    <>
       <WrappingRow>
         <RangeSlider
           value={lavaLampSnap.particleCount}
@@ -101,8 +100,8 @@ const LavaLampControlCard: React.FC = () => {
         />
       </Flex>
       <Button onClick={resetSettings}>Reset Settings</Button>
-    </ControlCard>
+    </>
   )
 }
 
-export default LavaLampControlCard
+export default LavaLampControlFields

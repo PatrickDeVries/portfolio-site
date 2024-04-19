@@ -25,7 +25,7 @@ export const Main = styled.div`
   overflow: hidden;
 `
 
-export const Body = styled.body<{ $tint?: boolean }>`
+export const Body = styled.div<{ $tint?: boolean }>`
   height: 100%;
   width: 100%;
 

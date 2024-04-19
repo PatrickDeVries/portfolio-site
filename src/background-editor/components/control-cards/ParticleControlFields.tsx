@@ -10,15 +10,14 @@ import RangeSlider from '@/common/components/RangeSlider'
 import Select from '@/common/components/Select'
 import React from 'react'
 import { useSnapshot } from 'valtio'
-import ControlCard from './ControlCard'
 import { formatMouseShape } from './formatters'
 import { WrappingRow } from './style'
 
-const ParticleControlCard: React.FC = () => {
+const ParticleControlFields: React.FC = () => {
   const particleSnap = useSnapshot(particleSettings)
 
   return (
-    <ControlCard areControlsOpen={particleSnap.areControlsOpen}>
+    <>
       <WrappingRow>
         <RangeSlider
           value={particleSnap.particleCount}
@@ -110,8 +109,8 @@ const ParticleControlCard: React.FC = () => {
         />
       </Flex>
       <Button onClick={resetSettings}>Reset Settings</Button>
-    </ControlCard>
+    </>
   )
 }
 
-export default ParticleControlCard
+export default ParticleControlFields
