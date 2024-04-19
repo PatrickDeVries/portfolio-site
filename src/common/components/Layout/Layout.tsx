@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { RouteObject, matchPath, matchRoutes, useLocation } from 'react-router-dom'
 import Background from './Background'
 import Header from './Header'
@@ -18,11 +18,14 @@ const Layout: React.FC<Props> = ({ children }) => {
   const location = useLocation()
   const [bodyElement, setBodyElement] = useState<HTMLBodyElement | null>(null)
 
+  const background = useMemo(
+    () => <Background top={bodyElement?.getBoundingClientRect().top ?? 0} />,
+    [bodyElement],
+  )
+
   return (
     <Wrapper>
-      {matchRoutes(BACKGROUND_WHITELIST, location.pathname) && (
-        <Background top={bodyElement?.getBoundingClientRect().top ?? 0} />
-      )}
+      {matchRoutes(BACKGROUND_WHITELIST, location.pathname) && background}
       <Main>
         <Header />
         <Body $tint={!matchPath(location.pathname, '/particles')} ref={setBodyElement}>

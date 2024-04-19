@@ -18,3 +18,10 @@ export enum RepellentShape {
   Rectangle = 'RECTANGLE',
   Star = 'STAR',
 }
+
+export interface Scale {
+  xMin: number
+  xMax: number
+  yMin: number
+  yMax: number
+}

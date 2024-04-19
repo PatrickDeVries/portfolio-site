@@ -1,4 +1,5 @@
-import { Circle, Point2d } from './types'
+import { Size } from '@react-three/fiber'
+import { Circle, Point2d, Polygon, RepellentShape, Scale, isCircle } from './types'
 
 export const PI2 = Math.PI * 2
 
@@ -201,6 +202,38 @@ export const generateStar = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point
 }
 
 ///
+/// Utils for shape information
+///
+
+export const getShapeMin = (shape: Circle | Polygon) =>
+  isCircle(shape)
+    ? { x: shape.x - shape.radius, y: shape.y - shape.radius }
+    : {
+        x: Math.min.apply(
+          Math,
+          shape.vertices.map(v => v.x),
+        ),
+        y: Math.min.apply(
+          Math,
+          shape.vertices.map(v => v.y),
+        ),
+      }
+
+export const getShapeMax = (shape: Circle | Polygon) =>
+  isCircle(shape)
+    ? { x: shape.x + shape.radius, y: shape.y + shape.radius }
+    : {
+        x: Math.max.apply(
+          Math,
+          shape.vertices.map(v => v.x),
+        ),
+        y: Math.max.apply(
+          Math,
+          shape.vertices.map(v => v.y),
+        ),
+      }
+
+///
 /// DOM interfacing utils
 ///
 
@@ -222,17 +255,47 @@ export const projectWindowPointIntoViewport = (
     (point.y - 0) * ((-viewportScale.yMax - -viewportScale.yMin) / (window.innerHeight - 0)), // three.js coordinate system y axis is inverted to the window's coordinate system
 })
 
-export const scaleWidthIntoViewport = (
-  width: number,
-  viewportScale: {
-    xMin: number
-    xMax: number
-    yMin: number
-    yMax: number
-  },
-) => width * ((viewportScale.xMax - viewportScale.xMin) / (window.innerWidth - 0))
+export const scaleWidthIntoViewport = (width: number, viewportScale: Scale) =>
+  width * ((viewportScale.xMax - viewportScale.xMin) / (window.innerWidth - 0))
 
-export const getVisibleParticleRepellents = () => {
+///
+/// repellent information utils
+///
+
+const getFixedRepellentShapes = (viewport: Size, viewportScale: Scale) => {
+  const pathname = window.location.hash.slice(1)
+  switch (pathname) {
+    case '/':
+      return viewport.width < viewport.height
+        ? []
+        : [
+            {
+              vertices: generateStar(viewport.width * 0.1, {
+                x: (viewportScale.xMin * 3) / 4,
+                y: 0,
+              }),
+            },
+            {
+              vertices: generateStar(viewport.width * 0.1, {
+                x: (viewportScale.xMax * 3) / 4,
+                y: 0,
+              }),
+            },
+          ]
+    default:
+      return []
+  }
+}
+
+const getFixedRepellentInfo = (viewport: Size, viewportScale: Scale) => {
+  const fixedRepellentShapes = getFixedRepellentShapes(viewport, viewportScale)
+  const fixedRepellentMins: Point2d[] = fixedRepellentShapes.map(getShapeMin)
+  const fixedRepellentMaxes: Point2d[] = fixedRepellentShapes.map(getShapeMax)
+
+  return { fixedRepellentShapes, fixedRepellentMins, fixedRepellentMaxes }
+}
+
+const getVisibleDynamicRepellents = () => {
   const allRepellents = document.querySelectorAll('*[data-repel-particles="true"]')
   const visibleRepellents = Array.from(allRepellents).filter(repellent => {
     const { top, bottom, left, right } = repellent.getBoundingClientRect()
@@ -245,4 +308,66 @@ export const getVisibleParticleRepellents = () => {
     return verticallyVisible && horizontallyVisible
   })
   return visibleRepellents
+}
+
+const getVisibleDynamicRepellentShapes = (viewportScale: Scale) => {
+  const dynamicRepellents = getVisibleDynamicRepellents()
+
+  return dynamicRepellents.map(repellent => {
+    const { top, right, bottom, left } = repellent.getBoundingClientRect()
+    const repellentShape = repellent.getAttribute('data-repel-shape')
+
+    switch (repellentShape) {
+      case RepellentShape.Circle:
+        return {
+          ...projectWindowPointIntoViewport(
+            { x: (right + left) / 2, y: (top + bottom) / 2 },
+            viewportScale,
+          ),
+          radius: scaleWidthIntoViewport((right - left) / 2, viewportScale),
+        }
+      case RepellentShape.Rectangle:
+        return {
+          vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
+            projectWindowPointIntoViewport(point, viewportScale),
+          ),
+        }
+      case RepellentShape.Star:
+        return {
+          vertices: generateStar(bottom - top, {
+            x: (right + left) / 2,
+            y: (bottom + top) / 2,
+          }).map(point => projectWindowPointIntoViewport(point, viewportScale)),
+        }
+      default:
+        return {
+          vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
+            projectWindowPointIntoViewport(point, viewportScale),
+          ),
+        }
+    }
+  })
+}
+
+const getDynamicRepellentInfo = (viewportScale: Scale) => {
+  const dynamicRepellentShapes = getVisibleDynamicRepellentShapes(viewportScale)
+  const dynamicRepellentMins: Point2d[] = dynamicRepellentShapes.map(getShapeMin)
+  const dynamicRepellentMaxes: Point2d[] = dynamicRepellentShapes.map(getShapeMax)
+
+  return { dynamicRepellentShapes, dynamicRepellentMins, dynamicRepellentMaxes }
+}
+
+export const getRepellentInfo = (viewport: Size, viewportScale: Scale) => {
+  const { fixedRepellentShapes, fixedRepellentMaxes, fixedRepellentMins } = getFixedRepellentInfo(
+    viewport,
+    viewportScale,
+  )
+  const { dynamicRepellentShapes, dynamicRepellentMaxes, dynamicRepellentMins } =
+    getDynamicRepellentInfo(viewportScale)
+
+  return {
+    repellentShapes: [...fixedRepellentShapes, ...dynamicRepellentShapes],
+    repellentMins: [...fixedRepellentMins, ...dynamicRepellentMins],
+    repellentMaxes: [...fixedRepellentMaxes, ...dynamicRepellentMaxes],
+  }
 }

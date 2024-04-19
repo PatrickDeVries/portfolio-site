@@ -5,19 +5,17 @@ import * as THREE from 'three'
 import { Points, ShaderMaterial } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
-import useFixedRepellents from '../useFixedRepellents'
 import {
   PI2,
   escapeRadius,
-  generateRectangleFromBoundingRect,
   generateRectangleFromCenter,
   generateStar,
   getNewAngle,
-  getVisibleParticleRepellents,
+  getRepellentInfo,
+  getShapeMax,
+  getShapeMin,
   isPointInCircle,
   isPointInPolygon,
-  projectWindowPointIntoViewport,
-  scaleWidthIntoViewport,
 } from '../utils'
 import { MAX_PARTICLES } from './constants'
 import './particle-material'
@@ -69,10 +67,9 @@ const ParticleShaderMaterial: React.FC<{
 
 type Props = {
   top: number
-  pathname: string
 }
 
-const Particles: React.FC<Props> = ({ top, pathname }) => {
+const Particles: React.FC<Props> = ({ top }) => {
   useWindowListener('keyup', event => {
     if (event.key === '=') {
       particleSettings.mouseSize =
@@ -95,12 +92,6 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
 
   const pointsRef = useRef<Points | null>(null)
 
-  // create fixed repellent boundaries based on route
-  const { fixedRepellentShapes, fixedRepellentMaxes, fixedRepellentMins } = useFixedRepellents({
-    pathname,
-    viewport,
-  })
-
   const mouse = usePoint2dMouse(viewport)
 
   const { positions, velocities, angles } = randomizeLocations()
@@ -119,99 +110,18 @@ const Particles: React.FC<Props> = ({ top, pathname }) => {
                 particleSettings.mouseSize * 2,
               ),
             }
-    const mouseMax: Point2d = isCircle(mouseShape)
-      ? { x: 0, y: 0 }
-      : {
-          x: Math.max.apply(
-            Math,
-            mouseShape.vertices.map(v => v.x),
-          ),
-          y: Math.max.apply(
-            Math,
-            mouseShape.vertices.map(v => v.y),
-          ),
-        }
-    const mouseMin: Point2d = isCircle(mouseShape)
-      ? { x: 0, y: 0 }
-      : {
-          x: Math.min.apply(
-            Math,
-            mouseShape.vertices.map(v => v.x),
-          ),
-          y: Math.min.apply(
-            Math,
-            mouseShape.vertices.map(v => v.y),
-          ),
-        }
+    const mouseMin: Point2d = getShapeMin(mouseShape)
+    const mouseMax: Point2d = getShapeMax(mouseShape)
 
-    // get other dynamic repellent information
-    const dynamicRepellents = getVisibleParticleRepellents()
-    const dynamicRepellentShapes: (Circle | Polygon)[] = dynamicRepellents.map(repellent => {
-      const { top, right, bottom, left } = repellent.getBoundingClientRect()
-      const repellentShape = repellent.getAttribute('data-repel-shape')
-
-      switch (repellentShape) {
-        case RepellentShape.Circle:
-          return {
-            ...projectWindowPointIntoViewport(
-              { x: (right + left) / 2, y: (top + bottom) / 2 },
-              viewportScale,
-            ),
-            radius: scaleWidthIntoViewport((right - left) / 2, viewportScale),
-          }
-        case RepellentShape.Rectangle:
-          return {
-            vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
-              projectWindowPointIntoViewport(point, viewportScale),
-            ),
-          }
-        case RepellentShape.Star:
-          return {
-            vertices: generateStar(bottom - top, {
-              x: (right + left) / 2,
-              y: (bottom + top) / 2,
-            }).map(point => projectWindowPointIntoViewport(point, viewportScale)),
-          }
-        default:
-          return {
-            vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
-              projectWindowPointIntoViewport(point, viewportScale),
-            ),
-          }
-      }
-    })
-    const dynamicRepellentMaxes: Point2d[] = dynamicRepellentShapes.map(repellent =>
-      isCircle(repellent)
-        ? { x: 0, y: 0 }
-        : {
-            x: Math.max.apply(
-              Math,
-              repellent.vertices.map(v => v.x),
-            ),
-            y: Math.max.apply(
-              Math,
-              repellent.vertices.map(v => v.y),
-            ),
-          },
-    )
-    const dynamicRepellentMins: Point2d[] = dynamicRepellentShapes.map(repellent =>
-      isCircle(repellent)
-        ? { x: 0, y: 0 }
-        : {
-            x: Math.min.apply(
-              Math,
-              repellent.vertices.map(v => v.x),
-            ),
-            y: Math.min.apply(
-              Math,
-              repellent.vertices.map(v => v.y),
-            ),
-          },
+    // get other repellent information
+    const { repellentShapes, repellentMins, repellentMaxes } = getRepellentInfo(
+      viewport,
+      viewportScale,
     )
 
-    const allRepellentShapes = [mouseShape, ...dynamicRepellentShapes, ...fixedRepellentShapes]
-    const allRepellentMaxes = [mouseMax, ...dynamicRepellentMaxes, ...fixedRepellentMaxes]
-    const allRepellentMins = [mouseMin, ...dynamicRepellentMins, ...fixedRepellentMins]
+    const allRepellentShapes = [mouseShape, ...repellentShapes]
+    const allRepellentMaxes = [mouseMax, ...repellentMaxes]
+    const allRepellentMins = [mouseMin, ...repellentMins]
 
     if (pointsRef.current) {
       // get current three.js versions of point data
