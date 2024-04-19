@@ -7,6 +7,7 @@ export type LavaLampSettings = {
   particleCount: number
   particleScale: number
   convectionCoefficientScale: number
+  conductionCoefficientScale: number
   lampTempScale: number
 
   mouseSize: number

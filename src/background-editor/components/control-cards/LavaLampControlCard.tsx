@@ -45,7 +45,17 @@ const LavaLampControlCard: React.FC = () => {
             (lavaLampSettings.convectionCoefficientScale =
               newVal === 0 ? (lavaLampSnap.convectionCoefficientScale > 0 ? -1 : 1) : newVal)
           }
-          label="Convection coefficient scale"
+          label="Conv. coeff. scale"
+        />
+        <RangeSlider
+          value={lavaLampSnap.conductionCoefficientScale}
+          min={-100}
+          max={100}
+          onChange={newVal =>
+            (lavaLampSettings.conductionCoefficientScale =
+              newVal === 0 ? (lavaLampSnap.conductionCoefficientScale > 0 ? -1 : 1) : newVal)
+          }
+          label="Cond. coeff. scale"
         />
         <RangeSlider
           value={lavaLampSnap.lampTempScale}
