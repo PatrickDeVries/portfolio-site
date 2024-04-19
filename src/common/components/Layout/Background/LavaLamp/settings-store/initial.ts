@@ -9,6 +9,7 @@ export const INITIAL_SETTINGS: LavaLampSettings = {
   particleCount: 2500,
   particleScale: 1,
   convectionCoefficientScale: 1,
+  conductionCoefficientScale: 1,
   lampTempScale: 1,
 
   mouseSize: 1,
@@ -22,6 +23,7 @@ export const DEFAULT_SETTINGS: Partial<LavaLampSettings> = {
   particleCount: 2500,
   particleScale: 1,
   convectionCoefficientScale: 1,
+  conductionCoefficientScale: 1,
   lampTempScale: 1,
 
   mouseSize: 1,

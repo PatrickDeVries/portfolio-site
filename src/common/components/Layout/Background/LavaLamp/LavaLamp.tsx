@@ -21,6 +21,7 @@ import positionStore, { randomizeLocations } from './position-store'
 import lavaLampSettings from './settings-store'
 import {
   getAccelerationFromTemperature,
+  getConductionHeatTransferPerFrame,
   getConvectionHeatTransferPerFrame,
   scaleSetting,
 } from './utils'
@@ -199,7 +200,7 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
 
       // update each particle's position
       for (let i = 0, l = lavaLampSettings.particleCount; i < l; i++) {
-        const temperature = pts.getX(i)
+        let temperature = pts.getX(i)
 
         let horizontalVelocity = pvs.getX(i)
         let verticalVelocity = pvs.getY(i)
@@ -271,6 +272,28 @@ const LavaLamp: React.FC<Props> = ({ top, pathname }) => {
 
           pvs.setY(particleCollisionIndex, averageVerticalVelocity)
           verticalVelocity = averageVerticalVelocity
+
+          // update temperatures based on conduction
+          const collidedParticleTemperature = pts.getX(particleCollisionIndex)
+          const isCollidedParticleHotter = collidedParticleTemperature > temperature
+
+          if (isCollidedParticleHotter) {
+            const heatTransfer = getConductionHeatTransferPerFrame({
+              tHot: collidedParticleTemperature,
+              tCold: temperature,
+            })
+
+            temperature += heatTransfer
+            pts.setX(collidedParticleTemperature, collidedParticleTemperature - heatTransfer)
+          } else {
+            const heatTransfer = getConductionHeatTransferPerFrame({
+              tHot: temperature,
+              tCold: collidedParticleTemperature,
+            })
+
+            temperature -= heatTransfer
+            pts.setX(collidedParticleTemperature, collidedParticleTemperature + heatTransfer)
+          }
         }
 
         // check for and handle collision with screen boundaries
