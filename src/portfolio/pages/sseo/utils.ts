@@ -1,4 +1,4 @@
-import { Balls, BallType, BallTypeCombo, Player, Roles } from './types'
+import { BallType, BallTypeCombo, Balls, Player, Roles } from './types'
 
 export const ballsSunkToRole = (balls: number[], role: BallType[]): BallType[] => {
   const sunkTypes = {

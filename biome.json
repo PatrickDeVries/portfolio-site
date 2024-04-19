@@ -1,0 +1,217 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.7.0/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "main"
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "attributePosition": "auto",
+    "ignore": ["./node_modules", "./dist", "**/.DS_Store"]
+  },
+  "organizeImports": { "enabled": true },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "a11y": {
+        "noAccessKey": "warn",
+        "noAriaUnsupportedElements": "warn",
+        "noAutofocus": "error",
+        "noBlankTarget": "warn",
+        "noDistractingElements": "warn",
+        "noHeaderScope": "warn",
+        "noInteractiveElementToNoninteractiveRole": "error",
+        "noNoninteractiveElementToInteractiveRole": "error",
+        "noNoninteractiveTabindex": "error",
+        "noPositiveTabindex": "error",
+        "noRedundantRoles": "warn",
+        "useAltText": "warn",
+        "useAnchorContent": "warn",
+        "useAriaActivedescendantWithTabindex": "warn",
+        "useAriaPropsForRole": "warn",
+        "useHeadingContent": "warn",
+        "useHtmlLang": "error",
+        "useIframeTitle": "warn",
+        "useKeyWithClickEvents": "error",
+        "useKeyWithMouseEvents": "error",
+        "useMediaCaption": "error",
+        "useValidAnchor": "warn",
+        "useValidAriaProps": "warn",
+        "useValidAriaRole": {
+          "level": "warn",
+          "options": { "allowInvalidRoles": [], "ignoreNonDom": true }
+        },
+        "useValidAriaValues": "warn"
+      },
+      "complexity": {
+        "noMultipleSpacesInRegularExpressionLiterals": "warn",
+        "noUselessConstructor": "warn",
+        "noUselessLabel": "warn",
+        "noUselessLoneBlockStatements": "warn",
+        "noUselessRename": "warn",
+        "noWith": "warn",
+        "useOptionalChain": "warn"
+      },
+      "correctness": {
+        "noConstAssign": "warn",
+        "noEmptyCharacterClassInRegex": "warn",
+        "noEmptyPattern": "warn",
+        "noGlobalObjectCalls": "warn",
+        "noInvalidUseBeforeDeclaration": "warn",
+        "noNewSymbol": "warn",
+        "noSelfAssign": "warn",
+        "noUndeclaredVariables": "error",
+        "noUnreachable": "warn",
+        "noUnreachableSuper": "warn",
+        "noUnusedLabels": "warn",
+        "noUnusedVariables": "warn",
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error",
+        "useIsNan": "warn",
+        "useJsxKeyInIterable": "warn",
+        "useYield": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn",
+        "noGlobalEval": "warn"
+      },
+      "style": {
+        "noCommaOperator": "warn",
+        "noRestrictedGlobals": {
+          "level": "error",
+          "options": {
+            "deniedGlobals": [
+              "addEventListener",
+              "blur",
+              "close",
+              "closed",
+              "confirm",
+              "defaultStatus",
+              "defaultstatus",
+              "event",
+              "external",
+              "find",
+              "focus",
+              "frameElement",
+              "frames",
+              "history",
+              "innerHeight",
+              "innerWidth",
+              "length",
+              "location",
+              "locationbar",
+              "menubar",
+              "moveBy",
+              "moveTo",
+              "name",
+              "onblur",
+              "onerror",
+              "onfocus",
+              "onload",
+              "onresize",
+              "onunload",
+              "open",
+              "opener",
+              "opera",
+              "outerHeight",
+              "outerWidth",
+              "pageXOffset",
+              "pageYOffset",
+              "parent",
+              "print",
+              "removeEventListener",
+              "resizeBy",
+              "resizeTo",
+              "screen",
+              "screenLeft",
+              "screenTop",
+              "screenX",
+              "screenY",
+              "scroll",
+              "scrollbars",
+              "scrollBy",
+              "scrollTo",
+              "scrollX",
+              "scrollY",
+              "self",
+              "status",
+              "statusbar",
+              "stop",
+              "toolbar",
+              "top"
+            ]
+          }
+        },
+        "useNamingConvention": {
+          "level": "warn",
+          "options": { "strictCase": false }
+        }
+      },
+      "suspicious": {
+        "noAssignInExpressions": "warn",
+        "noCatchAssign": "warn",
+        "noCommentText": "warn",
+        "noConfusingLabels": "warn",
+        "noControlCharactersInRegex": "warn",
+        "noDoubleEquals": "warn",
+        "noDuplicateCase": "warn",
+        "noDuplicateClassMembers": "warn",
+        "noDuplicateJsxProps": "warn",
+        "noDuplicateObjectKeys": "warn",
+        "noDuplicateParameters": "warn",
+        "noExplicitAny": "warn",
+        "noFallthroughSwitchClause": "warn",
+        "noFunctionAssign": "warn",
+        "noGlobalAssign": "warn",
+        "noLabelVar": "warn",
+        "noRedeclare": "warn",
+        "noSelfCompare": "warn",
+        "noShadowRestrictedNames": "warn",
+        "noUnsafeNegation": "warn",
+        "useGetterReturn": "warn",
+        "useValidTypeof": "warn"
+      }
+    },
+    "ignore": ["./node_modules", "./dist", "**/.DS_Store", "src/common/store/valtio-persist.ts"]
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingComma": "all",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "asNeeded",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto"
+    }
+  },
+  "overrides": [
+    {
+      "include": ["**/*.ts?(x)"],
+      "linter": {
+        "rules": {
+          "complexity": { "noUselessConstructor": "warn" },
+          "correctness": {
+            "noInvalidUseBeforeDeclaration": "warn",
+            "noUndeclaredVariables": "off",
+            "noUnusedVariables": "warn"
+          },
+          "suspicious": {
+            "noDuplicateClassMembers": "off",
+            "noRedeclare": "warn"
+          }
+        }
+      }
+    }
+  ]
+}

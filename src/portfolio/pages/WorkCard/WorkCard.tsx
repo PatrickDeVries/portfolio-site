@@ -20,7 +20,11 @@ const WorkCard: React.FC<Props> = ({ item }) => (
       <ScalingImg src={item.image} />
       <BodyText>{item.description}</BodyText>
     </BodySection>
-    <TagSection>{item.tags?.map(tagText => <Tag key={tagText}>{tagText}</Tag>)}</TagSection>
+    <TagSection>
+      {item.tags?.map(tagText => (
+        <Tag key={tagText}>{tagText}</Tag>
+      ))}
+    </TagSection>
   </StyledCard>
 )
 

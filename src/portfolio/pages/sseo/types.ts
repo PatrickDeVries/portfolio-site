@@ -17,7 +17,7 @@ export type BallStatus = 'table' | 'queued' | 'sunk'
 export type Balls = Record<number, BallStatus>
 
 export type Roles = {
-  [key in Player]: BallType[]
+  [Key in Player]: BallType[]
 }
 
 export enum BallTypeCombo {
@@ -31,14 +31,14 @@ export interface Shot {
   player: Player
   balls: number[]
   roles: Roles
-  rankings: { [key in Player]?: number }
+  rankings: { [Key in Player]?: number }
   lost: boolean
 }
 
 export interface GameState {
-  names: { [key in Player]: string }
+  names: { [Key in Player]: string }
   balls: Balls
   shots: Shot[]
   roles: Roles
-  rankings: { [key in Player]?: number }
+  rankings: { [Key in Player]?: number }
 }

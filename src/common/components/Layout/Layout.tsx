@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { RouteObject, matchPath, matchRoutes, useLocation } from 'react-router-dom'
 import Background from './Background'
 import Header from './Header'
@@ -39,10 +39,6 @@ const Layout: React.FC<Props> = ({ children }) => {
 export const LayoutFallback: React.FC = () => {
   const location = useLocation()
   const bodyRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [location.pathname])
 
   return (
     <Wrapper>

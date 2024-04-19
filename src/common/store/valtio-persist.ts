@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { get, isPlainObject, omit, set, toPath } from 'lodash-es'
 import { proxy, snapshot, subscribe } from 'valtio'
 import { subscribeKey } from 'valtio/utils'
@@ -78,7 +77,6 @@ export default function proxyWithPersist<S extends object>(inputs: IProxyWithPer
       error: null,
     },
   })
-
   ;(async () => {
     const storage = await inputs.getStorage()
 

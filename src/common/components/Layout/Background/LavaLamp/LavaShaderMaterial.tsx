@@ -1,5 +1,5 @@
 import { useFrame } from '@react-three/fiber'
-import { useMemo, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Color, ShaderMaterial, UniformsUtils } from 'three'
 import { useSnapshot } from 'valtio'
 import { PARTICLE_VISIBLE_RADIUS } from './constants'
@@ -42,18 +42,13 @@ const LavaShaderMaterial: React.FC<{
   const { particleScale } = useSnapshot(lavaLampSettings)
   const pointSize = scaleSetting({ base: PARTICLE_VISIBLE_RADIUS, scale: particleScale })
 
-  const uniforms = useMemo(
-    () =>
-      UniformsUtils.merge([
-        {
-          hotColor: { value: new Color(hotColor) },
-          coldColor: { value: new Color(coldColor) },
-          pointSize: { value: pointSize },
-        },
-      ]),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  )
+  const uniforms = UniformsUtils.merge([
+    {
+      hotColor: { value: new Color(hotColor) },
+      coldColor: { value: new Color(coldColor) },
+      pointSize: { value: pointSize },
+    },
+  ])
 
   useFrame(() => {
     if (ref.current) {

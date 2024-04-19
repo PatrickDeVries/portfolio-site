@@ -44,7 +44,9 @@ const ParticleControlFields: React.FC = () => {
           min={0}
           max={1}
           step={0.0001}
-          onChange={newVal => (particleSettings.vVar = newVal)}
+          onChange={newVal => {
+            particleSettings.vVar = newVal
+          }}
           label="Velocity variance"
         />
         <RangeSlider
@@ -52,7 +54,9 @@ const ParticleControlFields: React.FC = () => {
           min={0}
           max={particleSnap.particleCount}
           step={1}
-          onChange={newVal => (particleSettings.freeThinkers = newVal)}
+          onChange={newVal => {
+            particleSettings.freeThinkers = newVal
+          }}
           label="Free thinkers"
         />
         <RangeSlider
@@ -60,7 +64,9 @@ const ParticleControlFields: React.FC = () => {
           min={0}
           max={parseFloat((Math.PI / 4).toFixed(5))}
           step={0.00001}
-          onChange={newVal => (particleSettings.baseTurnV = newVal)}
+          onChange={newVal => {
+            particleSettings.baseTurnV = newVal
+          }}
           label="Base turn speed"
           labels={{ max: 'π/4' }}
         />
@@ -69,7 +75,9 @@ const ParticleControlFields: React.FC = () => {
           min={0}
           max={parseFloat((Math.PI / 4).toFixed(5))}
           step={0.00001}
-          onChange={newVal => (particleSettings.turnVar = newVal)}
+          onChange={newVal => {
+            particleSettings.turnVar = newVal
+          }}
           label="Turn speed variance"
           labels={{ max: 'π/4' }}
         />
@@ -82,14 +90,18 @@ const ParticleControlFields: React.FC = () => {
             label: formatMouseShape(shape),
           }))}
           value={particleSnap.mouseShape}
-          onChange={value => (particleSettings.mouseShape = value)}
+          onChange={value => {
+            particleSettings.mouseShape = value
+          }}
         />
         <RangeSlider
           value={particleSnap.mouseSize}
           min={0}
           max={5}
           step={0.01}
-          onChange={newVal => (particleSettings.mouseSize = newVal)}
+          onChange={newVal => {
+            particleSettings.mouseSize = newVal
+          }}
           label="Mouse radius"
           title="Press '-' to shrink, '=' to grow"
         />
@@ -99,13 +111,17 @@ const ParticleControlFields: React.FC = () => {
           type="color"
           label="Left color"
           value={particleSnap.colorA}
-          onChange={event => (particleSettings.colorA = event.target.value)}
+          onChange={event => {
+            particleSettings.colorA = event.target.value
+          }}
         />
         <Input
           type="color"
           label="Right color"
           value={particleSnap.colorB}
-          onChange={event => (particleSettings.colorB = event.target.value)}
+          onChange={event => {
+            particleSettings.colorB = event.target.value
+          }}
         />
       </Flex>
       <Button onClick={resetSettings}>Reset Settings</Button>
