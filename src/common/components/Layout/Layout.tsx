@@ -38,7 +38,7 @@ const Layout: React.FC<Props> = ({ children }) => {
 
 export const LayoutFallback: React.FC = () => {
   const location = useLocation()
-  const bodyRef = useRef<HTMLBodyElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
