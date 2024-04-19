@@ -1,20 +1,33 @@
 import backgroundStore from '@/background-editor/components/BackgroundNavIcon/store'
-import lavaLampSettings from '@/common/components/Layout/Background/LavaLamp/settings-store'
-import particleSettings from '@/common/components/Layout/Background/Particles/settings-store'
 import { NavIcon } from '@/common/components/Layout/Header/style'
+import { Body } from '@/common/components/Layout/style'
 import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useRef } from 'react'
 import { HiOutlineCog } from 'react-icons/hi'
 import { useSnapshot } from 'valtio'
-import { LavaLampControlCard, ParticleControlCard } from '../control-cards'
+import { ControlCard, LavaLampControlCard, ParticleControlCard } from '../control-cards'
+import controlCardStore from './store'
 
 const ControlCardNavIcon: React.FC = () => {
-  const gearRef = useRef<HTMLButtonElement>(null)
+  const { areControlsOpen } = useSnapshot(controlCardStore)
   const backgroundSnap = useSnapshot(backgroundStore)
+  const gearRef = useRef<HTMLButtonElement>(null)
+  const fieldsetRef = useRef<HTMLFieldSetElement>(null)
 
   useWindowListener('keyup', event => {
     if (event.key === 'Escape' && gearRef.current) {
-      gearRef.current.click()
+      controlCardStore.areControlsOpen = !controlCardStore.areControlsOpen
+    }
+  })
+
+  useWindowListener('click', event => {
+    const target = event.target as Node
+
+    if (
+      !fieldsetRef.current?.contains(target) &&
+      document.querySelector(Body.toString())?.contains(target)
+    ) {
+      controlCardStore.areControlsOpen = false
     }
   })
 
@@ -22,24 +35,18 @@ const ControlCardNavIcon: React.FC = () => {
     <>
       <NavIcon
         title="Edit background settings"
-        onClick={() => {
-          if (backgroundSnap.background === 'lava-lamp') {
-            lavaLampSettings.areControlsOpen = !lavaLampSettings.areControlsOpen
-            lavaLampSettings.isFirstHit = false
-          } else {
-            particleSettings.areControlsOpen = !particleSettings.areControlsOpen
-            particleSettings.isFirstHit = false
-          }
-        }}
+        onClick={() => (controlCardStore.areControlsOpen = !controlCardStore.areControlsOpen)}
         ref={gearRef}
       >
         <HiOutlineCog size="1.5rem" />
       </NavIcon>
-      {backgroundSnap.background === 'lava-lamp' ? (
-        <LavaLampControlCard />
-      ) : (
-        <ParticleControlCard />
-      )}
+      <ControlCard ref={fieldsetRef} $areControlsOpen={areControlsOpen}>
+        {backgroundSnap.background === 'lava-lamp' ? (
+          <LavaLampControlCard />
+        ) : (
+          <ParticleControlCard />
+        )}
+      </ControlCard>
     </>
   )
 }

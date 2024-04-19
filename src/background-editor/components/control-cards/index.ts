@@ -1,4 +1,9 @@
-import LavaLampControlCard from './LavaLampControlCard'
-import ParticleControlCard from './ParticleControlCard'
+import LavaLampControlFields from './LavaLampControlFields'
+import ParticleControlFields from './ParticleControlFields'
+import { ControlCard } from './style'
 
-export { LavaLampControlCard, ParticleControlCard }
+export {
+  ControlCard,
+  LavaLampControlFields as LavaLampControlCard,
+  ParticleControlFields as ParticleControlCard,
+}

@@ -16,7 +16,7 @@ interface Props {
 
 const Layout: React.FC<Props> = ({ children }) => {
   const location = useLocation()
-  const [bodyElement, setBodyElement] = useState<HTMLBodyElement | null>(null)
+  const [bodyElement, setBodyElement] = useState<HTMLDivElement | null>(null)
 
   const background = useMemo(
     () => <Background top={bodyElement?.getBoundingClientRect().top ?? 0} />,
