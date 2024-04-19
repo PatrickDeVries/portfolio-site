@@ -1,3 +1,4 @@
+import React from 'react'
 import { RouteObject, useRoutes } from 'react-router-dom'
 import PortfolioPage from './pages'
 import SSEOPage from './pages/sseo'

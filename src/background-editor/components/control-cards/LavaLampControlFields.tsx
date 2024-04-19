@@ -23,47 +23,49 @@ const LavaLampControlFields: React.FC = () => {
           value={lavaLampSnap.particleCount}
           min={1}
           max={MAX_PARTICLES}
-          onChange={newVal => (lavaLampSettings.particleCount = newVal)}
+          onChange={newVal => {
+            lavaLampSettings.particleCount = newVal
+          }}
           label="Particle count"
         />
         <RangeSlider
           value={lavaLampSnap.particleScale}
           min={-10}
           max={100}
-          onChange={newVal =>
-            (lavaLampSettings.particleScale =
-              newVal === 0 ? (lavaLampSnap.particleScale > 0 ? -1 : 1) : newVal)
-          }
+          onChange={newVal => {
+            lavaLampSettings.particleScale =
+              newVal === 0 ? (lavaLampSnap.particleScale > 0 ? -1 : 1) : newVal
+          }}
           label="Particle radius scale"
         />
         <RangeSlider
           value={lavaLampSnap.convectionCoefficientScale}
           min={-100}
           max={100}
-          onChange={newVal =>
-            (lavaLampSettings.convectionCoefficientScale =
-              newVal === 0 ? (lavaLampSnap.convectionCoefficientScale > 0 ? -1 : 1) : newVal)
-          }
+          onChange={newVal => {
+            lavaLampSettings.convectionCoefficientScale =
+              newVal === 0 ? (lavaLampSnap.convectionCoefficientScale > 0 ? -1 : 1) : newVal
+          }}
           label="Conv. coeff. scale"
         />
         <RangeSlider
           value={lavaLampSnap.conductionCoefficientScale}
           min={-100}
           max={100}
-          onChange={newVal =>
-            (lavaLampSettings.conductionCoefficientScale =
-              newVal === 0 ? (lavaLampSnap.conductionCoefficientScale > 0 ? -1 : 1) : newVal)
-          }
+          onChange={newVal => {
+            lavaLampSettings.conductionCoefficientScale =
+              newVal === 0 ? (lavaLampSnap.conductionCoefficientScale > 0 ? -1 : 1) : newVal
+          }}
           label="Cond. coeff. scale"
         />
         <RangeSlider
           value={lavaLampSnap.lampTempScale}
           min={-100}
           max={100}
-          onChange={newVal =>
-            (lavaLampSettings.lampTempScale =
-              newVal === 0 ? (lavaLampSnap.lampTempScale > 0 ? -1 : 1) : newVal)
-          }
+          onChange={newVal => {
+            lavaLampSettings.lampTempScale =
+              newVal === 0 ? (lavaLampSnap.lampTempScale > 0 ? -1 : 1) : newVal
+          }}
           label="Lamp temperature scale"
         />
         <RangeSlider
@@ -71,7 +73,9 @@ const LavaLampControlFields: React.FC = () => {
           min={0}
           max={5}
           step={0.01}
-          onChange={newVal => (lavaLampSettings.mouseSize = newVal)}
+          onChange={newVal => {
+            lavaLampSettings.mouseSize = newVal
+          }}
           label="Mouse radius"
           title="Press '-' to shrink, '=' to grow"
         />
@@ -82,7 +86,9 @@ const LavaLampControlFields: React.FC = () => {
             label: formatMouseShape(shape),
           }))}
           value={lavaLampSnap.mouseShape}
-          onChange={value => (lavaLampSettings.mouseShape = value)}
+          onChange={value => {
+            lavaLampSettings.mouseShape = value
+          }}
         />
       </WrappingRow>
       <Flex $stretch $justifyContent="space-between" $gap="1rem">
@@ -90,13 +96,17 @@ const LavaLampControlFields: React.FC = () => {
           type="color"
           label="Hot color"
           value={lavaLampSnap.hotColor}
-          onChange={event => (lavaLampSettings.hotColor = event.target.value)}
+          onChange={event => {
+            lavaLampSettings.hotColor = event.target.value
+          }}
         />
         <Input
           type="color"
           label="Cold color"
           value={lavaLampSnap.coldColor}
-          onChange={event => (lavaLampSettings.coldColor = event.target.value)}
+          onChange={event => {
+            lavaLampSettings.coldColor = event.target.value
+          }}
         />
       </Flex>
       <Button onClick={resetSettings}>Reset Settings</Button>

@@ -1,7 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useWindowListener } from '@yobgob/too-many-hooks'
-import React, { useMemo, useRef } from 'react'
-import * as THREE from 'three'
+import React, { useRef } from 'react'
+import * as three from 'three'
 import { Points, ShaderMaterial } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
@@ -28,29 +28,24 @@ const ParticleShaderMaterial: React.FC<{
   colorB: string
   bboxMin: number
   bboxMax: number
-}> = props => {
+}> = ({ colorA, colorB, bboxMin, bboxMax }) => {
   const ref = useRef<ShaderMaterial | null>(null)
 
-  const uniforms = useMemo(
-    () =>
-      THREE.UniformsUtils.merge([
-        {
-          colorA: { value: new THREE.Color(props.colorA) },
-          colorB: { value: new THREE.Color(props.colorB) },
-          bboxMin: { value: props.bboxMin },
-          bboxMax: { value: props.bboxMax },
-        },
-      ]),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  )
+  const uniforms = three.UniformsUtils.merge([
+    {
+      colorA: { value: new three.Color(colorA) },
+      colorB: { value: new three.Color(colorB) },
+      bboxMin: { value: bboxMin },
+      bboxMax: { value: bboxMax },
+    },
+  ])
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.uniforms.colorA.value = new THREE.Color(props.colorA)
-      ref.current.uniforms.colorB.value = new THREE.Color(props.colorB)
-      ref.current.uniforms.bboxMin.value = props.bboxMin
-      ref.current.uniforms.bboxMax.value = props.bboxMax
+      ref.current.uniforms.colorA.value = new three.Color(colorA)
+      ref.current.uniforms.colorB.value = new three.Color(colorB)
+      ref.current.uniforms.bboxMin.value = bboxMin
+      ref.current.uniforms.bboxMax.value = bboxMax
     }
   })
 

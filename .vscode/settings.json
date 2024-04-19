@@ -12,5 +12,17 @@
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "cSpell.words": ["sseo"],
-  "stylelint.validate": ["css", "less", "postcss", "typescript", "typescriptreact", "scss"]
+  "stylelint.validate": ["css", "less", "postcss", "typescript", "typescriptreact", "scss"],
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }

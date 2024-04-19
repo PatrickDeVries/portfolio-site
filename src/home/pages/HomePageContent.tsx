@@ -1,5 +1,6 @@
 import Button from '@/common/components/Button'
 import { RepellentShape } from '@/common/components/Layout/Background'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import { IntroBlock, IntroText, PageWrapper } from './style'
 
