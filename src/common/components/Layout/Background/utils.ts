@@ -376,5 +376,6 @@ export const getRepellentInfo = (viewport: Size, viewportScale: Scale) => {
 /// Utilities for interacting with background settings
 ///
 
+// Scales a `base` value by a % change `scale`
 export const scaleSetting = ({ base, scale }: { base: number; scale: number }): number =>
-  base * (scale > 0 ? scale : 1 / -scale)
+  base + (base * scale) / 100

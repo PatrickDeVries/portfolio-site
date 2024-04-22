@@ -7,10 +7,10 @@ export const INITIAL_SETTINGS: LavaLampSettings = {
   areControlsOpen: false,
 
   particleCount: 2500,
-  particleScale: 1,
-  convectionCoefficientScale: 1,
-  conductionCoefficientScale: 1,
-  lampTempScale: 1,
+  particleScale: 0,
+  convectionCoefficientScale: 0,
+  conductionCoefficientScale: 0,
+  lampTempScale: 0,
 
   mouseSize: 1,
   mouseShape: RepellentShape.Circle,
@@ -21,10 +21,10 @@ export const INITIAL_SETTINGS: LavaLampSettings = {
 
 export const DEFAULT_SETTINGS: Partial<LavaLampSettings> = {
   particleCount: 2500,
-  particleScale: 1,
-  convectionCoefficientScale: 1,
-  conductionCoefficientScale: 1,
-  lampTempScale: 1,
+  particleScale: 0,
+  convectionCoefficientScale: 0,
+  conductionCoefficientScale: 0,
+  lampTempScale: 0,
 
   mouseSize: 1,
   mouseShape: RepellentShape.Circle,
