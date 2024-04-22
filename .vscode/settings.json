@@ -1,16 +1,24 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "biomejs.biome",
   "editor.tabSize": 2,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit"
   },
   "editor.formatOnSave": true,
   "editor.formatOnPaste": false,
-  "prettier.enable": true,
   "search.exclude": {
     "dist": true
   },
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "cSpell.words": ["sseo"],
-  "stylelint.validate": ["css", "less", "postcss", "typescript", "typescriptreact", "scss"]
+  "stylelint.validate": ["css", "less", "postcss", "typescript", "typescriptreact", "scss"],
+  "[jsonc]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }

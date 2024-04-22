@@ -1,7 +1,7 @@
-import { WorkItem } from './types'
+import { WorkCategory, WorkItem } from './types'
 
-export const MY_WORK: Record<string, WorkItem[]> = {
-  'Work Experience': [
+export const MY_WORK: Record<WorkCategory, WorkItem[]> = {
+  [WorkCategory.WorkExperience]: [
     {
       header: 'Agricultural Finance Lender',
       image: '/react-icon.svg',
@@ -28,7 +28,7 @@ export const MY_WORK: Record<string, WorkItem[]> = {
       tags: ['Cloud', 'Azure', 'Terraform', 'ARM Templates', 'DevOps'],
     },
   ],
-  'Github Contributions': [
+  [WorkCategory.GithubContributions]: [
     {
       header: 'Too Many Hooks',
       image: '/too-many-hooks-small-white.png',
@@ -62,7 +62,7 @@ export const MY_WORK: Record<string, WorkItem[]> = {
       href: 'https://github.com/PatrickDeVries/JokerCord',
     },
   ],
-  Certifications: [
+  [WorkCategory.Certifications]: [
     {
       header: 'AZ-900 - Azure Fundamentals',
       image: '/AZ900.svg',
@@ -80,7 +80,7 @@ export const MY_WORK: Record<string, WorkItem[]> = {
       href: 'https://www.credly.com/badges/36e250d4-692c-4198-bcd6-4df6be171d32/public_url',
     },
   ],
-  'Live Sites I Helped Design/Build': [
+  [WorkCategory.LiveSites]: [
     {
       header: 'XDO Maturity Quiz',
       image: '/xdo.svg',
@@ -96,7 +96,7 @@ export const MY_WORK: Record<string, WorkItem[]> = {
       href: 'https://www.melanieclemmons.com/HYBRID/',
     },
   ],
-  'Art Projects': [
+  [WorkCategory.ArtProjects]: [
     {
       header: 'Three Web Stalker',
       image: '/3ws.png',
@@ -113,7 +113,7 @@ export const MY_WORK: Record<string, WorkItem[]> = {
       tags: ['ThreeJS', 'JavaScript', 'CSS', 'Creative Computing'],
     },
   ],
-  Random: [
+  [WorkCategory.Random]: [
     {
       header: 'Solids vs Stripes vs Even vs Odds',
       image: '/8ball.png',

@@ -3,8 +3,8 @@ import Input from '@/common/components/Input'
 import React, { useState } from 'react'
 import { useTheme } from 'styled-components'
 import { useSnapshot } from 'valtio'
-import { formatBallType } from './formatters'
 import SSEOGraph from './SSEOGraph'
+import { formatBallType } from './formatters'
 import sseo, { derived, INITIAL_STATE } from './store'
 import {
   BallsWrapper,
@@ -45,7 +45,7 @@ const SSEOPageContent: React.FC = () => {
             New game
           </Button>
         </Header>
-        {Object.values(Player).map((playerKey, i) => (
+        {Object.values(Player).map(playerKey => (
           <PlayerWrapper key={playerKey}>
             <div>
               {`Player ${playerKey.toLowerCase()} - ${stateSnap.roles[playerKey]
@@ -147,9 +147,9 @@ const SSEOPageContent: React.FC = () => {
               if (wouldWin(selectedPlayer, sseo.balls, decided)) {
                 selectedWon = true
                 let ranks = [1, 2, 3, 4]
-                Object.values(sseo.rankings).forEach(
-                  rank => (ranks = ranks.filter(r => r !== rank)),
-                )
+                Object.values(sseo.rankings).forEach(rank => {
+                  ranks = ranks.filter(r => r !== rank)
+                })
                 if (lost) {
                   sseo.rankings[selectedPlayer] = ranks.at(-1)
                 } else {
@@ -171,9 +171,9 @@ const SSEOPageContent: React.FC = () => {
                   wouldWin(player, sseo.balls, decided)
                 ) {
                   let ranks = [1, 2, 3, 4]
-                  Object.values(sseo.rankings).forEach(
-                    rank => (ranks = ranks.filter(r => r !== rank)),
-                  )
+                  Object.values(sseo.rankings).forEach(rank => {
+                    ranks = ranks.filter(r => r !== rank)
+                  })
                   sseo.rankings[player] = ranks.at(0)
                 }
               })
@@ -223,7 +223,9 @@ const SSEOPageContent: React.FC = () => {
               Object.entries(sseo.balls).forEach(([ball, status]) => {
                 if (status === 'queued') sseo.balls[Number(ball)] = 'table'
               })
-              lastShot.balls.forEach(ball => (sseo.balls[ball] = 'queued'))
+              lastShot.balls.forEach(ball => {
+                sseo.balls[ball] = 'queued'
+              })
 
               Object.assign(sseo.roles, lastShot.roles)
 

@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['stylelint-config-standard', 'stylelint-config-prettier'],
+  extends: ['stylelint-config-standard'],
   customSyntax: 'postcss-styled-syntax',
   rules: {
     'selector-type-case': ['lower', { ignoreTypes: ['/^\\$\\w+/'] }],

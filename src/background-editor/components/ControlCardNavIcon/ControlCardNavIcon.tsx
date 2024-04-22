@@ -35,7 +35,9 @@ const ControlCardNavIcon: React.FC = () => {
     <>
       <NavIcon
         title="Edit background settings"
-        onClick={() => (controlCardStore.areControlsOpen = !controlCardStore.areControlsOpen)}
+        onClick={() => {
+          controlCardStore.areControlsOpen = !controlCardStore.areControlsOpen
+        }}
         ref={gearRef}
       >
         <HiOutlineCog size="1.5rem" />

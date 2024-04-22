@@ -6,7 +6,8 @@ export type Point2d = {
 export type Circle = Point2d & {
   radius: number
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const isCircle = (b: any): b is Circle => typeof b.radius === 'number'
 
 export type Polygon = {
