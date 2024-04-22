@@ -1,6 +1,6 @@
-import positionStore from './store'
+import particlesPositionStore from './store'
 
-export default positionStore
+export default particlesPositionStore
 
 export * from './initial'
 export * from './types'

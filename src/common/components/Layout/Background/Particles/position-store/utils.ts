@@ -1,24 +1,25 @@
 import { MAX_PARTICLES } from '../constants'
-import positionStore from './store'
+import particlesPositionStore from './store'
 
-export const randomizeLocations = (): {
+export const generateRandomParticleData = (): {
   positions: number[]
   velocities: number[]
   angles: number[]
 } => {
-  const newPositions = []
-  const newVelocities = []
-  const newAngles = []
+  const positions = []
+  const velocities = []
+  const angles = []
 
   for (let i = 0; i < MAX_PARTICLES; i++) {
-    newPositions.push(
-      Math.random() * positionStore.viewport.width - positionStore.viewport.width / 2,
-      Math.random() * positionStore.viewport.height -
-        positionStore.viewport.height / 2 -
-        positionStore.viewport.top,
+    positions.push(
+      Math.random() * particlesPositionStore.viewport.width -
+        particlesPositionStore.viewport.width / 2,
+      Math.random() * particlesPositionStore.viewport.height -
+        particlesPositionStore.viewport.height / 2 -
+        particlesPositionStore.viewport.top,
       0,
     )
-    newVelocities.push(Math.random(), Math.random(), 0)
+    velocities.push(Math.random(), Math.random(), 0)
     let newA = Math.random() * 2 * Math.PI
     if (
       newA < 0.01 ||
@@ -29,26 +30,30 @@ export const randomizeLocations = (): {
     ) {
       newA += 0.03
     }
-    newAngles.push(newA)
+    angles.push(newA)
   }
 
-  if (positionStore.pointsRef.current) {
-    const pps = positionStore.pointsRef.current.geometry.getAttribute('position')
-    const pvs = positionStore.pointsRef.current.geometry.getAttribute('velocity')
-    const pas = positionStore.pointsRef.current.geometry.getAttribute('angle')
+  return { positions, velocities, angles }
+}
+
+export const randomizeParticleData = () => {
+  const { positions, velocities, angles } = generateRandomParticleData()
+
+  if (particlesPositionStore.pointsRef.current) {
+    const pps = particlesPositionStore.pointsRef.current.geometry.getAttribute('position')
+    const pvs = particlesPositionStore.pointsRef.current.geometry.getAttribute('velocity')
+    const pas = particlesPositionStore.pointsRef.current.geometry.getAttribute('angle')
 
     for (let i = 0; i < MAX_PARTICLES; i++) {
-      pps.setXYZ(i, newPositions[i * 3], newPositions[i * 3 + 1], 0)
-      pvs.setXYZ(i, newVelocities[i * 3], newVelocities[i * 3 + 1], 0)
-      pas.setX(i, newAngles[i])
+      pps.setXYZ(i, positions[i * 3], positions[i * 3 + 1], 0)
+      pvs.setXYZ(i, velocities[i * 3], velocities[i * 3 + 1], 0)
+      pas.setX(i, angles[i])
     }
-    positionStore.pointsRef.current.geometry.setAttribute('position', pps)
-    positionStore.pointsRef.current.geometry.setAttribute('velocity', pvs)
-    positionStore.pointsRef.current.geometry.setAttribute('angle', pas)
-    positionStore.pointsRef.current.geometry.attributes.position.needsUpdate = true
-    positionStore.pointsRef.current.geometry.attributes.velocity.needsUpdate = true
-    positionStore.pointsRef.current.geometry.attributes.angle.needsUpdate = true
+    particlesPositionStore.pointsRef.current.geometry.setAttribute('position', pps)
+    particlesPositionStore.pointsRef.current.geometry.setAttribute('velocity', pvs)
+    particlesPositionStore.pointsRef.current.geometry.setAttribute('angle', pas)
+    particlesPositionStore.pointsRef.current.geometry.attributes.position.needsUpdate = true
+    particlesPositionStore.pointsRef.current.geometry.attributes.velocity.needsUpdate = true
+    particlesPositionStore.pointsRef.current.geometry.attributes.angle.needsUpdate = true
   }
-
-  return { positions: newPositions, velocities: newVelocities, angles: newAngles }
 }

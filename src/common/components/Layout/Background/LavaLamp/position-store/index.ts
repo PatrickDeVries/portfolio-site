@@ -1,6 +1,6 @@
-import positionStore from './store'
+import lavaLampPositionStore from './store'
 
-export default positionStore
+export default lavaLampPositionStore
 
 export * from './initial'
 export * from './types'

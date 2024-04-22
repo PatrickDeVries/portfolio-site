@@ -1,7 +1,10 @@
 import Button from '@/common/components/Button'
 import Flex from '@/common/components/Flex'
 import Input from '@/common/components/Input'
-import { MAX_PARTICLES } from '@/common/components/Layout/Background/Particles'
+import {
+  MAX_PARTICLES,
+  randomizeParticleData,
+} from '@/common/components/Layout/Background/Particles'
 import particleSettings, {
   resetSettings,
 } from '@/common/components/Layout/Background/Particles/settings-store'
@@ -135,6 +138,7 @@ const ParticleControlFields: React.FC = () => {
         />
       </Flex>
       <Button onClick={resetSettings}>Reset Settings</Button>
+      <Button onClick={randomizeParticleData}>Randomize Particles</Button>
     </>
   )
 }

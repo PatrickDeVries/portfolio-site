@@ -15,7 +15,7 @@ import {
 } from '../utils'
 import LavaShaderMaterial from './LavaShaderMaterial'
 import { MAX_PARTICLES, PARTICLE_MAX_VERTICAL_SPEED } from './constants'
-import positionStore, { randomizeLocations } from './position-store'
+import lavaLampPositionStore, { generateRandomLavaLampData } from './position-store'
 import lavaLampSettings, { derivedLavaLampSettings } from './settings-store'
 import {
   getAccelerationFromTemperature,
@@ -46,13 +46,21 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
     yMin: -viewport.height / 2,
     yMax: viewport.height / 2,
   }
-  positionStore.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
+  lavaLampPositionStore.viewport = {
+    width: viewport.width,
+    height: viewport.height,
+    top: viewportTop,
+  }
+
+  const {
+    positions: initialPositions,
+    temperatures: initialTemperatures,
+    velocities: initialVelocities,
+  } = generateRandomLavaLampData()
 
   const pointsRef = useRef<Points | null>(null)
 
   const mouse = usePoint2dMouse(viewport)
-
-  const { positions, temperatures, velocities } = randomizeLocations()
 
   const updatePositions = () => {
     // get current mouse repellent information
@@ -252,12 +260,12 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
     updatePositions()
 
     if (pointsRef.current) {
-      positionStore.pointsRef = pointsRef
+      lavaLampPositionStore.pointsRef = pointsRef
       pointsRef.current.geometry.setDrawRange(0, lavaLampSettings.particleCount)
     }
   })
 
-  if (positions.length < MAX_PARTICLES * 3) {
+  if (initialPositions.length < MAX_PARTICLES * 3) {
     return null
   }
 
@@ -267,19 +275,19 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
         <bufferAttribute
           attach="attributes-position"
           count={MAX_PARTICLES}
-          array={new Float32Array(positions)}
+          array={new Float32Array(initialPositions)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-temperature"
           count={MAX_PARTICLES}
-          array={new Float32Array(temperatures)}
+          array={new Float32Array(initialTemperatures)}
           itemSize={1}
         />
         <bufferAttribute
           attach="attributes-velocity"
           count={MAX_PARTICLES}
-          array={new Float32Array(velocities)}
+          array={new Float32Array(initialVelocities)}
           itemSize={2}
         />
       </bufferGeometry>
