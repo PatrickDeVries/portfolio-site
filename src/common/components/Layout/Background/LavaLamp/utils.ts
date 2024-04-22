@@ -1,13 +1,7 @@
 import { Point2d } from '../types'
-import {
-  GRAVITY,
-  LAMP_TEMPERATURE,
-  PARTICLE_COLLISION_RADIUS,
-  PARTICLE_CONDUCTION_COEFFICIENT,
-  PARTICLE_CONVECTION_COEFFICIENT,
-} from './constants'
+import { GRAVITY } from './constants'
 import store from './position-store'
-import lavaLampSettings from './settings-store'
+import { derivedLavaLampSettings } from './settings-store'
 
 export const scaleSetting = ({ base, scale }: { base: number; scale: number }): number =>
   base * (scale > 0 ? scale : 1 / -scale)
@@ -21,9 +15,7 @@ export const getTemperatureAtCoordinate = ({ x, y }: Point2d): number => {
 
   const totalStrength = yStrength * 0.8 + xStrength * 0.2
 
-  return (
-    scaleSetting({ base: LAMP_TEMPERATURE, scale: lavaLampSettings.lampTempScale }) * totalStrength
-  )
+  return derivedLavaLampSettings.scaledLampTemperature * totalStrength
 }
 
 // Q = [K ∙ A ∙ (Thot – Tcold)] / d
@@ -34,17 +26,15 @@ export const getConductionHeatTransferPerFrame = ({
   tHot: number
   tCold: number
 }): number => {
-  const coefficientOfConductivity = scaleSetting({
-    base: PARTICLE_CONDUCTION_COEFFICIENT,
-    scale: lavaLampSettings.conductionCoefficientScale,
-  })
-  const scaledRadius = scaleSetting({
-    base: PARTICLE_COLLISION_RADIUS,
-    scale: lavaLampSettings.particleScale,
-  })
-  const areaOfHeatTransfer = Math.PI * (scaledRadius / 4) ** 2
-  const particleThickness = scaledRadius * 2
-  return (coefficientOfConductivity * areaOfHeatTransfer * (tHot - tCold)) / particleThickness
+  const {
+    scaledParticleCollisionRadius,
+    scaledParticleCollisionArea,
+    scaledCoefficientOfConduction,
+  } = derivedLavaLampSettings
+
+  const areaOfHeatTransfer = scaledParticleCollisionArea / 10
+  const particleThickness = scaledParticleCollisionRadius * 2
+  return (scaledCoefficientOfConduction * areaOfHeatTransfer * (tHot - tCold)) / particleThickness
 }
 
 // Q = hc ∙ A ∙ (Ts – Tf)
@@ -54,15 +44,11 @@ export const getConvectionHeatTransferPerFrame = (
 ): number => {
   const fluidTemperature = getTemperatureAtCoordinate({ y, x })
 
-  const coefficientOfConvection = scaleSetting({
-    base: PARTICLE_CONVECTION_COEFFICIENT,
-    scale: lavaLampSettings.convectionCoefficientScale,
-  })
-  const particleArea =
-    Math.PI *
-    scaleSetting({ base: PARTICLE_COLLISION_RADIUS, scale: lavaLampSettings.particleScale }) ** 2
+  const { scaledParticleCollisionArea, scaledCoefficientOfConvection } = derivedLavaLampSettings
 
-  return coefficientOfConvection * particleArea * (temperature - fluidTemperature)
+  return (
+    scaledCoefficientOfConvection * scaledParticleCollisionArea * (temperature - fluidTemperature)
+  )
 }
 
 export const getAccelerationFromTemperature = (temperature: number) => {

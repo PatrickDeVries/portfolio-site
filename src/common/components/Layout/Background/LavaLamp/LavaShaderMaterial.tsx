@@ -1,10 +1,7 @@
 import { useFrame } from '@react-three/fiber'
 import React, { useRef } from 'react'
-import { Color, ShaderMaterial, UniformsUtils } from 'three'
-import { useSnapshot } from 'valtio'
-import { PARTICLE_VISIBLE_RADIUS } from './constants'
-import lavaLampSettings from './settings-store'
-import { scaleSetting } from './utils'
+import { Color, ShaderMaterial } from 'three'
+import lavaLampSettings, { derivedLavaLampSettings } from './settings-store'
 
 const VERTEX = `
   attribute float temperature;
@@ -33,28 +30,14 @@ const FRAGMENT = `
   }
 `
 
-const LavaShaderMaterial: React.FC<{
-  hotColor: string
-  coldColor: string
-}> = ({ hotColor, coldColor }) => {
+const LavaShaderMaterial: React.FC = () => {
   const ref = useRef<ShaderMaterial | null>(null)
-
-  const { particleScale } = useSnapshot(lavaLampSettings)
-  const pointSize = scaleSetting({ base: PARTICLE_VISIBLE_RADIUS, scale: particleScale })
-
-  const uniforms = UniformsUtils.merge([
-    {
-      hotColor: { value: new Color(hotColor) },
-      coldColor: { value: new Color(coldColor) },
-      pointSize: { value: pointSize },
-    },
-  ])
 
   useFrame(() => {
     if (ref.current) {
-      ref.current.uniforms.hotColor.value = new Color(hotColor)
-      ref.current.uniforms.coldColor.value = new Color(coldColor)
-      ref.current.uniforms.pointSize.value = pointSize
+      ref.current.uniforms.hotColor.value = new Color(lavaLampSettings.hotColor)
+      ref.current.uniforms.coldColor.value = new Color(lavaLampSettings.coldColor)
+      ref.current.uniforms.pointSize.value = derivedLavaLampSettings.scaledParticleVisibleRadius
     }
   })
 
@@ -62,7 +45,13 @@ const LavaShaderMaterial: React.FC<{
     <shaderMaterial
       ref={ref}
       attach="material"
-      uniforms={uniforms}
+      uniforms={{
+        hotColor: { value: new Color(lavaLampSettings.hotColor) },
+        coldColor: { value: new Color(lavaLampSettings.coldColor) },
+        pointSize: {
+          value: derivedLavaLampSettings.scaledParticleVisibleRadius,
+        },
+      }}
       vertexShader={VERTEX}
       fragmentShader={FRAGMENT}
     />

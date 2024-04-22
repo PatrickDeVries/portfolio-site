@@ -1,8 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useRef } from 'react'
-import * as three from 'three'
-import { Points, ShaderMaterial } from 'three'
+import { Points } from 'three'
 import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
@@ -17,48 +16,10 @@ import {
   isPointInCircle,
   isPointInPolygon,
 } from '../utils'
+import { ParticleShaderMaterial } from './ParticleShaderMaterial'
 import { MAX_PARTICLES } from './constants'
-import './particle-material'
-import { fragment, vertex } from './particle-material'
 import positionStore, { randomizeLocations } from './position-store'
 import particleSettings from './settings-store'
-
-const ParticleShaderMaterial: React.FC<{
-  colorA: string
-  colorB: string
-  bboxMin: number
-  bboxMax: number
-}> = ({ colorA, colorB, bboxMin, bboxMax }) => {
-  const ref = useRef<ShaderMaterial | null>(null)
-
-  const uniforms = three.UniformsUtils.merge([
-    {
-      colorA: { value: new three.Color(colorA) },
-      colorB: { value: new three.Color(colorB) },
-      bboxMin: { value: bboxMin },
-      bboxMax: { value: bboxMax },
-    },
-  ])
-
-  useFrame(() => {
-    if (ref.current) {
-      ref.current.uniforms.colorA.value = new three.Color(colorA)
-      ref.current.uniforms.colorB.value = new three.Color(colorB)
-      ref.current.uniforms.bboxMin.value = bboxMin
-      ref.current.uniforms.bboxMax.value = bboxMax
-    }
-  })
-
-  return (
-    <shaderMaterial
-      ref={ref}
-      attach="material"
-      uniforms={uniforms}
-      vertexShader={vertex}
-      fragmentShader={fragment}
-    />
-  )
-}
 
 type Props = {
   top: number
@@ -265,12 +226,7 @@ const Particles: React.FC<Props> = ({ top }) => {
           itemSize={1}
         />
       </bufferGeometry>
-      <ParticleShaderMaterial
-        colorA={particleSettings.colorA}
-        colorB={particleSettings.colorB}
-        bboxMin={-1}
-        bboxMax={1}
-      />
+      <ParticleShaderMaterial viewportScale={viewportScale} />
     </points>
   )
 }
