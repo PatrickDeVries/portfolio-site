@@ -30,6 +30,16 @@ const ParticleControlFields: React.FC = () => {
           label="Particle count"
         />
         <RangeSlider
+          value={particleSnap.particleScale}
+          min={-10}
+          max={100}
+          onChange={newVal => {
+            particleSettings.particleScale =
+              newVal === 0 ? (particleSnap.particleScale > 0 ? -1 : 1) : newVal
+          }}
+          label="Particle radius scale"
+        />
+        <RangeSlider
           value={parseFloat(particleSnap.baseV.toFixed(4))}
           min={0}
           max={1}

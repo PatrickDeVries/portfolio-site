@@ -1,4 +1,5 @@
 import { derive } from 'valtio/utils'
+import { scaleSetting } from '../../utils'
 import {
   LAMP_TEMPERATURE,
   PARTICLE_COLLISION_RADIUS,
@@ -6,7 +7,6 @@ import {
   PARTICLE_CONVECTION_COEFFICIENT,
   PARTICLE_VISIBLE_RADIUS,
 } from '../constants'
-import { scaleSetting } from '../utils'
 import lavaLampSettings from './store'
 
 export const derivedLavaLampSettings = derive({

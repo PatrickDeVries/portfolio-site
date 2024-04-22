@@ -4,17 +4,19 @@ import * as three from 'three'
 import { ShaderMaterial } from 'three'
 import { Scale } from '../types'
 import particleSettings from './settings-store'
+import { derivedParticleSettings } from './settings-store/derived'
 
 export const vertex = `
   uniform float bboxMin;
   uniform float bboxMax;
+  uniform float pointSize;
   varying float rightness;
 
   void main() {
       rightness = (position.x - bboxMin) / (bboxMax - bboxMin);
       vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
       gl_Position = projectionMatrix * modelViewPosition;    
-      gl_PointSize = 10.0;  
+      gl_PointSize = pointSize;   
   }
   `
 
@@ -39,6 +41,7 @@ export const ParticleShaderMaterial: React.FC<{ viewportScale: Scale }> = ({ vie
     if (ref.current) {
       ref.current.uniforms.colorA.value = new three.Color(particleSettings.colorA)
       ref.current.uniforms.colorB.value = new three.Color(particleSettings.colorB)
+      ref.current.uniforms.pointSize.value = derivedParticleSettings.scaledParticleVisibleRadius
     }
   })
 
@@ -49,6 +52,7 @@ export const ParticleShaderMaterial: React.FC<{ viewportScale: Scale }> = ({ vie
       uniforms={{
         colorA: { value: new three.Color(particleSettings.colorA) },
         colorB: { value: new three.Color(particleSettings.colorB) },
+        pointSize: { value: derivedParticleSettings.scaledParticleVisibleRadius },
         bboxMin: { value: viewportScale.xMin },
         bboxMax: { value: viewportScale.xMax },
       }}
