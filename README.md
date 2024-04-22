@@ -6,7 +6,7 @@ This is a Vite React app (formerly a Create React App, formerly a Next.js App)
 
 ### Bun / package management
 
-This project uses Bun for package management, with a version of [v1.0.20](.tool-versions)
+This project uses Bun for package management, with a version of [v1.1.4](.tool-versions)
 
 ## Scripts
 
