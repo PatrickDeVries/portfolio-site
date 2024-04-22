@@ -371,3 +371,10 @@ export const getRepellentInfo = (viewport: Size, viewportScale: Scale) => {
     repellentMaxes: [...fixedRepellentMaxes, ...dynamicRepellentMaxes],
   }
 }
+
+///
+/// Utilities for interacting with background settings
+///
+
+export const scaleSetting = ({ base, scale }: { base: number; scale: number }): number =>
+  base * (scale > 0 ? scale : 1 / -scale)

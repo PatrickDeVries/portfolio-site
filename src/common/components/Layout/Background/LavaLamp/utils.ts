@@ -3,9 +3,6 @@ import { GRAVITY } from './constants'
 import store from './position-store'
 import { derivedLavaLampSettings } from './settings-store'
 
-export const scaleSetting = ({ base, scale }: { base: number; scale: number }): number =>
-  base * (scale > 0 ? scale : 1 / -scale)
-
 export const getTemperatureAtCoordinate = ({ x, y }: Point2d): number => {
   const normalizedY = (y + store.viewport.height / 2) / store.viewport.height // y from 0 to 1
   const yStrength = 0.5 * 7.6 ** (-2.1 * normalizedY + 0.9)

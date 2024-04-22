@@ -5,7 +5,7 @@ import { useWindowListener } from '@yobgob/too-many-hooks'
 import React, { useRef } from 'react'
 import { HiOutlineCog } from 'react-icons/hi'
 import { useSnapshot } from 'valtio'
-import { ControlCard, LavaLampControlCard, ParticleControlCard } from '../control-cards'
+import { ControlCard, LavaLampControlFields, ParticleControlFields } from '../control-cards'
 import controlCardStore from './store'
 
 const ControlCardNavIcon: React.FC = () => {
@@ -44,9 +44,9 @@ const ControlCardNavIcon: React.FC = () => {
       </NavIcon>
       <ControlCard ref={fieldsetRef} $areControlsOpen={areControlsOpen}>
         {backgroundSnap.background === 'lava-lamp' ? (
-          <LavaLampControlCard />
+          <LavaLampControlFields />
         ) : (
-          <ParticleControlCard />
+          <ParticleControlFields />
         )}
       </ControlCard>
     </>

@@ -5,6 +5,7 @@ export type ParticleSettings = {
   areControlsOpen: boolean
 
   particleCount: number
+  particleScale: number
   baseV: number
   vVar: number
   baseTurnV: number
