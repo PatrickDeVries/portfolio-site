@@ -18,7 +18,7 @@ import {
 } from '../utils'
 import { ParticleShaderMaterial } from './ParticleShaderMaterial'
 import { MAX_PARTICLES } from './constants'
-import positionStore, { randomizeLocations } from './position-store'
+import particlesPositionStore, { generateRandomParticleData } from './position-store'
 import particleSettings from './settings-store'
 
 type Props = {
@@ -44,13 +44,20 @@ const Particles: React.FC<Props> = ({ top }) => {
     yMin: -viewport.height / 2,
     yMax: viewport.height / 2,
   }
-  positionStore.viewport = { width: viewport.width, height: viewport.height, top: viewportTop }
+  particlesPositionStore.viewport = {
+    width: viewport.width,
+    height: viewport.height,
+    top: viewportTop,
+  }
+  const {
+    positions: initialPositions,
+    velocities: initialVelocities,
+    angles: initialAngles,
+  } = generateRandomParticleData()
 
   const pointsRef = useRef<Points | null>(null)
 
   const mouse = usePoint2dMouse(viewport)
-
-  const { positions, velocities, angles } = randomizeLocations()
 
   const updatePositions = () => {
     // get current mouse repellent information
@@ -195,12 +202,12 @@ const Particles: React.FC<Props> = ({ top }) => {
     updatePositions()
 
     if (pointsRef.current) {
-      positionStore.pointsRef = pointsRef
+      particlesPositionStore.pointsRef = pointsRef
       pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
     }
   })
 
-  if (positions.length < MAX_PARTICLES * 3) {
+  if (initialPositions.length < MAX_PARTICLES * 3) {
     return null
   }
 
@@ -210,19 +217,19 @@ const Particles: React.FC<Props> = ({ top }) => {
         <bufferAttribute
           attach="attributes-position"
           count={MAX_PARTICLES}
-          array={new Float32Array(positions)}
+          array={new Float32Array(initialPositions)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-velocity"
           count={MAX_PARTICLES}
-          array={new Float32Array(velocities)}
+          array={new Float32Array(initialVelocities)}
           itemSize={3}
         />
         <bufferAttribute
           attach="attributes-angle"
           count={MAX_PARTICLES}
-          array={new Float32Array(angles)}
+          array={new Float32Array(initialAngles)}
           itemSize={1}
         />
       </bufferGeometry>

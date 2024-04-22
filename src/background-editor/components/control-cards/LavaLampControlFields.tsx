@@ -1,7 +1,10 @@
 import Button from '@/common/components/Button'
 import Flex from '@/common/components/Flex'
 import Input from '@/common/components/Input'
-import { MAX_PARTICLES } from '@/common/components/Layout/Background/LavaLamp'
+import {
+  MAX_PARTICLES,
+  randomizeLavaLampData,
+} from '@/common/components/Layout/Background/LavaLamp'
 import lavaLampSettings, {
   resetSettings,
 } from '@/common/components/Layout/Background/LavaLamp/settings-store'
@@ -110,6 +113,7 @@ const LavaLampControlFields: React.FC = () => {
         />
       </Flex>
       <Button onClick={resetSettings}>Reset Settings</Button>
+      <Button onClick={randomizeLavaLampData}>Randomize Lava</Button>
     </>
   )
 }
