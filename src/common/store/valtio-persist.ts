@@ -168,7 +168,6 @@ export default function proxyWithPersist<S extends object>(inputs: IProxyWithPer
           } else {
             subscribeKey(proxySubObject, pathKey, persistPath)
           }
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         } else if (strategy === PersistStrategy.MultiFile) {
           await Promise.all(
             allKeys
