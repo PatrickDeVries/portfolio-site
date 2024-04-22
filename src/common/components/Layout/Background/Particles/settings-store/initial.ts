@@ -7,7 +7,7 @@ export const INITIAL_SETTINGS: ParticleSettings = {
   areControlsOpen: false,
 
   particleCount: 20000,
-  particleScale: 1,
+  particleScale: 0,
   baseV: 0.05,
   vVar: 0.003,
   baseTurnV: 0.03 * Math.PI,
@@ -22,7 +22,7 @@ export const INITIAL_SETTINGS: ParticleSettings = {
 
 export const DEFAULT_SETTINGS: Partial<ParticleSettings> = {
   particleCount: 20000,
-  particleScale: 1,
+  particleScale: 0,
   baseV: 0.05,
   vVar: 0.003,
   baseTurnV: 0.03 * Math.PI,

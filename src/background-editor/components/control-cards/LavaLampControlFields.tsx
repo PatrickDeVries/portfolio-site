@@ -33,43 +33,43 @@ const LavaLampControlFields: React.FC = () => {
         />
         <RangeSlider
           value={lavaLampSnap.particleScale}
-          min={-10}
-          max={100}
+          min={-100}
+          max={1000}
           onChange={newVal => {
-            lavaLampSettings.particleScale =
-              newVal === 0 ? (lavaLampSnap.particleScale > 0 ? -1 : 1) : newVal
+            lavaLampSettings.particleScale = newVal
           }}
-          label="Particle radius scale"
+          label="Particle radius Δ%"
+          labels={{ min: '-100%', max: '1000%' }}
         />
         <RangeSlider
           value={lavaLampSnap.convectionCoefficientScale}
           min={-100}
-          max={100}
+          max={1000}
           onChange={newVal => {
-            lavaLampSettings.convectionCoefficientScale =
-              newVal === 0 ? (lavaLampSnap.convectionCoefficientScale > 0 ? -1 : 1) : newVal
+            lavaLampSettings.convectionCoefficientScale = newVal
           }}
-          label="Conv. coeff. scale"
+          label="Conv. coeff. Δ%"
+          labels={{ min: '-100%', max: '1000%' }}
         />
         <RangeSlider
           value={lavaLampSnap.conductionCoefficientScale}
           min={-100}
-          max={100}
+          max={1000}
           onChange={newVal => {
-            lavaLampSettings.conductionCoefficientScale =
-              newVal === 0 ? (lavaLampSnap.conductionCoefficientScale > 0 ? -1 : 1) : newVal
+            lavaLampSettings.conductionCoefficientScale = newVal
           }}
-          label="Cond. coeff. scale"
+          label="Cond. coeff. Δ%"
+          labels={{ min: '-100%', max: '1000%' }}
         />
         <RangeSlider
           value={lavaLampSnap.lampTempScale}
           min={-100}
-          max={100}
+          max={1000}
           onChange={newVal => {
-            lavaLampSettings.lampTempScale =
-              newVal === 0 ? (lavaLampSnap.lampTempScale > 0 ? -1 : 1) : newVal
+            lavaLampSettings.lampTempScale = newVal
           }}
-          label="Lamp temperature scale"
+          label="Lamp temperature Δ%"
+          labels={{ min: '-100%', max: '1000%' }}
         />
         <RangeSlider
           value={lavaLampSnap.mouseSize}
