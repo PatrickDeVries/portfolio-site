@@ -29,15 +29,36 @@ The following scripts are available for this project:
 - Deploy the application to GitHub pages
 - This implicitly runs the `predeploy` script first, which lints and builds the app
 
-### `bun format`
+### `bun format/bun format:changed`
 
-- Format the application with prettier
+- Format the application with Biome
+- `bun format` will format all files
+- `bun format:changed` will format files that git detects as changed relative to `main`
 
-### `bun lint`/`bun lint:code`/`bun lint:styles`/`bun lint:format`/`bun lint:types`
+### `bun fix/bun fix:changed`
 
-- Lint the application
-- `bun lint` will run all lint scripts concurrently
-- `bun lint:code` lints with ESLint
-- `bun lint:styles` lints with Stylelint
-- `bun lint:format` checks the formatting with prettier
-- `bun lint:types` runs a type check
+- Auto-formatting and lint errors
+- `bun fix` will fix errors in all files
+- `bun fix:changed` will fix errors in files that git detects as changed relative to `main`
+
+### `bun lint:styles`
+
+- Checks for CSS format errors with Stylelint
+
+### `bun lint:types`
+
+- Checks for type errors with tsc
+
+### `bun lint:code`/`bun lint:changed:code` / `bun lint:format`/`bun lint:changed:format` / `bun lint:check`/`bun lint:changed:check`
+
+- Check code for errors with Biome
+- `bun lint:code` will check for lint errors in all files
+- `bun lint:changed:code` will check for lint errors in files that git detects as changed relative to `main`
+- `bun lint:format` will check for format errors in all files
+- `bun lint:changed:format` will check for format errors in files that git detects as changed relative to `main`
+- `bun lint:check` will check for both format and lint errors in all files
+- `bun lint:changed:check` will check for both format and lint errors in files that git detects as changed relative to `main`
+
+### `bun lint`
+
+- Lint the entire application, running `bun lint:check`, `bun lint:styles`, and `bun lint:types` concurrently
