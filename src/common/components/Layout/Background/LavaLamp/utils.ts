@@ -1,5 +1,10 @@
 import { Point2d } from '../types'
-import { GRAVITY } from './constants'
+import {
+  DRAG,
+  GRAVITY,
+  PARTICLE_MAX_HORIZONTAL_SPEED,
+  PARTICLE_MAX_VERTICAL_SPEED,
+} from './constants'
 import store from './position-store'
 import { derivedLavaLampSettings } from './settings-store'
 
@@ -49,6 +54,36 @@ export const getConvectionHeatTransferPerFrame = (
 }
 
 export const getAccelerationFromTemperature = (temperature: number) => {
-  const accelerationStrength = temperature / 500000 // 0.004 * temperature ** 2 - 0.016 * temperature - 1
+  const accelerationStrength = temperature / 500000
   return GRAVITY + accelerationStrength
+}
+
+export const getHorizontalAcceleration = (
+  initialHorizontalVelocity: number,
+  horizontalVelocity: number,
+) => {
+  const difference = initialHorizontalVelocity - horizontalVelocity
+  if (Math.abs(difference) < DRAG) return 0
+  if (difference < 0) {
+    return -DRAG
+  } else {
+    return DRAG
+  }
+}
+
+export const getBoundedHorizontalVelocity = (horizontalVelocity: number) =>
+  horizontalVelocity > PARTICLE_MAX_HORIZONTAL_SPEED
+    ? PARTICLE_MAX_HORIZONTAL_SPEED
+    : horizontalVelocity < -PARTICLE_MAX_HORIZONTAL_SPEED
+      ? -PARTICLE_MAX_HORIZONTAL_SPEED
+      : horizontalVelocity
+
+export const getBoundedVerticalVelocity = (verticalVelocity: number) => {
+  if (verticalVelocity > PARTICLE_MAX_VERTICAL_SPEED) {
+    return PARTICLE_MAX_VERTICAL_SPEED
+  } else if (verticalVelocity < -PARTICLE_MAX_VERTICAL_SPEED) {
+    return -PARTICLE_MAX_VERTICAL_SPEED
+  } else {
+    return verticalVelocity
+  }
 }

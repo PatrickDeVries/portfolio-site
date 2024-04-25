@@ -5,14 +5,27 @@ export type Point2d = {
 
 export type Circle = Point2d & {
   radius: number
+  $type: RepellentShape.Circle
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const isCircle = (b: any): b is Circle => typeof b.radius === 'number'
+export const isCircle = (s: Circle | Polygon): s is Circle => s.$type === RepellentShape.Circle
+export const isRectangle = (s: Circle | Polygon): s is Rectangle =>
+  s.$type === RepellentShape.Rectangle
+export const isStar = (s: Circle | Polygon): s is Star => s.$type === RepellentShape.Star
+export const isPolygon = (s: Circle | Polygon): s is Polygon =>
+  s.$type === RepellentShape.Rectangle || s.$type === RepellentShape.Star
 
-export type Polygon = {
+export type Rectangle = {
   vertices: Point2d[]
+  $type: RepellentShape.Rectangle
 }
+
+export type Star = {
+  vertices: Point2d[]
+  $type: RepellentShape.Star
+}
+
+export type Polygon = Rectangle | Star
 
 export enum RepellentShape {
   Circle = 'CIRCLE',
