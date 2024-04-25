@@ -1,0 +1,2 @@
+const __vite__fileDeps=["assets/BackgroundEditorPageContent-DGxYeMcS.js","assets/index-0SsW7yeb.js","assets/index-CY-KkjOo.css"],__vite__mapDeps=i=>i.map(i=>__vite__fileDeps[i]);
+import{r as o,_ as e,j as t,u as s}from"./index-0SsW7yeb.js";const a=o.lazy(()=>e(()=>import("./BackgroundEditorPageContent-DGxYeMcS.js"),__vite__mapDeps([0,1,2]))),r=()=>t.jsx(o.Suspense,{fallback:"Loading...",children:t.jsx(a,{})}),n=[{path:"/",element:t.jsx(r,{})}],u=()=>s(n);export{u as default};
