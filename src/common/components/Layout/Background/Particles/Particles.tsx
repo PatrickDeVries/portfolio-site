@@ -6,10 +6,10 @@ import { usePoint2dMouse } from '../hooks'
 import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
   PI2,
-  escapeRadius,
   generateRectangleFromCenter,
   generateStar,
   getNewAngle,
+  getRadiusEscapeAngle,
   getRepellentInfo,
   getShapeMax,
   getShapeMin,
@@ -63,15 +63,19 @@ const Particles: React.FC<Props> = ({ top }) => {
     // get current mouse repellent information
     const mouseShape: Circle | Polygon =
       particleSettings.mouseShape === RepellentShape.Circle
-        ? { ...mouse.current, radius: particleSettings.mouseSize }
+        ? { ...mouse.current, radius: particleSettings.mouseSize, $type: RepellentShape.Circle }
         : particleSettings.mouseShape === RepellentShape.Star
-          ? { vertices: generateStar(particleSettings.mouseSize, mouse.current) }
+          ? {
+              vertices: generateStar(particleSettings.mouseSize, mouse.current),
+              $type: RepellentShape.Star,
+            }
           : {
               vertices: generateRectangleFromCenter(
                 mouse.current,
                 particleSettings.mouseSize * 2,
                 particleSettings.mouseSize * 2,
               ),
+              $type: RepellentShape.Rectangle,
             }
     const mouseMin: Point2d = getShapeMin(mouseShape)
     const mouseMax: Point2d = getShapeMax(mouseShape)
@@ -106,21 +110,21 @@ const Particles: React.FC<Props> = ({ top }) => {
         const particleWasRepelled = allRepellentShapes.some((repellent, repellentIndex) => {
           if (isCircle(repellent)) {
             if (repellent.radius > 0 && isPointInCircle(currentPoint, repellent)) {
-              pas.setX(i, escapeRadius({ ...currentPoint, angle, turnV }, repellent, PI2))
+              pas.setX(i, getRadiusEscapeAngle({ ...currentPoint, angle, turnV }, repellent, PI2))
               return true
             }
           } else {
             if (
-              isPointInPolygon(
-                currentPoint,
-                allRepellentMaxes[repellentIndex],
-                allRepellentMins[repellentIndex],
-                repellent.vertices,
-              )
+              isPointInPolygon({
+                point: currentPoint,
+                max: allRepellentMaxes[repellentIndex],
+                min: allRepellentMins[repellentIndex],
+                vertices: repellent.vertices,
+              })
             ) {
               pas.setX(
                 i,
-                escapeRadius(
+                getRadiusEscapeAngle(
                   { ...currentPoint, angle, turnV },
                   {
                     x:
@@ -130,6 +134,7 @@ const Particles: React.FC<Props> = ({ top }) => {
                       (allRepellentMaxes[repellentIndex].y + allRepellentMins[repellentIndex].y) /
                       2,
                     radius: Math.max.apply(Math, [viewport.width, viewport.height]),
+                    $type: RepellentShape.Circle,
                   },
                   PI2,
                 ),

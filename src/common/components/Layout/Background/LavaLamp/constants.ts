@@ -12,6 +12,8 @@ export const LAMP_TEMPERATURE = 100
 
 export const PARTICLE_MAX_VERTICAL_SPEED = 0.01
 
-export const PARTICLE_MAX_HORIZONTAL_SPEED = 0.001
+export const PARTICLE_MAX_HORIZONTAL_SPEED = 0.005
 
 export const GRAVITY = -0.0001
+
+export const DRAG = 0.0001

@@ -25,8 +25,8 @@ export const generateRandomLavaLampData = (): {
     const randomTemperature = Math.random() * 100
     temperatures.push(randomTemperature)
     velocities.push(
-      Math.random() * PARTICLE_MAX_HORIZONTAL_SPEED - PARTICLE_MAX_HORIZONTAL_SPEED / 2,
-      getAccelerationFromTemperature(randomTemperature),
+      Math.random() * PARTICLE_MAX_HORIZONTAL_SPEED - PARTICLE_MAX_HORIZONTAL_SPEED / 2, // horizontal speed
+      getAccelerationFromTemperature(randomTemperature), // vertical speed
     )
   }
 
@@ -54,8 +54,10 @@ export const randomizeLavaLampData = () => {
     lavaLampPositionStore.pointsRef.current.geometry.setAttribute('position', pps)
     lavaLampPositionStore.pointsRef.current.geometry.setAttribute('temperature', pts)
     lavaLampPositionStore.pointsRef.current.geometry.setAttribute('velocity', pvs)
+    lavaLampPositionStore.pointsRef.current.geometry.setAttribute('initialVelocity', pvs)
     lavaLampPositionStore.pointsRef.current.geometry.attributes.position.needsUpdate = true
     lavaLampPositionStore.pointsRef.current.geometry.attributes.temperature.needsUpdate = true
     lavaLampPositionStore.pointsRef.current.geometry.attributes.velocity.needsUpdate = true
+    lavaLampPositionStore.pointsRef.current.geometry.attributes.initialVelocity.needsUpdate = true
   }
 }
