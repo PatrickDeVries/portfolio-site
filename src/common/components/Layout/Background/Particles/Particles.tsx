@@ -141,40 +141,46 @@ const Particles: React.FC<Props> = ({ top }) => {
         const xNeedsInversion = hasCollidedWithRight || hasCollidedWithLeft
         const yNeedsInversion = hasCollidedWithTop || hasCollidedWithBottom
 
+        // update angle
+        // if particle was reflected by a window boundary
         if (xNeedsInversion || yNeedsInversion) {
           angle = Math.atan2(
             yNeedsInversion ? -yVelocity : yVelocity,
             xNeedsInversion ? -xVelocity : xVelocity,
           )
-          pas.setX(i, angle)
-        } else if (particleSettings.freeThinkers === 0) {
-          let goalAngle = 0
-          if (i === 0) {
-            goalAngle = Math.atan2(
-              pps.getY(particleSettings.particleCount - 1) - pps.getY(i),
-              pps.getX(particleSettings.particleCount - 1) - pps.getX(i),
-            )
-          } else {
-            goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
-          }
-          const newAngle = getNewAngle(angle, goalAngle, turnVelocity)
-
-          pas.setX(i, newAngle)
-        } else if (
-          i % Math.ceil(particleSettings.particleCount / particleSettings.freeThinkers) !== 0 &&
-          i > 0
-        ) {
-          // non-free particles
-          const goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
-          const newAngle = getNewAngle(angle, goalAngle, turnVelocity)
-
-          pas.setX(i, newAngle)
         }
+        // if not reflected and there are no free thinkers
+        else if (particleSettings.freeThinkers === 0) {
+          const targetParticleIndex = i === 0 ? particleSettings.particleCount - 1 : i - 1
+          const targetParticleLocation = {
+            x: pps.getX(targetParticleIndex),
+            y: pps.getY(targetParticleIndex),
+          }
+          const goalAngle = Math.atan2(
+            targetParticleLocation.y - newPosition.y,
+            targetParticleLocation.x - newPosition.x,
+          )
+          angle = getNewAngle(angle, goalAngle, turnVelocity)
+        }
+        // if not reflected, there are free thinkers, and this particle is not one
+        else if (
+          i > 0 &&
+          i % Math.ceil(particleSettings.particleCount / particleSettings.freeThinkers) !== 0
+        ) {
+          const targetParticleLocation = {
+            x: pps.getX(i - 1),
+            y: pps.getY(i - 1),
+          }
+          const goalAngle = Math.atan2(
+            targetParticleLocation.y - newPosition.y,
+            targetParticleLocation.x - newPosition.x,
+          )
+          angle = getNewAngle(angle, goalAngle, turnVelocity)
+        }
+
+        pas.setX(i, angle)
       }
 
-      pointsRef.current.geometry.setAttribute('position', pps)
-      pointsRef.current.geometry.setAttribute('velocity', pvs)
-      pointsRef.current.geometry.setAttribute('angle', pas)
       pointsRef.current.geometry.attributes.position.needsUpdate = true
       pointsRef.current.geometry.attributes.velocity.needsUpdate = true
       pointsRef.current.geometry.attributes.angle.needsUpdate = true
@@ -186,7 +192,7 @@ const Particles: React.FC<Props> = ({ top }) => {
 
     if (pointsRef.current) {
       particlesPositionStore.pointsRef = pointsRef
-      pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount)
+      pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount) // only draw particles [0-`particleCount`)
     }
   })
 

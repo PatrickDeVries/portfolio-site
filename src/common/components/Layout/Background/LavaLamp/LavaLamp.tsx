@@ -251,12 +251,10 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
         pts.setX(i, temperature - temperatureChange)
       }
 
-      pointsRef.current.geometry.setAttribute('position', pps)
-      pointsRef.current.geometry.setAttribute('velocity', pvs)
-      pointsRef.current.geometry.setAttribute('temperature', pts)
       pointsRef.current.geometry.attributes.position.needsUpdate = true
       pointsRef.current.geometry.attributes.velocity.needsUpdate = true
       pointsRef.current.geometry.attributes.temperature.needsUpdate = true
+      pointsRef.current.geometry.attributes.goalVelocity.needsUpdate = true
     }
   }
 
