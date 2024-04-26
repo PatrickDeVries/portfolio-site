@@ -11,6 +11,7 @@ import lavaLampSettings, {
 import { RepellentShape } from '@/common/components/Layout/Background/types'
 import RangeSlider from '@/common/components/RangeSlider'
 import Select from '@/common/components/Select'
+import { useWindowListener } from '@yobgob/too-many-hooks'
 import React from 'react'
 import { useSnapshot } from 'valtio'
 import { formatMouseShape } from './formatters'
@@ -18,6 +19,16 @@ import { WrappingRow } from './style'
 
 const LavaLampControlFields: React.FC = () => {
   const lavaLampSnap = useSnapshot(lavaLampSettings)
+
+  useWindowListener('keyup', event => {
+    if (event.key === '=') {
+      lavaLampSettings.mouseSize =
+        lavaLampSettings.mouseSize + 0.5 < 5 ? lavaLampSettings.mouseSize + 0.5 : 5
+    } else if (event.key === '-') {
+      lavaLampSettings.mouseSize =
+        lavaLampSettings.mouseSize - 0.5 > 0 ? lavaLampSettings.mouseSize - 0.5 : 0
+    }
+  })
 
   return (
     <>

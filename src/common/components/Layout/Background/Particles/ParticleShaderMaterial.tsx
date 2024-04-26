@@ -15,10 +15,10 @@ export const vertex = `
   void main() {
       rightness = (position.x - bboxMin) / (bboxMax - bboxMin);
       vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-      gl_Position = projectionMatrix * modelViewPosition;    
+      gl_Position = projectionMatrix * modelViewPosition;
       gl_PointSize = pointSize;   
-  }
-  `
+    }
+    `
 
 export const fragment = `
     uniform vec3 colorA; 

@@ -27,6 +27,8 @@ export type Star = {
 
 export type Polygon = Rectangle | Star
 
+export type Repellent = { shape: Circle | Polygon; mins: Point2d; maxes: Point2d; center: Point2d }
+
 export enum RepellentShape {
   Circle = 'CIRCLE',
   Rectangle = 'RECTANGLE',
