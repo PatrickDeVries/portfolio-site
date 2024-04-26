@@ -52,6 +52,9 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
     top: viewportTop,
   }
 
+  const { mouseShape, mouseSize, particleCount } = useSnapshot(lavaLampSettings)
+  const { scaledParticleCollisionRadius } = useSnapshot(derivedLavaLampSettings)
+
   const {
     positions: initialPositions,
     temperatures: initialTemperatures,
@@ -61,7 +64,6 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
   const pointsRef = useRef<Points | null>(null)
 
   const mouse = usePoint2dMouse(viewport)
-  const { mouseShape, mouseSize } = useSnapshot(lavaLampSettings)
   const { pathname } = useLocation()
 
   const updatePositions = () => {
@@ -86,16 +88,16 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
       const pgvs = pointsRef.current.geometry.getAttribute('goalVelocity')
 
       const pointBoundingSpheres = Array.from(
-        { length: lavaLampSettings.particleCount },
+        { length: particleCount },
         (_, index) =>
           new Sphere(
             new Vector3(pps.getX(index), pps.getY(index), pps.getZ(index)),
-            derivedLavaLampSettings.scaledParticleCollisionRadius,
+            scaledParticleCollisionRadius,
           ),
       )
 
       // update each particle's position
-      for (let i = 0, l = lavaLampSettings.particleCount; i < l; i++) {
+      for (let i = 0, l = particleCount; i < l; i++) {
         let temperature = pts.getX(i)
         const particleGoalHorizontalVelocity = pgvs.getX(i)
 
@@ -255,7 +257,7 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
 
     if (pointsRef.current) {
       lavaLampPositionStore.pointsRef = pointsRef
-      pointsRef.current.geometry.setDrawRange(0, lavaLampSettings.particleCount)
+      pointsRef.current.geometry.setDrawRange(0, particleCount)
     }
   })
 

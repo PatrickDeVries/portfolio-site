@@ -34,12 +34,15 @@ const Particles: React.FC<Props> = ({ top }) => {
     }),
     [viewport.height, viewport.width],
   )
-
   particlesPositionStore.viewport = {
     width: viewport.width,
     height: viewport.height,
     top: viewportTop,
   }
+
+  const { mouseShape, mouseSize, particleCount, vVar, baseV, turnVar, baseTurnV, freeThinkers } =
+    useSnapshot(particleSettings)
+
   const {
     positions: initialPositions,
     velocities: initialVelocities,
@@ -49,7 +52,6 @@ const Particles: React.FC<Props> = ({ top }) => {
   const pointsRef = useRef<Points | null>(null)
 
   const mouse = usePoint2dMouse(viewport)
-  const { mouseShape, mouseSize } = useSnapshot(particleSettings)
   const { pathname } = useLocation()
 
   const updatePositions = () => {
@@ -73,10 +75,10 @@ const Particles: React.FC<Props> = ({ top }) => {
       const pas = pointsRef.current.geometry.getAttribute('angle')
 
       // update each particle's position
-      for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
+      for (let i = 0, l = particleCount; i < l; i++) {
         let angle = pas.getX(i)
-        const velocity = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
-        const turnVelocity = pvs.getY(i) * particleSettings.turnVar + particleSettings.baseTurnV
+        const velocity = pvs.getX(i) * vVar + baseV
+        const turnVelocity = pvs.getY(i) * turnVar + baseTurnV
         const previousPosition = { x: pps.getX(i), y: pps.getY(i) }
 
         const newPosition = {
@@ -139,8 +141,8 @@ const Particles: React.FC<Props> = ({ top }) => {
           )
         }
         // if not reflected and there are no free thinkers
-        else if (particleSettings.freeThinkers === 0) {
-          const targetParticleIndex = i === 0 ? particleSettings.particleCount - 1 : i - 1
+        else if (freeThinkers === 0) {
+          const targetParticleIndex = i === 0 ? particleCount - 1 : i - 1
           const targetParticleLocation = {
             x: pps.getX(targetParticleIndex),
             y: pps.getY(targetParticleIndex),
@@ -152,10 +154,7 @@ const Particles: React.FC<Props> = ({ top }) => {
           angle = getNewAngle(angle, goalAngle, turnVelocity)
         }
         // if not reflected, there are free thinkers, and this particle is not one
-        else if (
-          i > 0 &&
-          i % Math.ceil(particleSettings.particleCount / particleSettings.freeThinkers) !== 0
-        ) {
+        else if (i > 0 && i % Math.ceil(particleCount / freeThinkers) !== 0) {
           const targetParticleLocation = {
             x: pps.getX(i - 1),
             y: pps.getY(i - 1),
@@ -181,7 +180,7 @@ const Particles: React.FC<Props> = ({ top }) => {
 
     if (pointsRef.current) {
       particlesPositionStore.pointsRef = pointsRef
-      pointsRef.current.geometry.setDrawRange(0, particleSettings.particleCount) // only draw particles [0-`particleCount`)
+      pointsRef.current.geometry.setDrawRange(0, particleCount) // only draw particles [0-`particleCount`)
     }
   })
 
