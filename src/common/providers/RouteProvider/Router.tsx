@@ -4,11 +4,10 @@ import HomePages from '@/home'
 import PortfolioPages from '@/portfolio'
 import React from 'react'
 import { RouteObject, useRoutes } from 'react-router-dom'
-import { FallbackMessage } from './style'
 
 const ROUTES: RouteObject[] = [
   {
-    path: '/',
+    path: '/*',
     element: <HomePages />,
   },
   {
@@ -22,10 +21,6 @@ const ROUTES: RouteObject[] = [
   {
     path: '/portfolio/*',
     element: <PortfolioPages />,
-  },
-  {
-    path: '/*',
-    element: <FallbackMessage>404 | not found</FallbackMessage>,
   },
 ]
 
