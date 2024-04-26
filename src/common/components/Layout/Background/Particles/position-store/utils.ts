@@ -17,9 +17,8 @@ export const generateRandomParticleData = (): {
       Math.random() * particlesPositionStore.viewport.height -
         particlesPositionStore.viewport.height / 2 -
         particlesPositionStore.viewport.top,
-      0,
     )
-    velocities.push(Math.random(), Math.random(), 0)
+    velocities.push(Math.random(), Math.random())
     let newA = Math.random() * 2 * Math.PI
     if (
       newA < 0.01 ||
@@ -45,8 +44,8 @@ export const randomizeParticleData = () => {
     const pas = particlesPositionStore.pointsRef.current.geometry.getAttribute('angle')
 
     for (let i = 0; i < MAX_PARTICLES; i++) {
-      pps.setXYZ(i, positions[i * 3], positions[i * 3 + 1], 0)
-      pvs.setXYZ(i, velocities[i * 3], velocities[i * 3 + 1], 0)
+      pps.setXY(i, positions[i * 2], positions[i * 2 + 1])
+      pvs.setXY(i, velocities[i * 2], velocities[i * 2 + 1])
       pas.setX(i, angles[i])
     }
     particlesPositionStore.pointsRef.current.geometry.setAttribute('position', pps)

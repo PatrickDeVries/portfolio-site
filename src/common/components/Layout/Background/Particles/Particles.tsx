@@ -212,7 +212,7 @@ const Particles: React.FC<Props> = ({ top }) => {
     }
   })
 
-  if (initialPositions.length < MAX_PARTICLES * 3) {
+  if (initialPositions.length < MAX_PARTICLES * 2) {
     return null
   }
 
@@ -223,13 +223,13 @@ const Particles: React.FC<Props> = ({ top }) => {
           attach="attributes-position"
           count={MAX_PARTICLES}
           array={new Float32Array(initialPositions)}
-          itemSize={3}
+          itemSize={2}
         />
         <bufferAttribute
           attach="attributes-velocity"
           count={MAX_PARTICLES}
           array={new Float32Array(initialVelocities)}
-          itemSize={3}
+          itemSize={2}
         />
         <bufferAttribute
           attach="attributes-angle"
