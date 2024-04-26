@@ -504,21 +504,6 @@ export const getWindowBoundsCollisions = ({
   const isAtLeft = position.x < minX
   const hasCollidedWithLeft = isAtLeft && xVelocity < 0
 
-  // if (isAtBottom && yVelocity < 0)
-  //   console.log(
-  //     isAtTop,
-  //     hasCollidedWithTop,
-  //     isAtRight,
-  //     hasCollidedWithRight,
-  //     isAtBottom,
-  //     hasCollidedWithBottom,
-  //     isAtLeft,
-  //     hasCollidedWithLeft,
-  //     position,
-  //     xVelocity,
-  //     yVelocity,
-  //   )
-
   return {
     isAtTop,
     hasCollidedWithTop,
