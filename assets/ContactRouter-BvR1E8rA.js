@@ -1,0 +1,2 @@
+const __vite__fileDeps=["assets/ContactPageContent-Dsfm2HuV.js","assets/index-D-7_lSYN.js","assets/index-CY-KkjOo.css"],__vite__mapDeps=i=>i.map(i=>__vite__fileDeps[i]);
+import{r as e,_ as a,j as t,u as o}from"./index-D-7_lSYN.js";import{F as s}from"./style-DxG-63DA.js";const n=e.lazy(()=>a(()=>import("./ContactPageContent-Dsfm2HuV.js"),__vite__mapDeps([0,1,2]))),r=()=>t.jsx(e.Suspense,{fallback:"Loading...",children:t.jsx(n,{})}),c=[{path:"/",element:t.jsx(r,{})},{path:"/*",element:t.jsx(s,{children:"404 | not found"})}],p=()=>o(c);export{p as default};

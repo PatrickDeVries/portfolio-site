@@ -1,0 +1,2 @@
+const __vite__fileDeps=["assets/HomePageContent-Da3RyaIc.js","assets/index-D-7_lSYN.js","assets/index-CY-KkjOo.css"],__vite__mapDeps=i=>i.map(i=>__vite__fileDeps[i]);
+import{r as t,_ as o,j as e,u as s}from"./index-D-7_lSYN.js";import{F as a}from"./style-DxG-63DA.js";const n=t.lazy(()=>o(()=>import("./HomePageContent-Da3RyaIc.js"),__vite__mapDeps([0,1,2]))),r=()=>e.jsx(t.Suspense,{fallback:"Loading...",children:e.jsx(n,{})}),l=[{path:"/",element:e.jsx(r,{})},{path:"/*",element:e.jsx(a,{children:"404 | not found"})}],i=()=>s(l);export{i as default};

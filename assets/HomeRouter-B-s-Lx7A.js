@@ -1,2 +1,0 @@
-const __vite__fileDeps=["assets/HomePageContent-CaCENHbH.js","assets/index-0SsW7yeb.js","assets/index-CY-KkjOo.css"],__vite__mapDeps=i=>i.map(i=>__vite__fileDeps[i]);
-import{r as t,_ as o,j as e,u as s}from"./index-0SsW7yeb.js";const a=t.lazy(()=>o(()=>import("./HomePageContent-CaCENHbH.js"),__vite__mapDeps([0,1,2]))),r=()=>e.jsx(t.Suspense,{fallback:"Loading...",children:e.jsx(a,{})}),n=[{path:"/",element:e.jsx(r,{})}],u=()=>s(n);export{u as default};
