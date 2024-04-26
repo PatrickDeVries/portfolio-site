@@ -1,5 +1,5 @@
 import { Size } from '@react-three/fiber'
-import { Circle, Point2d, Polygon, RepellentShape, Scale, isCircle } from './types'
+import { Circle, Point2d, Polygon, Repellent, RepellentShape, Scale, isCircle } from './types'
 
 export const PI2 = Math.PI * 2
 
@@ -33,7 +33,7 @@ export const isPointInPolygon = ({
   }
 }
 
-// Unknown
+// Any shape
 export const isPointInShape = ({
   point,
   shape,
@@ -127,14 +127,8 @@ export const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
       : angle + turnV) % PI2
 
 // move a particle out of a circle by turning
-export const getRadiusEscapeAngle = (
-  point: Point2d & { angle: number; turnV: number },
-  circle: Circle,
-  boostSpeed = 1,
-) => {
-  const angleFromCircle = Math.atan2(point.y - circle.y, point.x - circle.x)
-  return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // boost to turn speed to make mouse circle cleaner
-}
+export const getAngleFromPoint = ({ point, fromPoint }: { point: Point2d; fromPoint: Point2d }) =>
+  Math.atan2(point.y - fromPoint.y, point.x - fromPoint.x)
 
 // move a particle out of a radius with horizontal/vertical velocities
 export const getRadiusEscapeVelocities = ({
@@ -251,11 +245,32 @@ export const generateStar = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point
   ]
 }
 
+export const getMouseShape = ({
+  position,
+  shape,
+  size,
+}: { position: Point2d; shape: RepellentShape; size: number }): Circle | Polygon => {
+  switch (shape) {
+    case RepellentShape.Circle:
+      return { ...position, radius: size, $type: RepellentShape.Circle }
+    case RepellentShape.Rectangle:
+      return {
+        vertices: generateRectangleFromCenter(position, size * 2, size * 2),
+        $type: RepellentShape.Rectangle,
+      }
+    case RepellentShape.Star:
+      return {
+        vertices: generateStar(size, position),
+        $type: RepellentShape.Star,
+      }
+  }
+}
+
 ///
 /// Utils for shape information
 ///
 
-export const getShapeMin = (shape: Circle | Polygon) =>
+export const getShapeMins = (shape: Circle | Polygon) =>
   isCircle(shape)
     ? { x: shape.x - shape.radius, y: shape.y - shape.radius }
     : {
@@ -269,7 +284,7 @@ export const getShapeMin = (shape: Circle | Polygon) =>
         ),
       }
 
-export const getShapeMax = (shape: Circle | Polygon) =>
+export const getShapeMaxes = (shape: Circle | Polygon) =>
   isCircle(shape)
     ? { x: shape.x + shape.radius, y: shape.y + shape.radius }
     : {
@@ -282,6 +297,36 @@ export const getShapeMax = (shape: Circle | Polygon) =>
           shape.vertices.map(v => v.y),
         ),
       }
+
+export const getRepellentFromShape = (shape: Circle | Polygon): Repellent => {
+  if (isCircle(shape)) {
+    return {
+      shape,
+      mins: { x: shape.x - shape.radius, y: shape.y - shape.radius },
+      maxes: { x: shape.x + shape.radius, y: shape.y + shape.radius },
+      center: shape,
+    }
+  } else {
+    let mins = { x: shape.vertices[0].x, y: shape.vertices[0].y }
+    let maxes = { x: shape.vertices[0].x, y: shape.vertices[0].y }
+    for (let i = 1; i < shape.vertices.length; i++) {
+      const x = shape.vertices[i].x
+      const y = shape.vertices[i].y
+
+      if (x < mins.x) mins.x = x
+      if (y < mins.y) mins.y = y
+      if (x > maxes.x) maxes.x = x
+      if (y > maxes.y) maxes.y = y
+    }
+
+    return {
+      shape,
+      mins,
+      maxes,
+      center: { x: (mins.x + maxes.x) / 2, y: (mins.y + maxes.y) / 2 },
+    }
+  }
+}
 
 ///
 /// DOM interfacing utils
@@ -312,8 +357,23 @@ export const scaleWidthIntoViewport = (width: number, viewportScale: Scale) =>
 /// repellent information utils
 ///
 
-const getFixedRepellentShapes = (viewport: Size, viewportScale: Scale): (Circle | Polygon)[] => {
-  const pathname = window.location.hash.slice(1)
+export const getRepellentCenter = ({
+  repellent,
+  mins,
+  maxes,
+}: { repellent: Circle | Polygon; mins: Point2d; maxes: Point2d }): Point2d =>
+  isCircle(repellent)
+    ? repellent
+    : {
+        x: (mins.x + maxes.x) / 2,
+        y: (mins.y + maxes.y) / 2,
+      }
+
+const getFixedRepellentShapes = (
+  pathname: string,
+  viewport: Size,
+  viewportScale: Scale,
+): (Circle | Polygon)[] => {
   switch (pathname) {
     case '/':
       return viewport.width < viewport.height
@@ -339,14 +399,12 @@ const getFixedRepellentShapes = (viewport: Size, viewportScale: Scale): (Circle 
   }
 }
 
-const getFixedRepellentInfo = (viewport: Size, viewportScale: Scale) => {
-  const fixedRepellentShapes = getFixedRepellentShapes(viewport, viewportScale)
-  const fixedRepellentMins: Point2d[] = fixedRepellentShapes.map(getShapeMin)
-  const fixedRepellentMaxes: Point2d[] = fixedRepellentShapes.map(getShapeMax)
+const getFixedRepellentInfo = (pathname: string, viewport: Size, viewportScale: Scale) => {
+  const fixedRepellentShapes = getFixedRepellentShapes(pathname, viewport, viewportScale)
+  const fixedRepellentShapesWithMetadata = fixedRepellentShapes.map(getRepellentFromShape)
 
-  return { fixedRepellentShapes, fixedRepellentMins, fixedRepellentMaxes }
+  return fixedRepellentShapesWithMetadata
 }
-
 const getVisibleDynamicRepellents = () => {
   const allRepellents = document.querySelectorAll('*[data-repel-particles="true"]')
   const visibleRepellents = Array.from(allRepellents).filter(repellent => {
@@ -367,7 +425,7 @@ const getVisibleDynamicRepellentShapes = (viewportScale: Scale): (Circle | Polyg
 
   return dynamicRepellents.map(repellent => {
     const { top, right, bottom, left } = repellent.getBoundingClientRect()
-    const repellentShape = repellent.getAttribute('data-repel-shape')
+    const repellentShape = repellent.getAttribute('data-repel-shape') as RepellentShape
 
     switch (repellentShape) {
       case RepellentShape.Circle:
@@ -394,38 +452,22 @@ const getVisibleDynamicRepellentShapes = (viewportScale: Scale): (Circle | Polyg
           }).map(point => projectWindowPointIntoViewport(point, viewportScale)),
           $type: RepellentShape.Star,
         }
-      default:
-        return {
-          vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
-            projectWindowPointIntoViewport(point, viewportScale),
-          ),
-          $type: RepellentShape.Rectangle,
-        }
     }
   })
 }
 
 const getDynamicRepellentInfo = (viewportScale: Scale) => {
   const dynamicRepellentShapes = getVisibleDynamicRepellentShapes(viewportScale)
-  const dynamicRepellentMins: Point2d[] = dynamicRepellentShapes.map(getShapeMin)
-  const dynamicRepellentMaxes: Point2d[] = dynamicRepellentShapes.map(getShapeMax)
+  const dynamicRepellentShapesWithMetadata = dynamicRepellentShapes.map(getRepellentFromShape)
 
-  return { dynamicRepellentShapes, dynamicRepellentMins, dynamicRepellentMaxes }
+  return dynamicRepellentShapesWithMetadata
 }
 
-export const getRepellentInfo = (viewport: Size, viewportScale: Scale) => {
-  const { fixedRepellentShapes, fixedRepellentMaxes, fixedRepellentMins } = getFixedRepellentInfo(
-    viewport,
-    viewportScale,
-  )
-  const { dynamicRepellentShapes, dynamicRepellentMaxes, dynamicRepellentMins } =
-    getDynamicRepellentInfo(viewportScale)
+export const getRepellentInfo = (pathname: string, viewport: Size, viewportScale: Scale) => {
+  const fixedRepellentShapesWithMetadata = getFixedRepellentInfo(pathname, viewport, viewportScale)
+  const dynamicRepellentShapesWithMetadata = getDynamicRepellentInfo(viewportScale)
 
-  return {
-    repellentShapes: [...fixedRepellentShapes, ...dynamicRepellentShapes],
-    repellentMins: [...fixedRepellentMins, ...dynamicRepellentMins],
-    repellentMaxes: [...fixedRepellentMaxes, ...dynamicRepellentMaxes],
-  }
+  return [...fixedRepellentShapesWithMetadata, ...dynamicRepellentShapesWithMetadata]
 }
 
 ///

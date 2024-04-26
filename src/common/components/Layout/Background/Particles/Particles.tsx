@@ -1,20 +1,17 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { useWindowListener } from '@yobgob/too-many-hooks'
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Points } from 'three'
+import { useSnapshot } from 'valtio'
 import { usePoint2dMouse } from '../hooks'
-import { Circle, Point2d, Polygon, RepellentShape, isCircle } from '../types'
 import {
-  PI2,
-  generateRectangleFromCenter,
-  generateStar,
+  getAngleFromPoint,
+  getMouseShape,
   getNewAngle,
-  getRadiusEscapeAngle,
+  getRepellentFromShape,
   getRepellentInfo,
-  getShapeMax,
-  getShapeMin,
-  isPointInCircle,
-  isPointInPolygon,
+  isPointInShape,
 } from '../utils'
 import { ParticleShaderMaterial } from './ParticleShaderMaterial'
 import { MAX_PARTICLES } from './constants'
@@ -38,12 +35,16 @@ const Particles: React.FC<Props> = ({ top }) => {
 
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
-  const viewportScale = {
-    xMin: -viewport.width / 2,
-    xMax: viewport.width / 2,
-    yMin: -viewport.height / 2,
-    yMax: viewport.height / 2,
-  }
+  const viewportScale = useMemo(
+    () => ({
+      xMin: -viewport.width / 2,
+      xMax: viewport.width / 2,
+      yMin: -viewport.height / 2,
+      yMax: viewport.height / 2,
+    }),
+    [viewport.height, viewport.width],
+  )
+
   particlesPositionStore.viewport = {
     width: viewport.width,
     height: viewport.height,
@@ -53,42 +54,27 @@ const Particles: React.FC<Props> = ({ top }) => {
     positions: initialPositions,
     velocities: initialVelocities,
     angles: initialAngles,
-  } = generateRandomParticleData()
+  } = useMemo(generateRandomParticleData, [])
 
   const pointsRef = useRef<Points | null>(null)
 
   const mouse = usePoint2dMouse(viewport)
+  const { mouseShape, mouseSize } = useSnapshot(particleSettings)
+  const { pathname } = useLocation()
 
   const updatePositions = () => {
     // get current mouse repellent information
-    const mouseShape: Circle | Polygon =
-      particleSettings.mouseShape === RepellentShape.Circle
-        ? { ...mouse.current, radius: particleSettings.mouseSize, $type: RepellentShape.Circle }
-        : particleSettings.mouseShape === RepellentShape.Star
-          ? {
-              vertices: generateStar(particleSettings.mouseSize, mouse.current),
-              $type: RepellentShape.Star,
-            }
-          : {
-              vertices: generateRectangleFromCenter(
-                mouse.current,
-                particleSettings.mouseSize * 2,
-                particleSettings.mouseSize * 2,
-              ),
-              $type: RepellentShape.Rectangle,
-            }
-    const mouseMin: Point2d = getShapeMin(mouseShape)
-    const mouseMax: Point2d = getShapeMax(mouseShape)
+    const mouseRepellentShape = getMouseShape({
+      position: mouse.current,
+      shape: mouseShape,
+      size: mouseSize,
+    })
+    const mouseRepellent = getRepellentFromShape(mouseRepellentShape)
 
     // get other repellent information
-    const { repellentShapes, repellentMins, repellentMaxes } = getRepellentInfo(
-      viewport,
-      viewportScale,
-    )
+    const repellents = getRepellentInfo(pathname, viewport, viewportScale)
 
-    const allRepellentShapes = [mouseShape, ...repellentShapes]
-    const allRepellentMaxes = [mouseMax, ...repellentMaxes]
-    const allRepellentMins = [mouseMin, ...repellentMins]
+    const allRepellents = [mouseRepellent, ...repellents]
 
     if (pointsRef.current) {
       // get current three.js versions of point data
@@ -99,49 +85,38 @@ const Particles: React.FC<Props> = ({ top }) => {
       // update each particle's position
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
         const angle = pas.getX(i)
-        const v = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
-        const turnV = pvs.getY(i) * particleSettings.turnVar + particleSettings.baseTurnV
+        const velocity = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
+        const turnVelocity = pvs.getY(i) * particleSettings.turnVar + particleSettings.baseTurnV
+        const previousPosition = { x: pps.getX(i), y: pps.getY(i) }
+
+        const newPosition = {
+          x: previousPosition.x + velocity * Math.cos(angle),
+          y: previousPosition.y + velocity * Math.sin(angle),
+        }
 
         // update point position
-        pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
+        pps.setXY(i, newPosition.x, newPosition.y)
 
-        const currentPoint = { x: pps.getX(i), y: pps.getY(i) }
+        const particleWasRepelled = allRepellents.some(({ shape, mins, maxes, center }) => {
+          const pointIsInRepellent = isPointInShape({
+            point: newPosition,
+            shape,
+            shapeMins: mins,
+            shapeMaxes: maxes,
+          })
 
-        const particleWasRepelled = allRepellentShapes.some((repellent, repellentIndex) => {
-          if (isCircle(repellent)) {
-            if (repellent.radius > 0 && isPointInCircle(currentPoint, repellent)) {
-              pas.setX(i, getRadiusEscapeAngle({ ...currentPoint, angle, turnV }, repellent, PI2))
-              return true
-            }
-          } else {
-            if (
-              isPointInPolygon({
-                point: currentPoint,
-                max: allRepellentMaxes[repellentIndex],
-                min: allRepellentMins[repellentIndex],
-                vertices: repellent.vertices,
-              })
-            ) {
-              pas.setX(
-                i,
-                getRadiusEscapeAngle(
-                  { ...currentPoint, angle, turnV },
-                  {
-                    x:
-                      (allRepellentMaxes[repellentIndex].x + allRepellentMins[repellentIndex].x) /
-                      2,
-                    y:
-                      (allRepellentMaxes[repellentIndex].y + allRepellentMins[repellentIndex].y) /
-                      2,
-                    radius: Math.max.apply(Math, [viewport.width, viewport.height]),
-                    $type: RepellentShape.Circle,
-                  },
-                  PI2,
-                ),
-              )
-              return true
-            }
+          if (pointIsInRepellent) {
+            pas.setX(
+              i,
+              getAngleFromPoint({
+                point: newPosition,
+                fromPoint: center,
+              }),
+            )
+
+            return true
           }
+
           return false
         })
         if (particleWasRepelled) continue
@@ -155,14 +130,17 @@ const Particles: React.FC<Props> = ({ top }) => {
         if (flipX || flipY) {
           pas.setX(
             i,
-            Math.atan2((flipY ? -v : v) * Math.sin(angle), (flipX ? -v : v) * Math.cos(angle)),
+            Math.atan2(
+              (flipY ? -velocity : velocity) * Math.sin(angle),
+              (flipX ? -velocity : velocity) * Math.cos(angle),
+            ),
           )
           // reset if it has somehow escaped
           if (
-            pps.getX(i) + v * Math.cos(pas.getX(i)) > viewport.width / 2 ||
-            pps.getX(i) + v * Math.cos(pas.getX(i)) < -viewport.width / 2 ||
-            pps.getY(i) + v * Math.sin(pas.getX(i)) > viewport.height - viewportTop / 2 ||
-            pps.getY(i) + v * Math.sin(pas.getX(i)) < -viewport.height / 2
+            pps.getX(i) + velocity * Math.cos(pas.getX(i)) > viewport.width / 2 ||
+            pps.getX(i) + velocity * Math.cos(pas.getX(i)) < -viewport.width / 2 ||
+            pps.getY(i) + velocity * Math.sin(pas.getX(i)) > viewport.height - viewportTop / 2 ||
+            pps.getY(i) + velocity * Math.sin(pas.getX(i)) < -viewport.height / 2
           ) {
             pps.setXY(
               i,
@@ -180,7 +158,7 @@ const Particles: React.FC<Props> = ({ top }) => {
           } else {
             goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
           }
-          const newAngle = getNewAngle(angle, goalAngle, turnV)
+          const newAngle = getNewAngle(angle, goalAngle, turnVelocity)
 
           pas.setX(i, newAngle)
         } else if (
@@ -189,7 +167,7 @@ const Particles: React.FC<Props> = ({ top }) => {
         ) {
           // non-free particles
           const goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
-          const newAngle = getNewAngle(angle, goalAngle, turnV)
+          const newAngle = getNewAngle(angle, goalAngle, turnVelocity)
 
           pas.setX(i, newAngle)
         }
@@ -212,35 +190,36 @@ const Particles: React.FC<Props> = ({ top }) => {
     }
   })
 
-  if (initialPositions.length < MAX_PARTICLES * 2) {
-    return null
-  }
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry attach="geometry">
-        <bufferAttribute
-          attach="attributes-position"
-          count={MAX_PARTICLES}
-          array={new Float32Array(initialPositions)}
-          itemSize={2}
-        />
-        <bufferAttribute
-          attach="attributes-velocity"
-          count={MAX_PARTICLES}
-          array={new Float32Array(initialVelocities)}
-          itemSize={2}
-        />
-        <bufferAttribute
-          attach="attributes-angle"
-          count={MAX_PARTICLES}
-          array={new Float32Array(initialAngles)}
-          itemSize={1}
-        />
-      </bufferGeometry>
-      <ParticleShaderMaterial viewportScale={viewportScale} />
-    </points>
+  const points = useMemo(
+    () => (
+      <points ref={pointsRef}>
+        <bufferGeometry attach="geometry">
+          <bufferAttribute
+            attach="attributes-position"
+            count={MAX_PARTICLES}
+            array={new Float32Array(initialPositions)}
+            itemSize={2}
+          />
+          <bufferAttribute
+            attach="attributes-velocity"
+            count={MAX_PARTICLES}
+            array={new Float32Array(initialVelocities)}
+            itemSize={2}
+          />
+          <bufferAttribute
+            attach="attributes-angle"
+            count={MAX_PARTICLES}
+            array={new Float32Array(initialAngles)}
+            itemSize={1}
+          />
+        </bufferGeometry>
+        <ParticleShaderMaterial viewportScale={viewportScale} />
+      </points>
+    ),
+    [initialPositions, initialVelocities, initialAngles, viewportScale],
   )
+
+  return points
 }
 
 export default Particles
