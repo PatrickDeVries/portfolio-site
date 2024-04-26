@@ -11,6 +11,7 @@ import {
   getNewAngle,
   getRepellentFromShape,
   getRepellentInfo,
+  getWindowBoundsCollisions,
   isPointInShape,
 } from '../utils'
 import { ParticleShaderMaterial } from './ParticleShaderMaterial'
@@ -84,7 +85,7 @@ const Particles: React.FC<Props> = ({ top }) => {
 
       // update each particle's position
       for (let i = 0, l = particleSettings.particleCount; i < l; i++) {
-        const angle = pas.getX(i)
+        let angle = pas.getX(i)
         const velocity = pvs.getX(i) * particleSettings.vVar + particleSettings.baseV
         const turnVelocity = pvs.getY(i) * particleSettings.turnVar + particleSettings.baseTurnV
         const previousPosition = { x: pps.getX(i), y: pps.getY(i) }
@@ -106,13 +107,12 @@ const Particles: React.FC<Props> = ({ top }) => {
           })
 
           if (pointIsInRepellent) {
-            pas.setX(
-              i,
-              getAngleFromPoint({
-                point: newPosition,
-                fromPoint: center,
-              }),
-            )
+            angle = getAngleFromPoint({
+              point: newPosition,
+              fromPoint: center,
+            })
+
+            pas.setX(i, angle)
 
             return true
           }
@@ -121,33 +121,32 @@ const Particles: React.FC<Props> = ({ top }) => {
         })
         if (particleWasRepelled) continue
 
-        // handle bouncing off window boundaries
-        const flipX = pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2
-        const flipY =
-          pps.getY(i) > viewport.height / 2 - viewportTop || pps.getY(i) < -viewport.height / 2
+        const xVelocity = velocity * Math.cos(angle)
+        const yVelocity = velocity * Math.sin(angle)
 
-        // if particle was not repelled, but is at a window boundary
-        if (flipX || flipY) {
-          pas.setX(
-            i,
-            Math.atan2(
-              (flipY ? -velocity : velocity) * Math.sin(angle),
-              (flipX ? -velocity : velocity) * Math.cos(angle),
-            ),
+        // check for crossing window boundaries
+        const {
+          hasCollidedWithTop,
+          hasCollidedWithRight,
+          hasCollidedWithBottom,
+          hasCollidedWithLeft,
+        } = getWindowBoundsCollisions({
+          viewport,
+          viewportTop,
+          position: newPosition,
+          xVelocity,
+          yVelocity,
+        })
+
+        const xNeedsInversion = hasCollidedWithRight || hasCollidedWithLeft
+        const yNeedsInversion = hasCollidedWithTop || hasCollidedWithBottom
+
+        if (xNeedsInversion || yNeedsInversion) {
+          angle = Math.atan2(
+            yNeedsInversion ? -yVelocity : yVelocity,
+            xNeedsInversion ? -xVelocity : xVelocity,
           )
-          // reset if it has somehow escaped
-          if (
-            pps.getX(i) + velocity * Math.cos(pas.getX(i)) > viewport.width / 2 ||
-            pps.getX(i) + velocity * Math.cos(pas.getX(i)) < -viewport.width / 2 ||
-            pps.getY(i) + velocity * Math.sin(pas.getX(i)) > viewport.height - viewportTop / 2 ||
-            pps.getY(i) + velocity * Math.sin(pas.getX(i)) < -viewport.height / 2
-          ) {
-            pps.setXY(
-              i,
-              Math.random() * viewport.width - viewport.width / 2,
-              Math.random() * viewport.height - viewport.height / 2 - viewport.top,
-            )
-          }
+          pas.setX(i, angle)
         } else if (particleSettings.freeThinkers === 0) {
           let goalAngle = 0
           if (i === 0) {
@@ -172,6 +171,7 @@ const Particles: React.FC<Props> = ({ top }) => {
           pas.setX(i, newAngle)
         }
       }
+
       pointsRef.current.geometry.setAttribute('position', pps)
       pointsRef.current.geometry.setAttribute('velocity', pvs)
       pointsRef.current.geometry.setAttribute('angle', pas)
@@ -198,7 +198,7 @@ const Particles: React.FC<Props> = ({ top }) => {
             attach="attributes-position"
             count={MAX_PARTICLES}
             array={new Float32Array(initialPositions)}
-            itemSize={2}
+            itemSize={3}
           />
           <bufferAttribute
             attach="attributes-velocity"

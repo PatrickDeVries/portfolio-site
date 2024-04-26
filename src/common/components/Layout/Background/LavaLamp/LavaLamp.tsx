@@ -11,6 +11,7 @@ import {
   getRadiusEscapeVelocities,
   getRepellentFromShape,
   getRepellentInfo,
+  getWindowBoundsCollisions,
   isPointInShape,
 } from '../utils'
 import LavaShaderMaterial from './LavaShaderMaterial'
@@ -90,7 +91,7 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
       const pps = pointsRef.current.geometry.getAttribute('position')
       const pts = pointsRef.current.geometry.getAttribute('temperature')
       const pvs = pointsRef.current.geometry.getAttribute('velocity')
-      const pivs = pointsRef.current.geometry.getAttribute('initialVelocity')
+      const pgvs = pointsRef.current.geometry.getAttribute('goalVelocity')
 
       const pointBoundingSpheres = Array.from(
         { length: lavaLampSettings.particleCount },
@@ -104,12 +105,12 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
       // update each particle's position
       for (let i = 0, l = lavaLampSettings.particleCount; i < l; i++) {
         let temperature = pts.getX(i)
-        const particleInitialHorizontalVelocity = pivs.getX(i)
+        const particleGoalHorizontalVelocity = pgvs.getX(i)
 
         let horizontalVelocity = pvs.getX(i)
         let verticalVelocity = pvs.getY(i)
         let horizontalAcceleration = getHorizontalAcceleration(
-          particleInitialHorizontalVelocity,
+          particleGoalHorizontalVelocity,
           horizontalVelocity,
         )
         let verticalAcceleration = getAccelerationFromTemperature(temperature)
@@ -192,19 +193,25 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
         }
 
         // check for and handle collision with screen boundaries
-        const atTop = pps.getY(i) > viewport.height / 2 - viewportTop
-        const hasCollidedWithTop = atTop && verticalVelocity > 0
-        const atBottom = pps.getY(i) < -viewport.height / 2
-        const hasCollidedWithBottom = atBottom && verticalVelocity < 0
-        const atLeft = pps.getX(i) > viewport.width / 2
-        const hasCollidedWithLeft = atLeft && horizontalVelocity < 0
-        const atRight = pps.getX(i) < -viewport.width / 2
-        const hasCollidedWithRight = atRight && horizontalVelocity > 0
+        const {
+          hasCollidedWithTop,
+          hasCollidedWithRight,
+          hasCollidedWithBottom,
+          hasCollidedWithLeft,
+        } = getWindowBoundsCollisions({
+          viewport,
+          viewportTop,
+          position: currentPoint,
+          xVelocity: horizontalVelocity,
+          yVelocity: verticalVelocity,
+        })
+
         if (hasCollidedWithTop || hasCollidedWithBottom) {
           verticalVelocity = 0
         }
-        if (hasCollidedWithLeft || hasCollidedWithRight) {
+        if (hasCollidedWithRight || hasCollidedWithLeft) {
           horizontalVelocity *= -1
+          pgvs.setX(i, particleGoalHorizontalVelocity * -1)
         }
 
         // update particle location
@@ -288,10 +295,10 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
           itemSize={2}
         />
         <bufferAttribute
-          attach="attributes-initialVelocity"
+          attach="attributes-goalVelocity"
           count={MAX_PARTICLES}
-          array={new Float32Array(initialVelocities)}
-          itemSize={2}
+          array={new Float32Array(initialVelocities.filter((_, index) => index % 2 === 0))}
+          itemSize={1}
         />
       </bufferGeometry>
       <LavaShaderMaterial />

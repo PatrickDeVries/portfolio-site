@@ -298,6 +298,18 @@ export const getShapeMaxes = (shape: Circle | Polygon) =>
         ),
       }
 
+export const getShapeCenter = ({
+  shape,
+  mins,
+  maxes,
+}: { shape: Circle | Polygon; mins: Point2d; maxes: Point2d }): Point2d =>
+  isCircle(shape)
+    ? shape
+    : {
+        x: (mins.x + maxes.x) / 2,
+        y: (mins.y + maxes.y) / 2,
+      }
+
 export const getRepellentFromShape = (shape: Circle | Polygon): Repellent => {
   if (isCircle(shape)) {
     return {
@@ -354,20 +366,8 @@ export const scaleWidthIntoViewport = (width: number, viewportScale: Scale) =>
   width * ((viewportScale.xMax - viewportScale.xMin) / (window.innerWidth - 0))
 
 ///
-/// repellent information utils
+/// Repellent information utils
 ///
-
-export const getRepellentCenter = ({
-  repellent,
-  mins,
-  maxes,
-}: { repellent: Circle | Polygon; mins: Point2d; maxes: Point2d }): Point2d =>
-  isCircle(repellent)
-    ? repellent
-    : {
-        x: (mins.x + maxes.x) / 2,
-        y: (mins.y + maxes.y) / 2,
-      }
 
 const getFixedRepellentShapes = (
   pathname: string,
@@ -452,6 +452,13 @@ const getVisibleDynamicRepellentShapes = (viewportScale: Scale): (Circle | Polyg
           }).map(point => projectWindowPointIntoViewport(point, viewportScale)),
           $type: RepellentShape.Star,
         }
+      default:
+        return {
+          vertices: generateRectangleFromBoundingRect({ top, right, bottom, left }).map(point =>
+            projectWindowPointIntoViewport(point, viewportScale),
+          ),
+          $type: RepellentShape.Rectangle,
+        }
     }
   })
 }
@@ -468,6 +475,60 @@ export const getRepellentInfo = (pathname: string, viewport: Size, viewportScale
   const dynamicRepellentShapesWithMetadata = getDynamicRepellentInfo(viewportScale)
 
   return [...fixedRepellentShapesWithMetadata, ...dynamicRepellentShapesWithMetadata]
+}
+
+export const getWindowBoundsCollisions = ({
+  viewport,
+  viewportTop,
+  position,
+  xVelocity,
+  yVelocity,
+}: {
+  viewport: Size
+  viewportTop: number
+  position: Point2d
+  xVelocity: number
+  yVelocity: number
+}) => {
+  const minX = -viewport.width / 2
+  const minY = -viewport.height / 2
+  const maxX = viewport.width / 2
+  const maxY = viewport.height / 2 - viewportTop
+
+  const isAtTop = position.y > maxY
+  const hasCollidedWithTop = isAtTop && yVelocity > 0
+  const isAtRight = position.x > maxX
+  const hasCollidedWithRight = isAtRight && xVelocity > 0
+  const isAtBottom = position.y < minY
+  const hasCollidedWithBottom = isAtBottom && yVelocity < 0
+  const isAtLeft = position.x < minX
+  const hasCollidedWithLeft = isAtLeft && xVelocity < 0
+
+  // if (isAtBottom && yVelocity < 0)
+  //   console.log(
+  //     isAtTop,
+  //     hasCollidedWithTop,
+  //     isAtRight,
+  //     hasCollidedWithRight,
+  //     isAtBottom,
+  //     hasCollidedWithBottom,
+  //     isAtLeft,
+  //     hasCollidedWithLeft,
+  //     position,
+  //     xVelocity,
+  //     yVelocity,
+  //   )
+
+  return {
+    isAtTop,
+    hasCollidedWithTop,
+    isAtRight,
+    hasCollidedWithRight,
+    isAtBottom,
+    hasCollidedWithBottom,
+    isAtLeft,
+    hasCollidedWithLeft,
+  }
 }
 
 ///
