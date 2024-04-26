@@ -11,6 +11,7 @@ import particleSettings, {
 import { RepellentShape } from '@/common/components/Layout/Background/types'
 import RangeSlider from '@/common/components/RangeSlider'
 import Select from '@/common/components/Select'
+import { useWindowListener } from '@yobgob/too-many-hooks'
 import React from 'react'
 import { useSnapshot } from 'valtio'
 import { formatMouseShape } from './formatters'
@@ -18,6 +19,16 @@ import { WrappingRow } from './style'
 
 const ParticleControlFields: React.FC = () => {
   const particleSnap = useSnapshot(particleSettings)
+
+  useWindowListener('keyup', event => {
+    if (event.key === '=') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize + 0.5 < 5 ? particleSettings.mouseSize + 0.5 : 5
+    } else if (event.key === '-') {
+      particleSettings.mouseSize =
+        particleSettings.mouseSize - 0.5 > 0 ? particleSettings.mouseSize - 0.5 : 0
+    }
+  })
 
   return (
     <>

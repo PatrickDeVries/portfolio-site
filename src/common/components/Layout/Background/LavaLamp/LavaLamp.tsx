@@ -1,6 +1,5 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import { useWindowListener } from '@yobgob/too-many-hooks'
-import React, { useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Points, Sphere, Vector3 } from 'three'
 import { useSnapshot } from 'valtio'
@@ -36,24 +35,17 @@ type Props = {
 }
 
 const LavaLamp: React.FC<Props> = ({ top }) => {
-  useWindowListener('keyup', event => {
-    if (event.key === '=') {
-      lavaLampSettings.mouseSize =
-        lavaLampSettings.mouseSize + 0.5 < 5 ? lavaLampSettings.mouseSize + 0.5 : 5
-    } else if (event.key === '-') {
-      lavaLampSettings.mouseSize =
-        lavaLampSettings.mouseSize - 0.5 > 0 ? lavaLampSettings.mouseSize - 0.5 : 0
-    }
-  })
-
   const viewport = useThree(rootState => rootState.viewport)
   const viewportTop = top * (viewport.height / window.innerHeight)
-  const viewportScale = {
-    xMin: -viewport.width / 2,
-    xMax: viewport.width / 2,
-    yMin: -viewport.height / 2,
-    yMax: viewport.height / 2,
-  }
+  const viewportScale = useMemo(
+    () => ({
+      xMin: -viewport.width / 2,
+      xMax: viewport.width / 2,
+      yMin: -viewport.height / 2,
+      yMax: viewport.height / 2,
+    }),
+    [viewport.width, viewport.height],
+  )
   lavaLampPositionStore.viewport = {
     width: viewport.width,
     height: viewport.height,
@@ -64,7 +56,7 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
     positions: initialPositions,
     temperatures: initialTemperatures,
     velocities: initialVelocities,
-  } = generateRandomLavaLampData()
+  } = useMemo(generateRandomLavaLampData, [])
 
   const pointsRef = useRef<Points | null>(null)
 
@@ -267,41 +259,42 @@ const LavaLamp: React.FC<Props> = ({ top }) => {
     }
   })
 
-  if (initialPositions.length < MAX_PARTICLES * 3) {
-    return null
-  }
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry attach="geometry">
-        <bufferAttribute
-          attach="attributes-position"
-          count={MAX_PARTICLES}
-          array={new Float32Array(initialPositions)}
-          itemSize={3}
-        />
-        <bufferAttribute
-          attach="attributes-temperature"
-          count={MAX_PARTICLES}
-          array={new Float32Array(initialTemperatures)}
-          itemSize={1}
-        />
-        <bufferAttribute
-          attach="attributes-velocity"
-          count={MAX_PARTICLES}
-          array={new Float32Array(initialVelocities)}
-          itemSize={2}
-        />
-        <bufferAttribute
-          attach="attributes-goalVelocity"
-          count={MAX_PARTICLES}
-          array={new Float32Array(initialVelocities.filter((_, index) => index % 2 === 0))}
-          itemSize={1}
-        />
-      </bufferGeometry>
-      <LavaShaderMaterial />
-    </points>
+  const points = useMemo(
+    () => (
+      <points ref={pointsRef}>
+        <bufferGeometry attach="geometry">
+          <bufferAttribute
+            attach="attributes-position"
+            count={MAX_PARTICLES}
+            array={new Float32Array(initialPositions)}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="attributes-temperature"
+            count={MAX_PARTICLES}
+            array={new Float32Array(initialTemperatures)}
+            itemSize={1}
+          />
+          <bufferAttribute
+            attach="attributes-velocity"
+            count={MAX_PARTICLES}
+            array={new Float32Array(initialVelocities)}
+            itemSize={2}
+          />
+          <bufferAttribute
+            attach="attributes-goalVelocity"
+            count={MAX_PARTICLES}
+            array={new Float32Array(initialVelocities.filter((_, index) => index % 2 === 0))}
+            itemSize={1}
+          />
+        </bufferGeometry>
+        <LavaShaderMaterial />
+      </points>
+    ),
+    [initialPositions, initialTemperatures, initialVelocities],
   )
+
+  return points
 }
 
 export default LavaLamp
